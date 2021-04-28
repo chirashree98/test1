@@ -1,0 +1,210 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class User_management extends MX_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper(array('url', 'form', 'html', 'text'));
+        $this->load->library(array('session', 'form_validation', 'email', 'upload', 'image_lib'));
+        $this->load->model(array('common_model', 'custom_model'));
+        if ($this->session->userdata('ADMIN_ID') == '') {
+            redirect('admin'); 
+        } 
+    }
+
+    public function all_user() {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+//        $this->db->Join('ds_user_membership', 'ds_users.membership_id = ds_user_membership.id');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-user', $data);
+    }
+
+    public function view_user() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+//        $this->db->Join('ds_user_membership', 'ds_users.membership_id = ds_user_membership.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-user', $data);
+    }
+
+    public function delete_user() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_user');
+    }
+
+    public function all_customer() {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.role_id', '4');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-customer', $data);
+    }
+
+    public function view_customer() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-customer', $data);
+    }
+
+    public function delete_customer() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_customer');
+    }
+
+    public function all_designer() {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.role_id', '1');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-designer', $data);
+    }
+
+    public function view_designer() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id,ds_membership.name as membership_name,ds_membership.description as membership_description');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id','left');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id','left');
+        $this->db->Join('ds_artist_service', 'ds_users.service_id = ds_artist_service.id','left');
+        $this->db->Join('ds_membership', 'ds_users.membership_id = ds_membership.id','left');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-designer', $data);
+    }
+
+    public function delete_designer() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_designer');
+    }
+
+    public function all_designstore() {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.role_id', '6');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-designstore', $data);
+    }
+
+    public function view_designstore() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id,ds_membership.name as membership_name,ds_membership.description as membership_description');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->Join('ds_membership', 'ds_users.membership_id = ds_membership.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-designstore', $data);
+    }
+
+    public function delete_designstore() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_designstore');
+    }
+
+    public function change_user_status() {
+
+        $data = array();
+        $id = $this->input->post('id');
+        $value = $this->input->post('val');
+        $save_data['is_approved'] = $value;
+        $this->common_model->UpdateRecord($save_data, 'ds_users', 'id', $id);
+
+        $user_info = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $id));
+        $from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+        foreach ($from_mail->result() as $row) {
+            $settings[$row->settings_name] = $row->settings_value;
+        }
+        if ($value == '1') {
+            $maildata['subject'] = 'Approval of Registration Request  ';
+            $maildata['email_template'] = 'user_approve_by_admin';
+        } else {
+            $maildata['subject'] = 'Not Approval of Registration Request  ';
+            $maildata['email_template'] = 'user_not_approve_by_admin';
+        }
+        $maildata['to'] = $user_info['email'];
+        $maildata['dear_name'] = $getData['first_name'];
+        $maildata['site_url'] = base_url();
+        $maildata['user_email'] = $user_info['email'];
+        $maildata['user_pass'] = base64_decode($user_info['password']);
+        $maildata['from'] = $settings['admin_from_mail_id'];
+        $maildata['facebook_url'] = $settings['facebook_url'];
+        $maildata['twitter_url'] = $settings['twitter_url'];
+        $maildata['pinterest'] = $settings['pinterest'];
+        $maildata['footer_copyright_text'] = $settings['footer_copyright_text'];
+        $result = send_mail($maildata);
+
+//        ******* Send mail End ************
+
+
+
+        echo 'ok';
+    }
+
+public function all_subscription() {
+    //$data['users'] = $this->common_model->RetriveRecordByWhere('ds_subscribed', array());
+        $this->db->select('*');
+		
+        $this->db->from('ds_subscribed'); 
+        $this->db->order_by('ds_subscribed.id', 'DESC');
+        
+        $data['users'] = $this->db->get();
+		
+		
+        
+        $this->load->view('subscription/all-subscription', $data);
+    }
+
+ public function delete_subscription() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_subscribed', $id, 'id');
+        $message = '<div class="alert alert-success"><p>Email has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_subscription');
+    }
+
+}

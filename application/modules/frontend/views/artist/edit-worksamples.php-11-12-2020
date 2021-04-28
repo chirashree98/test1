@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+        
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+
+
+
+        <section id="artist-accept-decline">
+            <div class="custom-width">
+                <div class="artist-heading">
+                    <h1>Artist Dashboard</h1>
+                </div>
+<span id="msg_box">
+            <?php if ($this->session->flashdata('success') != '') { ?>
+                <?php echo $this->session->flashdata('success'); ?>
+            <?php } ?>
+        </span>
+                <div class="artist-accept-decline-inner">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="artist-left-panel">
+                                <?php $this->load->view('artist/artist-left-panel'); ?>  
+                            </div>
+                        </div>
+<div class="col-md-9">
+                            <div class="my-account-left-panel">
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>Edit Work Samples</h4>
+                                    <?php // print_r($query);?>
+                                    <div class="my-account-left-panel-sec1-inner">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="artist-right-panel">
+
+
+                       
+										
+									 
+                     
+                  
+                   <form action="<?php echo base_url(); ?>update-worksamples" method="POST" enctype="multipart/form-data">
+				    <input type="hidden" name="id" id="id" value ="<?php echo $query_update['id']; ?>" />
+                     
+                    
+                            
+
+                            <div class="form-group" id="imgdiv">
+                                <label>Or Add Image</label>
+                                <input type="file" class="form-control" name="imagefile" id="imagefile"><br>
+                                <img src="<?php echo base_url(); ?>uploads/artist/<?php echo $query_update['image']; ?>" class="img-responsive">
+                            </div>
+							
+                              
+                            <div class="backwhite">    
+                                <div class="form-group">
+                                    <label>Image Name</label>
+                                    <input type="text" class="form-control" name="name" id="name" value="<?php echo $query_update['name']; ?>">
+                                    <p class = "error_msg"><?php echo form_error('name'); ?> </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Enter Description</label>
+                                    <textarea type="text" class="form-control" name="description" id="description"><?php echo $query_update['description']; ?></textarea>
+                                    <p class = "error_msg"><?php echo form_error('description'); ?> </p>
+                                </div>
+                            </div>
+
+                        </div>
+                         <div class="form-group">
+                            <button type="button" class="modal-btn" data-dismiss="modal">Cancel</button>
+							<input type="submit" class="modal-btn" value="Save" id = "addWorksample" />
+                           <!-- <button type="button" class="modal-btn">Save</button>-->
+                        </div>
+                    </form>
+                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        
+
+
+
+        <div class="clearfix"></div> 
+
+        <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+    <style>#image { display: none }</style>
+    <?php $this->load->view('common/footer_js'); ?>  
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+
+        $(".input").focus(function () {
+            $("#search").addClass("move");
+        });
+        $(".input").focusout(function () {
+            $("#search").removeClass("move");
+            $(".input").val("");
+        });
+
+        $(".search").click(function () {
+            $(".input").toggleClass("active");
+            $("#search").toggleClass("active");
+        });
+    </script>
+    <script>
+        /*******************************
+         * ACCORDION WITH TOGGLE ICONS
+         *******************************/
+        function toggleIcon(e) {
+            $(e.target)
+                    .prev('.panel-heading')
+                    .find(".more-less")
+                    .toggleClass('glyphicon-plus glyphicon-minus');
+        }
+        $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        $('.panel-group').on('shown.bs.collapse', toggleIcon);
+    </script>
+    <script>
+        $('.slick-carousel').slick({
+            centerMode: true,
+            arrows: false,
+            dots: true,
+            infinite: true,
+            slidesToShow: 4,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        arrows: false,
+                        dots: true,
+                        infinite: true,
+                        centerMode: true,
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        arrows: false,
+                        dots: true,
+                        infinite: true,
+                        centerMode: true,
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    </script>
+    <script>
+        $('.variable-width').slick({
+            dots: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 1,
+        });
+    </script>
+    <script>
+        $('#chooseFile').bind('change', function () {
+            var filename = $("#chooseFile").val();
+            if (/^\s*$/.test(filename)) {
+                $(".file-upload").removeClass('active');
+                $("#noFile").text("No file chosen...");
+            } else {
+                $(".file-upload").addClass('active');
+                $("#noFile").text(filename.replace("C:\\fakepath\\", ""));
+            }
+        });
+
+
+
+$('#addWorksample').on('click', function () {
+            $(".error_msg").html('');
+           /* if ($('#image').val() == '') {
+                $('#image').next(".error_msg").html('Please Select image');
+                $('#image').focus();
+                return false;
+            }*/
+            if ($('#name').val() == '') {
+                $('#name').next(".error_msg").html('Please enter name');
+                $('#name').focus();
+                return false;
+            }
+            if ($('#description').val() == '') {
+                $('#description').next(".error_msg").html('Please enter description');
+                $('#description').focus();
+                return false;
+            }
+            
+            }); 
+
+    </script>
+
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <?php $this->load->view('common/header_include'); ?>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/global/css/jquery.datetimepicker.min.css">
+
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md">
+        <div class="page-wrapper">
+            <?php $this->load->view('common/header'); ?>
+            <div class="clearfix"> </div>
+            <div class="page-container">
+                <?php $this->load->view('common/sidebar'); ?>
+                <div class="page-content-wrapper">
+                    <div class="page-content">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="msg_div">
+                                    <?php if ($this->session->flashdata('success') != '') { ?>
+                                        <?php echo $this->session->flashdata('success'); ?>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="portlet light portlet-fit portlet-form bordered">
+                                    <div class="portlet-body">
+                                        <form action="" id="myFrm" method="post" class="horizontal-form" enctype="multipart/form-data">
+<!--                                            <pre> <?php
+                                                print_R($query->result());
+//                                                exit();
+                                                ?></pre>-->
+                                            <div class="form-body">
+
+                                                <div class="portlet-title">
+                                                    <div class="caption"> <i class="icon-settings font-red"></i> <span class="caption-subject font-red sbold uppercase"> Settings </span> </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <?php
+                                                    foreach ($query->result() as $row) {
+                                                        ?>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label class="control-label"><?php echo str_replace("_", " ", $row->settings_name); ?></label>
+                                                                <input type="text" name="settings_name[<?php echo $row->id; ?>]" id="our_story_headind" value="<?php echo $row->settings_value; ?>"  class="form-control" placeholder="">
+
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="form-actions right"><button id="frmSubmit" type="submit" class="btn blue"> <i class="fa fa-check"></i> Save  </button> </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <?php $this->load->view('common/footer'); ?>
+        </div>
+        <?php // $this->load->view('common/quick_nav');  ?>
+        <?php $this->load->view('common/js_include'); ?>
+        <script>
+
+
+            $("#msg_div").fadeOut(7000);
+        </script>
+
+    </body>
+
+</html>

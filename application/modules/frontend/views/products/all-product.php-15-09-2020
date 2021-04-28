@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>   
+        <style>
+            .artist-list-inner img {
+                height: 290px;
+            }
+        </style>
+    </head> 
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+        <div class="clearfix"></div> 
+        <section id="artistlint-sec1">
+            <div class="custom-width">
+            <div class="innerpageproducts">
+                <div class="row"> 
+                
+                    <div class="col-md-3 col-sm-4"> 
+                        <div class="desktop-sec-hide">
+                            <h1>Products</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <div class="artist-shortby">
+                                <p>There are <?php echo $total_rows; ?> products</p>
+                                <span>Sort by : 
+                                    <div class="dropdown customright">
+                                        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Sort by Price  <img src="<?php echo base_url(); ?>assets/front/images/list-dropdown.png"/></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="<?php echo base_url(); ?>products_search?order=desc">high to low</a></li>
+                                            <li><a href="<?php echo base_url(); ?>products_search?order=asc">low to high</a></li>
+                                        </ul>
+                                    </div>
+
+                                </span>
+                            </div>
+
+                            <div class="artist-searcharea">
+                                <p>Active filters</p>
+                                <?php
+                                
+                                if (!empty($_SESSION)) {
+                                    foreach ($_SESSION['search'] as $key => $val) {
+                                        if ($key == 'order' && $val!='') {
+                                            echo '<button class="glass-products-btn">';
+                                            echo $val == 'desc' ? 'high to low' : 'low to high';
+                                            echo '<a href="' . base_url() . 'remove_search?value=order"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                        }
+                                        if ($key == 'cat_search' && $val!='') {
+                                            $catName=get_catname_by_id($val);
+                                            echo '<button class="glass-products-btn">';
+                                            echo $catName['name'];
+                                            echo '<a href="' . base_url() . 'remove_search?value=cat_search"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                        }
+                                        if ($key == 'attr_search' && !empty($val)) {
+                                            foreach ($val as $k => $v) {
+                                            $attrName=get_attrname_by_id($v);
+                                            echo '<button class="glass-products-btn">';
+                                            echo $k.' : '.$attrName['attr_name'];
+                                            echo '<a href="' . base_url() . 'remove_search?value=attr_search&val='.$k.'"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                            }
+                                        }
+                                    }
+                                }
+                                ?>
+                                <!--<button class="glass-products-btn">Glass Products <img src="<?php echo base_url(); ?>assets/front/images/cross.png"/></button>-->
+                            </div>
+                        </div>
+                        <div class="product-category">
+                            <?php $this->load->view('common/product_left_panel'); ?>  
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-9 col-sm-8">
+                        <div class="mobile-sec-hide">
+                            <h1>Products</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <div class="artist-shortby">
+                                <p>There are <?php echo $total_rows; ?> products</p>
+                                <span>Sort by : 
+                                    <div class="dropdown customright">
+                                        <button class="dropdown-toggle" type="button" data-toggle="dropdown"> Price <img src="<?php echo base_url(); ?>assets/front/images/list-dropdown.png"/></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="<?php echo base_url(); ?>products_search?order=desc">high to low</a></li>
+                                            <li><a href="<?php echo base_url(); ?>products_search?order=asc">low to high</a></li>
+                                        </ul>
+                                    </div>
+
+                                </span>
+                            </div>
+
+                            <div class="artist-searcharea">
+                                <p>Active filters</p>
+                                <?php
+                                
+                                if (!empty($_SESSION)) {
+                                    foreach ($_SESSION['search'] as $key => $val) {
+                                        if ($key == 'order' && $val!='') {
+                                            echo '<button class="glass-products-btn">';
+                                            echo $val == 'desc' ? 'high to low' : 'low to high';
+                                            echo '<a href="' . base_url() . 'remove_search?value=order"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                        }
+                                        if ($key == 'cat_search' && $val!='') {
+                                            $catName=get_catname_by_id($val);
+                                            echo '<button class="glass-products-btn">';
+                                            echo $catName['name'];
+                                            echo '<a href="' . base_url() . 'remove_search?value=cat_search"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                        }
+                                        if ($key == 'attr_search' && !empty($val)) {
+                                            foreach ($val as $k => $v) {
+                                            $attrName=get_attrname_by_id($v);
+                                            echo '<button class="glass-products-btn">';
+                                            echo $k.' : '.$attrName['attr_name'];
+                                            echo '<a href="' . base_url() . 'remove_search?value=attr_search&val='.$k.'"><img src="' . base_url() . 'assets/front/images/cross.png"/></a>';
+                                            echo '</button>';
+                                            }
+                                        }
+                                    }
+                                }
+                                ?>
+                                <!--<button class="glass-products-btn">Glass Products <img src="<?php echo base_url(); ?>assets/front/images/cross.png"/></button>-->
+                            </div>
+                        </div>
+                        <div class="artist-list">
+                            <div class="row">
+
+<!--                                <pre>
+                                <?php
+                                print_r($query->result());
+                                ?>
+                                </pre>-->
+                                <?php
+                                if ($query->num_rows() > 0) {
+                                    foreach ($query->result() as $row) {
+                                        $discount = floatval((($row->price - $row->sell_price) / $row->price) * 100);
+                                        ?>
+                                        <div class="col-md-4 col-sm-6">
+                                            <a href="#">
+                                            <div class="artist-list-inner">
+                                                <img src="<?php echo base_url(); ?>uploads/product/<?php echo $row->image; ?>" class="img-responsive"/>
+                                                <?php if (floatval($discount) > floatval(0)) { ?><div class="sale">-<?php echo round($discount, 2); ?>%</div><?php } ?>
+                                                <h4><?php echo $row->name; ?></h4>
+                                                <span><?php echo $row->currency; ?> <?php echo $row->sell_price; ?></span>
+                                            </div>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="artist-list-inner">
+                                            <h4>No Product Found</h4>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+
+
+                        <div class="pagination">
+
+<!--<span>Showing 1-10 item(s)</span>-->
+                            <?php if ($query->num_rows() > floatval($limit)) { ?>
+                                <span>Showing 1-<?php echo $limit ?> of <?php echo $query->num_rows(); ?> item(s)</span>
+                            <?php } else { ?>
+                                <span>Showing 1-<?php echo $query->num_rows(); ?> of <?php echo $query->num_rows() ?> item(s)</span>
+                            <?php } ?>
+                            <ul>
+                                <?php echo $links; ?>
+<!--                                <li><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i> &nbsp; Previous</a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li ><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#"> Next &nbsp; <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>-->
+                            </ul>
+                        </div>
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="clearfix"></div> 
+
+
+        <div class="custom-width">
+            <section id="scheme-sec4" class="back-img-change">
+
+
+                <div class="scheme-sec4-text">
+                    <h1>own a CODE</h1>
+                    <h2>gain extra profit from
+                        <br/>
+                        every deal</h2>
+                    <button class="free-consultation-brn">FREE CONSULTATION <img src="<?php echo base_url(); ?>assets/front/images/arrow-right2.png"/></button>
+                </div>
+
+            </section>
+        </div>
+
+        <div class="clearfix"></div> 
+
+
+
+        <!--+++++++++++++ footer Start +++++++++++++++++++-->
+        <?php $this->load->view('common/footer'); ?>  
+    </body>
+    <?php $this->load->view('common/footer_js'); ?>  
+    <script>
+
+        $(document).ready(function () {
+            $('#proSearch input').on('change', function () {
+//		 $.ajax({
+//                type: "POST",
+//                url: "<?php echo base_url('frontend/product/productsSearchAjax'); ?>",
+//                data: { data: $('#proSearch').serialize()},
+//                async: false,
+//                success: function (response) {
+//
+//                   
+//				 }
+//                
+//            });
+
+$("#proSearch").submit();
+
+            });
+        });
+
+
+
+    </script>
+</html>

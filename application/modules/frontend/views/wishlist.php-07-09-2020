@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+    
+   
+   
+   
+   
+   
+  <section id="my-account">
+   <div class="custom-width">
+   <div class="page-heading">
+   <h1>My Account</h1>
+   </div>
+   
+   <div class="my-account-inner">
+   <div class="row">
+   <div class="col-sm-9">
+   <div class="my-account-left-panel">
+   <div class="my-account-left-panel-sec1">
+  <h4>Wish List</h4>
+  <div class="my-account-left-panel-sec1-inner wishlisttable">
+  <p>Your Wish List</p>
+<div class="wishlist-area">
+<div class="cart">
+   <div class="table-responsive">
+   <table class="table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Model</th>
+        <th>Price</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="<?php echo base_url(); ?>assets/front/images/wishlist-img.png"/></td>
+        <td>MODERN LAMP</td>
+        <td>XYZ1234DYT56</td>
+      <td>€95.00</td>
+      <td>
+      <button class="add-to-cart">Add to Cart</button>
+      <button class="add-to-cart wishlist-delete-btn">Delete</button></td>
+    </tr>
+      <tr>
+        <td><img src="<?php echo base_url(); ?>assets/front/images/wishlist-img.png"/></td>
+        <td>MODERN LAMP</td>
+        <td>XYZ1234DYT56</td>
+      <td>€95.00</td>
+      <td>
+      <button class="add-to-cart">Add to Cart</button>
+      <button class="add-to-cart wishlist-delete-btn">Delete</button></td>
+    </tr>
+     
+    </tbody>
+  </table>
+   </div>
+   </div>
+</div>
+  </div>
+   </div>
+  
+   </div>
+   </div>
+   <div class="col-sm-3">
+   <div class="my-account-right-panel">
+    <ul>
+   <ul>
+   <li><a href="<?php echo base_url(); ?>account">My Account</a></li>
+   <li><a href="<?php echo base_url(); ?>edit-account">Edit Account</a></li>
+   <li><a href="<?php echo base_url(); ?>change-password">Password</a></li>
+   <li><a href="<?php echo base_url(); ?>all-addressbook">Address Book</a></li>
+   <li><a href="#">Design requests</a></li>
+   <li><a href="<?php echo base_url(); ?>wishlist">Wish List</a></li>
+   <li><a href="<?php echo base_url(); ?>order-history">Order History</a></li>
+  <!-- <li><a href="#">Downloads</a></li>
+   <li><a href="#">Recurring payments</a></li>
+   <li><a href="#">Reward Points</a></li>
+   <li><a href="#">Returns</a></li>
+   <li><a href="#">Transactions</a></li>-->
+   <li><a href="<?php echo base_url(); ?>user-newsletter">Newsletter</a></li>
+   <li class="bbnone"><a href="<?php echo base_url(); ?>logout">Logout</a></li>
+   </ul>
+   </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   </section>
+   
+   
+   
+    
+    <div class="clearfix"></div> 
+    
+     <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+<?php $this->load->view('common/footer_js'); ?>  
+
+</html>

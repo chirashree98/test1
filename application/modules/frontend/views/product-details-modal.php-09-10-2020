@@ -1,0 +1,369 @@
+<link href="<?php echo base_url(); ?>assets/front/product-details/main.css" rel="stylesheet">
+
+
+<?php 
+print_r($query);
+?>
+<div class="product-details-page-inner">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="product-details-img-area">
+
+
+                <div class="show" href="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" style="position: relative;">
+                    <img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" id="show-img" style="width: 100%; height: 100%;">
+                    <div style="position: absolute; left: 404px; top: 274px; background-color: rgb(0, 0, 0); width: 100px; height: 100px; opacity: 0.2; border: 1px solid rgb(204, 204, 204); cursor: crosshair; display: none;"></div><div style="position: absolute; overflow: hidden; left: 509px; top: 0px; width: 500px; height: 500px; display: none;"><img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" id="big-img" style="position: absolute; left: -2020px; top: -1370px; width: 2520px; height: 2030px;"></div></div>
+                <div class="small-img">
+                    <img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" class="icon-left" alt="" id="prev-img">
+                    <div class="small-container">
+                        <div id="small-img-roll">
+                            <?php
+                            $extra_images = json_decode($query['extra_images']);
+
+                            for ($i = 0; $i < count($extra_images); $i++) {
+                                ?>
+                                <img src="<?php echo base_url(); ?>uploads/product/<?php echo $extra_images[$i]; ?>" class="show-small-img" alt="">
+                                <?php
+                            }
+                            ?>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="product-details-right-text">
+                <h3><?php echo $query['name']; ?></h3>
+                <h5>SR <?php echo $query['sell_price']; ?></h5>
+                <p> <?php echo $query['details']; ?></p>
+                <ul>
+                    <?php  
+                    $extra_desc= explode(',', $query['extra_desc']);  
+                    foreach ($extra_desc as $key=>$row){
+                        echo '<li>'.$row.'</li>';
+                    }
+                    ?>
+                    
+                </ul>
+                <p class="sku"><span>SKU:</span><?php echo $query['sku']; ?></p>
+                <p class="sku"><span>Category:</span><?php echo $query['cat_name']; ?></p>
+                <div class="form-group">
+                    <label>Color:</label>
+                    <select>
+                        <option>Brown Wooden</option>
+                        <option>Gry Wooden</option>
+                    </select>
+                    <!--<img src="images/wooden.jpg">-->
+
+
+                    <div class="qntatra">
+                        <label>Quantity:</label>
+
+                        <div id="field1">
+                            <button type="button" id="sub" class="sub">-</button>
+                            <input type="number" id="1" value="1" min="100" max="100">
+                            <button type="button" id="add" class="add">+</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="addtocare-btn-area">
+                    <button class="addtocare-btn"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
+                    <p><a href="#"><img src="http://206.189.36.119/DesignStudio/html1/images/wishlist-icon.png"></a> Add to Wishlist</p>
+                </div>
+                <div class="stokin">
+                    <h6>In stock.</h6>
+                    <p><strong>Sold by:</strong> ABC Seller</p>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script src="<?php echo base_url(); ?>assets/front/product-details/zoom-image.js"></script>
+<script src="<?php echo base_url(); ?>assets/front/product-details/main.js"></script>
+
+ <script>
+    $('.add').click(function () {
+		if ($(this).prev().val() < 100) {
+    	$(this).prev().val(+$(this).prev().val() + 1);
+		}
+});
+$('.sub').click(function () {
+		if ($(this).next().val() > 1) {
+    	if ($(this).next().val() > 1) $(this).next().val(+$(this).next().val() - 1);
+		}
+});
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<h3> <?php //print_r($query);
+?>
+    <form class="" action="<?php echo base_url('cart'); ?>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<?php echo $query['p_id']; ?>" class="p_id">
+        <input type="hidden" name="name" value="<?php echo $query['name']; ?>" class="pname">
+        <input type="hidden" name="price" value="<?php echo $query['sell_price']; ?>" class="price">
+        <input type="hidden" name="image" value="<?php echo $query['image']; ?>" class="image">
+       
+         <div><img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" id="artist-img" width="687px;" height="742px;"> </div>
+<?php
+// $extra_images = json_decode($query['extra_images']);
+// for ($i = 0; $i < count($extra_images); $i++) { 
+?>
+       <div> <img src="<?php echo base_url(); ?>uploads/product/<?php echo $extra_images[$i]; ?>" id="artist-img" width="100px;" height="150px;"> </div>
+<?php
+// }
+?>
+        <p id="product-name"><?php echo $query['name']; ?></p>
+        <p id="product-price">SR <?php echo $query['sell_price']; ?></p>
+        <p id="product-attribute">
+
+<?php
+$p_attr = array();
+foreach ($items->result() as $row) {
+    if (!in_array($row->parent_id, $p_attr)) {
+        $p_attr[$row->parent_id][] = $row;
+    }
+}
+//            print_r($p_attr);
+?>
+<?php
+foreach ($p_attr as $row) {
+    ?>
+                        <label> <?php echo $row[0]->p_attr_name; ?></label>
+                        <select class="" required="" name="attrpro[]">
+                            <option value="">Select <?php echo $row[0]->p_attr_name; ?></option>
+    <?php foreach ($row as $r2) { ?>
+                                        <option value="<?php echo $r2->attr_id; ?>"><?php echo $r2->child_attr_name; ?></option>
+    <?php } ?>
+                        </select>
+<?php } ?>
+        </p>
+        <input class="modal-btn" name="action" type="submit" value="Add to Cart" />
+        <button type="button" class="modal-btn" data-dismiss="modal">Close</button>
+    </form>
+</h3>
+
+
+
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">   
+<link href="<?php echo base_url(); ?>assets/front/product-details/main.css" rel="stylesheet">
+
+<?php //print_r($query); ?>
+
+ <form class="" action="<?php echo base_url('cart'); ?>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<?php echo $query['p_id']; ?>" class="p_id">
+        <input type="hidden" name="name" value="<?php echo $query['name']; ?>" class="pname">
+        <input type="hidden" name="price" value="<?php echo $query['sell_price']; ?>" class="price">
+        <input type="hidden" name="image" value="<?php echo $query['image']; ?>" class="image">
+       
+
+<div class="product-details-page-inner">
+        <div class="row">
+           <div class="col-sm-5">
+            <div class="product-details-img-area">
+         
+ 
+  <div class="show" href="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>">
+    <img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" id="show-img">
+  </div>
+  <div class="small-img">
+    <img src="<?php echo base_url(); ?>assets/front/images/online_icon_right@2x.png" class="icon-left" alt="" id="prev-img">
+    <div class="small-container">
+      <div id="small-img-roll">
+<?php
+$extra_images = json_decode($query['extra_images']);
+
+for ($i = 0; $i < count($extra_images); $i++) {
+    ?>
+                <img src="<?php echo base_url(); ?>uploads/product/<?php echo $extra_images[$i]; ?>" class="show-small-img" alt="">
+    <?php
+}
+?>
+
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+           <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+        <img src="http://206.189.36.119/DesignStudio/dev/uploads/product/1601028210_product_main_image.jpg" class="show-small-img" alt="">
+
+      </div>
+    </div>
+  
+  </div>
+
+               </div>
+            </div>
+            <div class="col-sm-7">
+            <div class="product-details-right-text">
+                <h3><?php echo $query['name']; ?></h3>
+                <h5>SR <?php echo $query['sell_price']; ?></h5>
+                <p><?php echo $query['details']; ?></p><br>
+                 <p><?php echo $query['extra_desc']; ?></p>
+              
+                <ul>
+                    <li>Cotton blend</li>
+                    <li>Straight fit</li>
+                    <li>Dry clean</li>
+                </ul>
+                <p class="sku"><span>SKU:</span>022</p>
+                <p class="sku"><span>Category:</span>Furniture</p>
+                <div class="form-group">
+<?php
+$p_attr = array();
+foreach ($items->result() as $row) {
+    if (!in_array($row->parent_id, $p_attr)) {
+        $p_attr[$row->parent_id][] = $row;
+    }
+}
+//            print_r($p_attr);
+?>
+<?php
+foreach ($p_attr as $row) {
+    ?>
+                        <label> <?php echo $row[0]->p_attr_name; ?></label>
+                        <select class="" required="" name="attrpro[]">
+                            <option value="">Select <?php echo $row[0]->p_attr_name; ?></option>
+    <?php foreach ($row as $r2) { ?>
+                                        <option value="<?php echo $r2->attr_id; ?>"><?php echo $r2->child_attr_name; ?></option>
+    <?php } ?>
+                        </select>
+<?php } ?>
+                    <img src="http://206.189.36.119/DesignStudio/dev/assets/front/images/wooden.jpg"/>
+                      
+                    
+                    <div class="qntatra">
+                    <label>Quantity:</label>
+                        
+                       <div id="field1">
+    <button type="button" id="sub" class="sub">-</button>
+    <input type="number" name="qty" id="1" value="1" min="1" max="100" />
+    <button type="button" id="add" class="add">+</button>
+</div> 
+
+                    </div>
+                     </div>
+                    <div class="addtocare-btn-area">
+                     <input class="addtocare-btn" name="action" type="submit" value="Add to Cart" />
+                    <button class="addtocare-btn"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
+                        <p><a href="#"><img src="http://206.189.36.119/DesignStudio/dev/assets/front/images/wishlist-icon.png"/></a> Add to Wishlist</p>
+                    </div>
+                    <div class="stokin">
+                    <h6>In stock.</h6>
+                   <p><strong>Sold by:</strong> ABC Seller</p>
+                    </div>
+             
+                </div>
+            
+            </div>
+           </div>
+           
+           
+           
+           
+         <div class="product-details-tabarea">
+               <div class="tabbable-panel">
+                                <div class="tabbable-line">
+                                        <ul class="nav nav-tabs ">
+                                                <li class="active">
+                                                        <a href="#tab_default_1" data-toggle="tab">
+                                                        DESCRIPTION</a>
+                                                </li>
+                                                <li>
+                                                        <a href="#tab_default_2" data-toggle="tab">
+                                                        eStore Details</a>
+                                                </li>
+                                        
+                                        </ul>
+                                        <div class="tab-content">
+                                                <div class="tab-pane active" id="tab_default_1">
+                                                        
+                                                        <p>
+                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                        </p>
+                                                        
+                                                </div>
+                                                <div class="tab-pane" id="tab_default_2">
+                                                        
+                                                        <p>
+                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                        </p>
+                            <p>
+                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                        </p>
+                                                        
+                                                </div>
+                                                
+                                        </div>
+                                </div>
+                        </div>
+                </div>   
+           
+    
+           
+           
+           
+           
+           
+           
+           
+        </div>
+
+</form>
+
+
+
+
+
+
+
+
+ <script>
+    $('.add').click(function () {
+                if ($(this).prev().val() < 100) {
+        $(this).prev().val(+$(this).prev().val() + 1);
+                }
+});
+$('.sub').click(function () {
+                if ($(this).next().val() > 1) {
+        if ($(this).next().val() > 1) $(this).next().val(+$(this).next().val() - 1);
+                }
+});
+    </script>
+<script src="<?php echo base_url(); ?>assets/front/product-details/zoom-image.js"></script>
+<script src="<?php echo base_url(); ?>assets/front/product-details/main.js"></script>
+
+
+-->
+
+
+
+
+

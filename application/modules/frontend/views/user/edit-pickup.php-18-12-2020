@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+    
+   
+   
+   
+   
+   
+  <section id="my-account">
+   <div class="custom-width">
+   <div class="page-heading">
+   <h1>Edit Pickup Address</h1>
+   </div>
+   
+   <div class="my-account-inner">
+   <div class="row">
+   <div class="col-sm-9">
+    <span id="msg_box">
+    <?php if ($this->session->flashdata('success') != '') { ?>
+        <?php echo $this->session->flashdata('success'); ?>
+    <?php } ?>
+</span>
+   <div class="my-account-left-panel">
+   <div class="my-account-left-panel-sec1">
+  <h4>Edit Pickup Address</h4>
+  <?php //print_r($query);?>
+  <div class="my-account-left-panel-sec1-inner">
+  
+  <div class="row">
+  <div class="col-md-9 pull-md-3">
+  
+  <form action="<?php echo base_url(); ?>update_pickup" id="myFrm" method="post" >
+ 
+  <p>Pickup Details</p>
+<input type="hidden" name="id" id="id" class="form-control" value ="<?php echo $query['id']; ?>"/>
+
+<div class="form-group">
+<label>Company </label>
+<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Company Name" value ="<?php echo $query['company_name']; ?>"/>
+<p class = "error_msg"><?php echo form_error('company_name'); ?> </p>
+</div>
+
+<div class="form-group">
+<label>Address </label>
+<input type="text" name="address2" id="address2" class="form-control" placeholder="Address" value ="<?php echo $query['address2']; ?>"/>
+<p class = "error_msg"><?php echo form_error('address2'); ?> </p>
+</div>
+ 
+<div class="form-group">
+<label>City *</label>
+<input type="text" name="city" class="form-control" placeholder="City" value ="<?php echo $query['city']; ?>" id="city" />
+<p class = "error_msg"><?php echo form_error('city'); ?> </p>
+</div>
+
+<div class="form-group">
+<label>Post Code *</label>
+<input type="text" name="postcode" id="postcode" class="form-control" placeholder="" value ="<?php echo $query['postcode']; ?>"/>
+<p class = "error_msg"><?php echo form_error('postcode'); ?> </p>
+</div>
+
+<div class="form-group">
+                                                        <label>Country *</label>
+                                                        <select name = "country_id" class = "form-control" id = "country" >
+                                                        <option value="">Select Country</option>
+                                                            <?php
+                                                            foreach ($country->result() as $val) {
+                                                                ?>
+                                                                <option <?php
+                                                                if ($val->id == $query['country_id']) {
+                                                                    echo 'selected';
+                                                                }
+                                                                ?> value  = "<?php echo $val->id; ?>"  > <?php echo strtoupper($val->country_name); ?> </option>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                        </select>
+                                                        <p class = "error_msg"><?php echo form_error('country_id'); ?> </p>
+                                                    </div>
+
+                                                    <div class="form-group" >
+                                                        <label>Rigion / State *</label>
+                                                        <select class="form-control" name="state_id" required="" id="state">
+                                                            <?php
+                                                            if (count($state->result()) > 0) {
+
+                                                                foreach ($state->result() as $sval) {
+                                                                    ?>
+                                                                    <option <?php
+                                                                    if ($sval->id == $query['state_id']) {
+                                                                        echo 'selected';
+                                                                    }
+                                                                    ?> value  = "<?php echo $sval->id; ?>"  > <?php echo strtoupper($sval->name); ?> </option>
+                                                                        <?php
+                                                                    }
+                                                                } else {
+                                                                    ?>
+
+                                                                <option value ="">Select Country First</option>
+                                                                <?php
+                                                            }
+                                                            ?>
+
+
+                                                        </select>
+                                                        <p class = "error_msg"><?php echo form_error('state_id'); ?> </p>
+                                                    </div>
+<div class="form-group">
+<label>Phone *</label>
+<span class="number-cuntrycode">+966</span>
+<input type="number" name="phone" class="form-control number-cuntry" placeholder="phone"  value="<?php echo $query['phone']; ?>" id="phone"  title="Please enter a valid phone number" onkeyup="if (/\D/g.test(this.value ))
+                                                    this.value  = this.value .replace(/\D/g, '')"  required/>
+<p class = "error_msg"><?php echo form_error('phone'); ?> </p>
+
+</div>
+
+
+<div class="form-group">
+<!--
+<button class="back">Back</button>
+<button  class="back"href="<?php echo base_url(); ?>all-addressbook">Back</button>-->
+<button class="continue" id = "editUser">Continue</button>
+</div>
+</form>
+</div>
+  </div>
+
+  </div>
+   </div>
+   
+   </div>
+   </div>
+   <div class="col-sm-3">
+   <div class="my-account-right-panel">
+                                <?php $this->load->view('common/myaccount_side_panel'); ?>  
+                            </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   </section>
+   
+   
+   
+    
+    <div class="clearfix"></div> 
+    
+     <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+<?php $this->load->view('common/footer_js'); ?>  
+
+<script>
+  $('#editUser').on('click', function () {
+            $(".error_msg").html('');
+
+            if ($('#company_name').val() == '') {
+                $('#company_name').next(".error_msg").html('Please enter Company Name');
+                $('#company_name').focus();
+                return false;
+            }
+            if ($('#address2').val() == '') {
+                $('#address2').next(".error_msg").html('Please enter address');
+                $('#address2').focus();
+                return false;
+            }
+            
+			if ($('#city').val() == '') {
+                $('#city').next(".error_msg").html('Please enter city');
+                $('#city').focus();
+                return false;
+            }
+            if ($('#postcode').val() == '') {
+                $('#postcode').next(".error_msg").html('Please enter postcode');
+                $('#postcode').focus();
+                return false;
+            }
+            if ($('#country').val() == '') {
+                $('#country').next(".error_msg").html('Please select country');
+                $('#country').focus();
+                return false;
+            }
+			if ($('#state').val() == '') {
+                $('#state').next(".error_msg").html('Please select state');
+                $('#state').focus();
+                return false;
+            }
+			 if ($('#phone').val() == '') {
+                $('#phone').next(".error_msg").html('Please enter mobile number');
+                $('#phone').focus();
+                return false;
+            }
+            if ($('#phone').val().length > parseInt('12') || $('#phone').val().length < parseInt('6')) {
+                $('#phone').next(".error_msg").html('Please enter a valid phone number');
+                $('#phone').focus();
+                return false;
+            }
+ 			
+        });
+		
+		
+	
+ 
+  $('#country').on('change', function () {
+	  
+//alert($('#country').val());
+           // $('#state').hide();
+ 
+            $('.loader').show();
+            
+                $.post('<?php echo base_url(); ?>frontend/user/getstate', 'country_id=' + $('#country').val(), function (data) {
+                    $('#state').html(data);
+                   $('.loader').hide();
+           });
+        });
+        
+    </script>
+
+</html>

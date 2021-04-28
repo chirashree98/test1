@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php $this->load->view('common/header'); ?>
+</head>
+<body>
+<?php $this->load->view('common/header_nav'); ?>
+
+<!--Body content start-->
+<section id="artist-accept-decline">
+    <div class="custom-width">
+        <div class="artist-heading">
+            <h1><?= $query['design_type'] ?></h1>
+        </div>
+
+        <div class="artist-accept-decline-inner">
+            <form action="<?php echo base_url('design-consultation-action'); ?>" method="post" class="swt_form"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="artist_id" value="<?php echo $artist_id; ?>">
+                <input type="hidden" name="amount" value="<?php echo !empty($query['cost']) ? $query['cost'] : 0; ?>">
+                <input type="hidden" name="design_type_id" value="<?= $query['design_type_id'] ?>">
+                <input type="hidden" name="design_type_name" value="<?= $query['design_type'] ?>">
+                <div class="artist-right-panel">
+
+                    <div class="artist-dasbord-area">
+                        <span id="msg_box">
+                                    <?php if ($this->session->flashdata('error') != '') { ?>
+                                        <?php echo $this->session->flashdata('error'); ?>
+                                    <?php } ?>
+                                </span>
+                        <span id="msg_box">
+                                    <?php if ($this->session->flashdata('success') != '') { ?>
+                                        <?php echo $this->session->flashdata('success'); ?>
+                                    <?php } ?>
+                                </span>
+                        <div class="col-sm-3">
+                            <?php if (!empty($query['profile_image'])) { ?>
+                                <img src="<?php echo base_url('uploads/artist/' . $query['profile_image']); ?>"/>
+                            <?php } else { ?>
+                                <img src="<?php echo base_url('assets/front/images/profile-no.png'); ?>"/>
+                            <?php } ?>
+
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="artist-dasbord pb0">
+                                <div class="artist-dasbord-item designrequest">
+                                    <h5><?php echo $query['first_name'] . ' ' . $query['last_name']; ?></h5>
+                                    <?php if (!empty($query['cost'])) { ?>
+                                        <h5>Cost - <?php echo $query['cost']; ?>/-</h5>
+                                    <?php } else { ?>
+                                        <h5>No cost define.</h5>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="artist-dasbord-item designaconsultation">
+                                    <label>Attach all related docs</label>
+                                    <div class="form-group files">
+                                        <div class="file-upload">
+                                            <div class="file-select">
+                                                <input type="file" name="form_file[]" id="chooseFile" class="form-control" multiple="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="image_preview"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Message</label>
+                                        <textarea type="text" name="message" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-btn-area">
+                    <button class="save form_submit">Pay & Continue</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+<!--Body content end-->
+
+<?php
+$this->load->view('common/footer');
+$this->load->view('common/footer_js');
+?>
+</body>
+</html>

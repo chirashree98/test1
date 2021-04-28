@@ -1,0 +1,21 @@
+<?php
+$user_id = $this->session->userdata('USER_ID');
+
+$wallet_data = get_wallet_amount($user_id);
+
+$wallet_data = !empty($wallet_data['wallet_amount']) ? $wallet_data['wallet_amount'] : 0;
+?>
+
+<ul>
+    <!--<li <?php if($this->uri->segment(1)=="artist_account"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist_account">View Profile</a></li>-->
+     <li <?php if($this->uri->segment(1)=="artist_edit_profile"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist_edit_profile">Edit Profile</a></li>
+    <li <?php if($this->uri->segment(1)=="artist_edit_account"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist_edit_account">Edit Service Profile</a></li>
+    <li <?php if($this->uri->segment(1)=="artist-changepassword"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist-changepassword">Change Password</a></li>
+     <li <?php if($this->uri->segment(1)=="all_quotes"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>all_quotes">Received Quotes</a></li>
+    <li<?= ($this->uri->segment(1) == "request-ad") ? ' class="active"' : ''?>><a href="<?= base_url('request-ad');?>">Accept/Decline Request</a></li>
+    <li><a href="#">Consultation History</a></li>
+    <li><a href="javascript:void(0);">Wallet Amount (<?= $wallet_data ?> $)</a></li>
+    <li><a href="#">Transaction History</a></li>
+    <li <?php if($this->uri->segment(1)=="all_work_samples"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>all_work_samples">All Work Samples</a></li>
+    <li><a href="<?php echo base_url(); ?>logout">Logout</a></li>
+</ul>

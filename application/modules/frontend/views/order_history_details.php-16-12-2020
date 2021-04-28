@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php $this->load->view('common/header'); ?>
+    <link href="<?php echo base_url(); ?>assets/front/css/chat.css" rel="stylesheet">
+</head>
+<body>
+<?php $this->load->view('common/header_nav'); ?>
+<!--+++++++++++++ Header End +++++++++++++++++++-->
+<div class="clearfix"></div>
+<section id="my-account">
+    <div class="custom-width">
+        <div class="page-heading">
+            <h1>Welcome <?php echo @$user_type['user_type_name']; ?> Account</h1>
+        </div>
+        <div class="my-account-inner">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="my-account-left-panel">
+                        <button class="back-to-design-request"
+                                onclick="location.href='<?= base_url('order-history') ?>';">
+                            <img src="<?= base_url('assets/front/images/back-arrow.png') ?>"> BACK TO ORDER
+                        </button>
+                        <span id="msg_box">
+                                    <?php if ($this->session->flashdata('error') != '') { ?>
+                                        <?php echo $this->session->flashdata('error'); ?>
+                                    <?php } ?>
+                                </span>
+                        <span id="msg_box">
+                                    <?php if ($this->session->flashdata('success') != '') { ?>
+                                        <?php echo $this->session->flashdata('success'); ?>
+                                    <?php } ?>
+                                </span>
+                        <div class="design-requst-inner">
+                            <h4>Billing Address Details</h4>
+                            <div class="design-requst-inner-sub">
+                                <div class="request-details-page-inner">
+                                    <p><b>Name :</b>
+                                        <span><?= $billing_address[0]['name'] ?></span>
+                                    </p>
+                                    <p><b>Address :</b>
+                                        <span><?= $billing_address[0]['address2'] ?></span>
+                                    </p>
+                                    <p><b>Postcode :</b>
+                                        <span><?= $billing_address[0]['postcode'] ?></span>
+                                    </p>
+                                    <p><b>City :</b>
+                                        <span><?= $billing_address[0]['city'] ?></span>
+                                    </p>
+                                    <p><b>State :</b>
+                                        <span><?= $billing_address[0]['state_name'] ?></span>
+                                    </p>
+                                    <p><b>Country :</b>
+                                        <span><?= $billing_address[0]['country_name'] ?></span>
+                                    </p>
+                                    <p><b>Email :</b>
+                                        <span><?= $billing_address[0]['email'] ?></span>
+                                    </p>
+                                    <p><b>Phone :</b>
+                                        <span><?= $billing_address[0]['phone'] ?></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if(variable_array_check($shipping_address)){ ?>
+                        <div class="design-requst-inner">
+                            <h4>Shipping Address Details</h4>
+                            <div class="design-requst-inner-sub">
+                                <div class="request-details-page-inner">
+                                    <p><b>Name :</b>
+                                        <span><?= $shipping_address[0]['name'] ?></span>
+                                    </p>
+                                    <p><b>Address :</b>
+                                        <span><?= $shipping_address[0]['address2'] ?></span>
+                                    </p>
+                                    <p><b>Postcode :</b>
+                                        <span><?= $shipping_address[0]['postcode'] ?></span>
+                                    </p>
+                                    <p><b>City :</b>
+                                        <span><?= $shipping_address[0]['city'] ?></span>
+                                    </p>
+                                    <p><b>State :</b>
+                                        <span><?= $shipping_address[0]['state_name'] ?></span>
+                                    </p>
+                                    <p><b>Country :</b>
+                                        <span><?= $shipping_address[0]['country_name'] ?></span>
+                                    </p>
+                                    <p><b>Email :</b>
+                                        <span><?= $shipping_address[0]['email'] ?></span>
+                                    </p>
+                                    <p><b>Phone :</b>
+                                        <span><?= $shipping_address[0]['phone'] ?></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+                        <?php if(variable_array_check($shipping_address)){ ?>
+                            <div class="design-requst-inner">
+                                <h4>Shipping Address Details</h4>
+                                <div class="design-requst-inner-sub">
+                                    <div class="request-details-page-inner">
+                                        <p><b>Name :</b>
+                                            <span><?= $shipping_address[0]['name'] ?></span>
+                                        </p>
+                                        <p><b>Address :</b>
+                                            <span><?= $shipping_address[0]['address2'] ?></span>
+                                        </p>
+                                        <p><b>Postcode :</b>
+                                            <span><?= $shipping_address[0]['postcode'] ?></span>
+                                        </p>
+                                        <p><b>City :</b>
+                                            <span><?= $shipping_address[0]['city'] ?></span>
+                                        </p>
+                                        <p><b>State :</b>
+                                            <span><?= $shipping_address[0]['state_name'] ?></span>
+                                        </p>
+                                        <p><b>Country :</b>
+                                            <span><?= $shipping_address[0]['country_name'] ?></span>
+                                        </p>
+                                        <p><b>Email :</b>
+                                            <span><?= $shipping_address[0]['email'] ?></span>
+                                        </p>
+                                        <p><b>Phone :</b>
+                                            <span><?= $shipping_address[0]['phone'] ?></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <?php if(variable_array_check($pick_up_address)){ ?>
+                        <div class="design-requst-inner">
+                            <h4>Pickup Address</h4>
+                            <div class="design-requst-inner-sub">
+                                <div class="request-details-page-inner">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">SKU</th>
+                                            <th scope="col">Delivery Address</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($pick_up_address as $value) { ?>
+                                            <tr>
+                                                <td>
+                                                    <img src="<?= base_url('uploads/product/'.$value['image']) ?>" width="100"/>
+                                                </td>
+                                                <td><?= $value['name'] ?></td>
+                                                <td><?= $value['sku'] ?></td>
+                                                <td>
+                                                    <?= !empty($value['name']) ? $value['name'] : '' ?>
+                                                    <?= !empty($value['company_name']) ? ', '.$value['company_name'] : '' ?>
+                                                    <?= !empty($value['address2']) ? ', '.$value['address2'] : '' ?>
+                                                    <?= !empty($value['postcode']) ? ', '.$value['postcode'] : '' ?>
+                                                    <?= !empty($value['city']) ? ', '.$value['city'] : '' ?>
+                                                    <?= !empty($value['state_name']) ? ', '.$value['state_name'] : '' ?>
+                                                    <?= !empty($value['country_name']) ? ', '.$value['country_name'] : '' ?>
+                                                    <?= !empty($value['email']) ? ', '.$value['email'] : '' ?>
+                                                    <?= !empty($value['phone']) ? ', '.$value['phone'] : '' ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+
+                        <div class="design-requst-inner">
+                            <h4>Order Details</h4>
+                            <div class="design-requst-inner-sub">
+                                <div class="request-details-page-inner">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">SKU</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($order_transaction_data as $value) { ?>
+                                            <tr>
+                                                <td>
+                                                    <img src="<?= base_url('uploads/product/'.$value['image']) ?>" width="100"/>
+                                                </td>
+                                                <td><?= $value['name'] ?></td>
+                                                <td><?= $value['sku'] ?></td>
+                                                <td>SR <?= $value['selling_price'] + 0 ?></td>
+                                                <td><?= $value['quantity'] ?></td>
+                                                <td>SR <?= $value['product_total_amount'] + 0 ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                            <tr>
+                                                <td colspan="5" align="right">Subtotal</td>
+                                                <td>SR <?= $order_master_data[0]['sub_total_amount'] + 0 ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" align="right">Total</td>
+                                                <td>SR <?= $order_master_data[0]['order_amount'] + 0 ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="my-account-right-panel">
+                        <?php $this->load->view('common/myaccount_side_panel'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+<?php $this->load->view('common/footer'); ?>
+<?php $this->load->view('common/footer_js'); ?>
+</body>
+</html>

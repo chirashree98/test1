@@ -1,0 +1,380 @@
+$(document).ready(function () {
+    if (window.File && window.FileList && window.FileReader) {
+        $("#chooseFile").on("change", function (e) {
+            var files = e.target.files,
+                filesLength = files.length;
+            $('.files').hide();
+            for (var i = 0; i < filesLength; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+
+                var file_ck = this.files[i];
+                var fileType = file_ck["type"];
+                var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+
+                fileReader.onload = (function (e) {
+                    var file = e.target;
+
+                    if ($.inArray(fileType, validImageTypes) > 0) {
+                        $("<div class=\"pip col-md-2\">" +
+                            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" width='50' height='50' title=\"" + file.name + "\"/>" +
+                            "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                            "</div>").insertAfter(".image_preview");
+
+                    } else {
+                        $("<div class=\"pip col-md-2\">" +
+                            "<img src='" + base_url + "assets/front/images/icons8-file-48.png' width='50' height='50'/>" +
+                            "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                            "</div>").insertAfter(".image_preview");
+                    }
+
+                    $(".remove").click(function () {
+                        $(this).parent(".pip").remove();
+                        if ($('.pip').length == 0) {
+                            $('.files').show();
+                        }
+                    });
+
+                });
+                fileReader.readAsDataURL(f);
+            }
+        });
+    } else {
+        alert("Your browser doesn't support to File API")
+    }
+});
+
+
+$(document).on('click', '.form_submit', function (e) {
+    swal({
+        title: "Are you sure ?",
+        text: "Please recheck the form !",
+        type: "warning",
+        reverseButtons: true,
+        confirmButtonColor: "#ff0000",
+        confirmButtonText: "Yes",
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonColor: "#4caf50",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.value) {
+            $(".swt_form").submit();
+        }
+    });
+});
+
+$(document).on('click', '.onclick_show', function () {
+    $(".cart_link").show();
+});
+
+
+//related product assign to vendor code end
+$(document).ready(function () {
+    if (window.File && window.FileList && window.FileReader) {
+        $("#files").on("change", function (e) {
+            $('.files').hide();
+            var files = e.target.files,
+                filesLength = files.length;
+            for (var i = 0; i < filesLength; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+                fileReader.onload = (function (e) {
+                    var file = e.target;
+                    $("<div class=\"pip col-md-2\">" +
+                        "<img src='" + base_url + "assets/front/images/icons8-file-48.png' width='50' height='50'/>" +
+                        "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                        "</div>").insertAfter(".image_preview");
+
+                    $(".remove").click(function () {
+                        $(this).parent(".pip").remove();
+                        if ($('.pip').length == 0) {
+                            $('.files').val();
+                            $('.files').show();
+                        }
+                    });
+
+                });
+                fileReader.readAsDataURL(f);
+            }
+        });
+    } else {
+        alert("Your browser doesn't support to File API")
+    }
+});
+
+$(document).ready(function () {
+    $('.country').on('change', function () {
+        $('.loader').show();
+        $.post(base_url + 'frontend/user/getstate', 'country_id=' + $('.country').val(), function (data) {
+            $('.state').html(data);
+            $('.loader').hide();
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('.delivery_country').on('change', function () {
+        $('.loader').show();
+        $.post(base_url + 'frontend/user/getstate', 'country_id=' + $('.delivery_country').val(), function (data) {
+            $('.delivery_state').html(data);
+            $('.loader').hide();
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('#billingContinue').on('click', function () {
+
+        var billing_address_details = $('input[name="billing_address"]:checked').val();
+        var billingname = $('#billingname').val();
+        var billingemail = $('#billingemail').val();
+        var billingphone = $('#billingphone').val();
+        var billingaddress = $('#billingaddress').val();
+        var billingcity = $('#billingcity').val();
+        var billingzip = $('#billingzip').val();
+
+        var billingcountry = $("#billingcountry option:selected").val();
+        var billingstate = $("#billingstate option:selected").val();
+
+        $('.alert').remove();
+
+        if (billing_address_details == 'new_address') {
+
+            if (billingname == '') {
+                $('input[name="billingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+                return false;
+            }
+
+            if (billingemail == '') {
+                $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+                return false;
+            }
+
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(billingemail)) {
+                $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+                return false;
+            }
+
+            if (billingphone == '') {
+                $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+                return false;
+            }
+
+            var regexPattern = /^[0-9-+]+$/;
+            if (!regexPattern.test(billingphone)) {
+                $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Mobile not valid</div>');
+                return false;
+            }
+
+            if (billingaddress == '') {
+                $('input[name="billingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+                return false;
+            }
+
+            if (billingcity == '') {
+                $('input[name="billingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+                return false;
+            }
+
+            if (billingzip == '') {
+                $('input[name="billingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+                return false;
+            }
+
+            if (billingcountry == '') {
+                $('#billingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+                return false;
+            }
+
+            if (billingstate == '') {
+                $('#billingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+                return false;
+            }
+
+            $("#billingDetailsTab").click();
+            $("#deliveryDetailsTab").click();
+
+        } else {
+            $("#billingDetailsTab").click();
+            $("#deliveryDetailsTab").click()
+        }
+    });
+});
+
+$(document).ready(function () {
+    $('#deliveryContinue').on('click', function () {
+
+        var shippingname = $('#shippingname').val();
+        var shippingemail = $('#shippingemail').val();
+        var shippingphone = $('#shippingphone').val();
+        var shippingaddress = $('#shippingaddress').val();
+        var shippingcity = $('#shippingcity').val();
+        var shippingzip = $('#shippingzip').val();
+
+        var shippingcountry = $("#shippingcountry option:selected").val();
+        var shippingstate = $("#shippingstate option:selected").val();
+
+        $('.alert').remove();
+        //Billing address code start
+        var billingname = $('#billingname').val();
+        var billingemail = $('#billingemail').val();
+        var billingphone = $('#billingphone').val();
+        var billingaddress = $('#billingaddress').val();
+        var billingcity = $('#billingcity').val();
+        var billingzip = $('#billingzip').val();
+
+        var billingcountry = $("#billingcountry option:selected").val();
+        var billingstate = $("#billingstate option:selected").val();
+
+        if (billingname == '') {
+            $('input[name="billingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+            $("#billingDetailsTab").removeClass('collapsed');
+
+            $("#deliveryDetailsTab").addClass('collapsed');
+            $("#deliveryDetailsTab").attr("aria-expanded", "false");
+
+            $("#collapseTwo").addClass('collapse');
+            $("#collapseTwo").attr("aria-expanded", "false");
+            return false;
+        }
+
+        if (billingemail == '') {
+            $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+            return false;
+        }
+
+        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(billingemail)) {
+            $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+            return false;
+        }
+
+        if (billingphone == '') {
+            $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+            return false;
+        }
+
+        var regexPattern = /^[0-9-+]+$/;
+        if (!regexPattern.test(billingphone)) {
+            $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Mobile not valid</div>');
+            return false;
+        }
+
+        if (billingaddress == '') {
+            $('input[name="billingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+            return false;
+        }
+
+        if (billingcity == '') {
+            $('input[name="billingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+            return false;
+        }
+
+        if (billingzip == '') {
+            $('input[name="billingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+            return false;
+        }
+
+        if (billingcountry == '') {
+            $('#billingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+            return false;
+        }
+
+        if (billingstate == '') {
+            $('#billingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+            return false;
+        }
+        //Billing address code end
+
+
+        if (shippingname == '') {
+            $('input[name="shippingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+            return false;
+        }
+
+        if (shippingemail == '') {
+            $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+            return false;
+        }
+
+        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(shippingemail)) {
+            $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+            return false;
+        }
+
+        if (shippingphone == '') {
+            $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+            return false;
+        }
+
+        var regexPattern = /^[0-9-+]+$/;
+        if (!regexPattern.test(shippingphone)) {
+            $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Mobile not valid</div>');
+            return false;
+        }
+
+        if (shippingaddress == '') {
+            $('input[name="shippingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+            return false;
+        }
+
+        if (shippingcity == '') {
+            $('input[name="shippingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+            return false;
+        }
+
+        if (shippingzip == '') {
+            $('input[name="shippingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+            return false;
+        }
+
+        if (shippingcountry == '') {
+            $('#shippingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+            return false;
+        }
+
+        if (shippingstate == '') {
+            $('#shippingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+            return false;
+        }
+
+        $("#deliveryDetailsTab").click();
+        $("#paymentMethodTab").click();
+
+
+    });
+});
+$(document).ready(function () {
+    $("input[name='delivery_type']").change(function () {
+        var delivery_type = $("input[name='delivery_type']:checked").val();
+        if(delivery_type == 'DELIVERY'){
+            $(".delivery_type_delivery").show();
+            $(".delivery_type_pickup").hide();
+        }else{
+            $(".delivery_type_delivery").hide();
+            $(".delivery_type_pickup").show();
+        }
+
+    });
+});
+
+$(document).ready(function () {
+    $('.add_new_delivery').on('click', function () {
+        $(".new_delivery_address_form").show();
+    });
+});
+$(document).ready(function () {
+    $('.delivery_pickup_continue').on('click', function () {
+        $("#deliveryDetailsTab").click();
+        $("#confirmOrderTab").click();
+    });
+});
+$(document).ready(function () {
+    $('#product_confirm').on('click', function () {
+        $("#confirmOrderTab").click();
+        $("#paymentMethodTab").click();
+    });
+});

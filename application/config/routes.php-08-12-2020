@@ -1,0 +1,281 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+ 
+/* 
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+| 
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	http://codeigniter.com/user_guide/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There are three reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+| 
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router which controller/method to use if those
+| provided in the URL cannot be matched to a valid route.
+|
+|	$route['translate_uri_dashes'] = FALSE;
+|
+| This is not exactly a route, but allows you to automatically route
+| controller and method names that contain dashes. '-' isn't a valid
+| class or method name character, so it requires translation.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
+|
+| Examples:	my-controller/index	-> my_controller/index
+|		my-controller/my-method	-> my_controller/my_method
+*/
+
+$route['default_controller'] = 'frontend/home';
+$route['account'] = 'frontend/home/account';
+$route['logout'] = 'frontend/home/logout';
+$route['forgot_password'] = 'frontend/home/forgot_password';
+$route['forgot_password_submit'] = 'frontend/home/forgot_password_submit';
+$route['user/sucess'] = 'frontend/user/sucess';
+$route['user/sucess_intermediate'] = 'frontend/user/sucess_intermediate';
+$route['user/bekers'] = 'frontend/user/bekers';
+$route['user/mijidashboard'] = 'frontend/user/mijidashboard';
+$route['user/inbox'] = 'frontend/user/inbox';
+$route['user/aanbeve'] = 'frontend/user/aanbeve';
+$route['user/city_inbox'] = 'frontend/user/cityInbox';
+//$route['user/invoice'] = 'frontend/user/invoice';
+$route['user/vereniging'] = 'frontend/user/vereniging';
+
+$route['user/register_gemeenteen'] = 'frontend/user/registerGemeenteen';
+$route['user/register_verenigingen'] = 'frontend/user/registerVerenigingen';
+$route['user/add_vereniging'] = 'frontend/user/addVereniging';
+$route['user/mijievenementen'] = 'frontend/user/myEvents';
+$route['user/cityevenementen'] = 'frontend/user/myCityEvents';
+
+
+$route['user/cityprofile'] = 'frontend/user/cityprofile';
+$route['user/associationprofile'] = 'frontend/user/associationprofile';
+
+$route['get_vereniging'] = 'frontend/home/getVerenigingByPostcode';
+ 
+$route['user/bhuren'] = 'frontend/home/bhuren';
+$route['gemeenten'] = 'frontend/home/gemeenten';
+$route['profiwashvoorverenigingen'] = 'frontend/home/profiwashvoorverenigingen';
+$route['aanbeve'] = 'frontend/home/aanbeve';
+$route['mijn'] = 'frontend/home/mijn';
+$route['serviceplatform'] = 'frontend/home/serviceplatform';
+$route['contact'] = 'frontend/home/contact';
+
+
+$route['user/products'] = 'frontend/product/allProduct';
+$route['user/checkout'] = 'frontend/product/submitCart';
+$route['user/invoice/:num'] = 'frontend/product/invoice';
+
+
+//$route['newinvoice_download/:num'] = 'frontend/product/newinvoice_download';
+//$route['citynewinvoice_download/:num'] = 'frontend/product/citynewinvoice_download';
+$route['newinvoice_download/:num'] = 'frontend/cityproduct/newinvoice_download';
+$route['citynewinvoice_download/:num'] = 'frontend/cityproduct/citynewinvoice_download';
+$route['invoice_download/:num'] = 'frontend/product/invoice_download';
+$route['cityinvoice_download/:num'] = 'frontend/product/cityinvoice_download';
+$route['citywashinvoice_download/:num'] = 'frontend/product/citywashinvoice_download';
+ 
+$route['user/newinvoice/:num'] = 'frontend/product/newinvoice';
+
+$route['user/cityinvoice/:num'] = 'frontend/product/cityinvoice'; 
+$route['user/citynewinvoice/:num'] = 'frontend/product/citynewinvoice';
+
+
+$route['user/cityproducts'] = 'frontend/cityproduct/allProduct';
+$route['user/citycheckout'] = 'frontend/cityproduct/submitCart';
+$route['user/cityinvoice/:num'] = 'frontend/cityproduct/invoice';
+$route['user/citywashinvoice/:num'] = 'frontend/cityproduct/washinvoice';
+$route['user/citygraph'] = 'frontend/cityproduct/mijidashboard';
+$route['cart'] = 'frontend/product/getCart';
+$route['update-cart/(:any)'] = 'frontend/product/update_cart/$1';
+$route['remove-cart/(:any)'] = 'frontend/product/remove_cart/$1';
+$route['checkout'] = 'frontend/product/checkout';
+$route['checkout-login'] = 'frontend/product/checkout_login';
+$route['add_shippingaddress'] = 'frontend/product/add_shippingaddress';
+$route['user/invoice_pdf/:num'] = 'frontend/product/invoice_pdf';
+
+
+
+
+
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
+
+
+
+
+$route['login'] = 'frontend/user/login';
+$route['register'] = 'frontend/user/register';
+$route['success'] = 'frontend/user/success';
+$route['regsuccess'] = 'frontend/user/regsuccess';
+$route['adduser'] = 'frontend/home/addUser';
+$route['products'] = 'frontend/product/allProductList';
+$route['products/(:any)'] = 'frontend/product/allProductList/$1';
+$route['products_search'] = 'frontend/product/productsSearch';
+
+$route['remove_search'] = 'frontend/product/productsSearchRemove';
+$route['artist_remove_search'] = 'frontend/artist/artistSearchRemove';
+$route['artists'] = 'frontend/artist/allArtistList';
+$route['artists/(:any)'] = 'frontend/artist/allArtistList/$1';
+$route['artist-sorting'] = 'frontend/product/artist_sorting';
+$route['artist-search'] = 'frontend/product/artist_search';
+$route['addwork-sample'] = 'frontend/artist/save_work_sample';
+$route['ajax-worksample'] = 'frontend/artist/ajax_work_sample';
+$route['add-getquote'] = 'frontend/artist/save_get_quote';
+$route['fetch_worksample_record'] = 'frontend/artist/fetch_worksample';
+$route['fetch_product_record'] = 'frontend/home/fetch_products';
+$route['confirmmail/:num/:num'] = 'frontend/home/confirmMail'; 
+$route['changepassword'] = 'frontend/user/changepassword';
+$route['artistchangepassword'] = 'frontend/artist/changepassword';
+$route['user-newsletter'] = 'frontend/user/user_newsletter';
+
+$route['validate-email/(:any)'] = 'frontend/user/confirmMail/$1';
+$route['wishlist'] = 'frontend/user/wishlist';
+$route['order-history'] = 'frontend/user/order_history';
+$route['edit-account'] = 'frontend/user/edit_account';
+$route['update-user'] = 'frontend/user/update_account';
+$route['edit-service'] = 'frontend/user/edit_service';
+$route['update_service'] = 'frontend/user/update_service';
+$route['getstate'] = 'frontend/user/getstate';
+$route['change-password'] = 'frontend/user/change_password';
+$route['artist-changepassword'] = 'frontend/artist/change_password';
+$route['Unsubscribe'] = 'frontend/user/Unsubscribe';
+$route['all-addressbook'] = 'frontend/user/all_addressbook';
+$route['add-addressbook'] = 'frontend/user/add_addressbook';
+$route['save-addressbook'] = 'frontend/user/save_addressbook';
+$route['edit-addressbook/(:any)'] = 'frontend/user/edit_addressbook/$1';
+$route['update-addressbook'] = 'frontend/user/update_addressbook';
+$route['delete-addressbook/(:any)'] = 'frontend/user/delete_addressbook/$1';
+$route['artist-details/(:any)'] = 'frontend/artist/artist_details/$1';
+$route['delete-worksamples/(:any)'] = 'frontend/artist/delete_worksamples/$1';
+$route['edit-worksamples/(:any)'] = 'frontend/artist/edit_worksamples/$1';
+$route['update-worksamples'] = 'frontend/artist/update_worksamples';
+
+$route['artist_account'] = 'frontend/artist/account';
+$route['artist_edit_account'] = 'frontend/artist/editAccount';
+$route['artist_edit_profile'] = 'frontend/artist/editArtist';
+$route['all_work_samples'] = 'frontend/artist/all_work_samples';
+$route['sorting_worksamples'] = 'frontend/artist/worksamplesSorting';
+$route['all_quotes'] = 'frontend/artist/all_quote_messages';
+$route['store_account'] = 'frontend/store/account';
+//-------------------------------------------------------------------------------------------------
+//frontend routes
+//Design Consultation route
+$route['design-consultation/(:num)'] = 'frontend/design_consultation/index/$1';
+$route['design-consultation-action'] = 'frontend/design_consultation/action';
+//Design Consultation route
+
+//Design Review route
+$route['design-review/(:num)'] = 'frontend/design_consultation/design_review/$1';
+//Design Review route
+
+//Design Request code start
+$route['design-request/(:num)'] = 'frontend/design_consultation/design_request/$1';
+//Design Request code end
+
+
+//Designer route of design request
+$route['request-ad'] = 'frontend/artist_dashboard_controller/request_accept_decline';
+$route['request-ad/view/(:num)'] = 'frontend/artist_dashboard_controller/request_accept_decline_view/$1';
+$route['request-ad/(:any)/(:num)'] = 'frontend/artist_dashboard_controller/request_accept_decline_action/$1/$2';
+$route['designer-chat-save'] = 'frontend/artist_dashboard_controller/artist_chat_save';
+
+
+//designer create cart for customer
+$route['create-cart-for-customer/(:num)'] = 'frontend/artist_dashboard_controller/create_cart_for_customer/$1';
+//Share cart link for customer
+$route['share-cart-link/(:num)'] = 'frontend/product/getCart/$1';
+
+$route['customer-request-cart/(:any)/(:num)'] = 'frontend/artist_dashboard_controller/customer_request_cart/$1/$2';
+
+//Customer route of design request
+$route['my-design-requests'] = 'frontend/customer_dashboard_controller/my_design_request';
+$route['my-design-requests/view/(:num)'] = 'frontend/customer_dashboard_controller/my_design_request_view/$1';
+$route['customer-chat-save'] = 'frontend/customer_dashboard_controller/customer_chat_save';
+
+//backend routes
+$route['admin/settings/design-request-hours'] = 'admin/admin_setting_management/design_request_hours';
+$route['admin/settings/design-request-hours/save'] = 'admin/admin_setting_management/design_request_hours_save';
+
+$route['admin/settings/design-request-hours/save'] = 'admin/admin_setting_management/design_request_hours_save';
+
+//Quotation hours set for admin
+$route['admin/settings/quotation-hours'] = 'admin/admin_setting_management/quotation_hours';
+$route['admin/settings/quotation-hours/save'] = 'admin/admin_setting_management/quotation_hours_save';
+
+$route['admin/settings/quotation-milestone'] = 'admin/admin_setting_management/quotation_milestone';
+$route['admin/settings/quotation-milestone/save'] = 'admin/admin_setting_management/quotation_milestone_save';
+
+//quotation amount in designer dashboard
+$route['quotation-amount-save'] = 'frontend/artist_dashboard_controller/quotation_amount_save';
+$route['milestone-request-customer/(:any)/(:any)'] = 'frontend/artist_dashboard_controller/milestone_request_customer/$1/$2';
+//Customer dashboard
+$route['quotation-status/(:any)/(:num)'] = 'frontend/customer_dashboard_controller/quotation_status_action/$1/$2';
+$route['milestone-pay-customer/(:any)/(:any)/(:any)'] = 'frontend/customer_dashboard_controller/milestone_pay_customer/$1/$2/$3';
+$route['milestone-amount-update'] = 'frontend/customer_dashboard_controller/milestone_amount_update';
+
+$route['shop'] = 'frontend/product/shop';
+$route['shop/(:any)'] = 'frontend/product/shop/$1';
+$route['namesearch'] = 'frontend/product/namesearch';
+$route['searches'] = 'frontend/product/searches';
+
+$route['admin/rejected-quotation'] = 'admin/quotation_admin_controller/rejected_quotation';
+$route['admin/rejected-quotation/details/(:num)'] = 'admin/quotation_admin_controller/rejected_quotation_details/$1';
+
+$route['admin/rejected-quotation/details/(:num)'] = 'admin/quotation_admin_controller/rejected_quotation_details/$1';
+$route['admin/new-quotation/details/save'] = 'admin/quotation_admin_controller/save_milestone_by_admin';
+
+$route['admin-milestone-pay-customer/(:any)/(:any)/(:any)'] = 'frontend/customer_dashboard_controller/admin_milestone_pay_customer/$1/$2/$3';
+
+$route['admin-milestone-request-customer/(:any)/(:any)'] = 'admin/quotation_admin_controller/admin_milestone_request_customer/$1/$2';
+
+$route['admin-work-report'] = 'admin/quotation_admin_controller/admin_work_report';
+
+$route['admin/declined-design'] = 'admin/designType_admin_controller/declined_design';
+$route['admin/declined-design/details/(:num)'] = 'admin/designType_admin_controller/declined_design_details/$1';
+
+$route['admin/accept-design'] = 'admin/designType_admin_controller/accept_design';
+$route['admin/accept-design/details/(:num)'] = 'admin/designType_admin_controller/accept_design_details/$1';
+
+$route['declined-design/add-more-products/(:num)'] = 'admin/designType_admin_controller/add_more_product_list/$1';
+
+//Add to cart code start
+$route['admin-add-to-cart-modal/(:num)/(:num)'] = 'admin/designType_admin_controller/add_to_cart_modal/$1/$2';
+$route['admin-add-to-cart-modal/save'] = 'admin/designType_admin_controller/add_to_cart_modal_save';
+//Update quantity route
+$route['add-to-cart/(:num)/(:num)'] = 'admin/designType_admin_controller/add_to_cart/$1/$2';
+$route['admin/delete/cart/(:num)'] = 'admin/designType_admin_controller/delete_cart/$1';
+$route['admin-chat-save'] = 'admin/designType_admin_controller/admin_chat_save';
+
+$route['product_detail/(:any)']='frontend/product/product_detail/$1';
+$route['all_products'] = 'frontend/user/all_products';
+$route['add_products'] = 'frontend/user/add_products';
+$route['change_product_status_product']='frontend/user/change_product_status_product';
+$route['delete_products/(:any)'] = 'frontend/user/delete_products/$1';
+$route['edit_product/(:any)'] = 'frontend/user/edit_product/$1';
+$route['update_product'] = 'frontend/user/update_product';
+$route['save_products'] = 'frontend/user/save_products';

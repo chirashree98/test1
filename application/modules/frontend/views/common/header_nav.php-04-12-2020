@@ -1,0 +1,301 @@
+<?php
+$from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+foreach ($from_mail->result() as $row) {
+    $settings[$row->settings_name] = $row->settings_value;
+}
+?>
+<div class="notifications"
+     style="border: 1px solid #e41648; border-bottom-left-radius: 4px; border-top-left-radius: 4px; background: #e41648; color: #ffffff; width: auto; padding: 9px; font-weight: bold; position: fixed; right: 0; z-index: 999999;"></div>
+<section id="scheme-top-nav">
+    <div class="custom-width">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="scheme-top-nav-left">
+                    <ul>
+                        <li><a href="#"><img src="<?php echo base_url(); ?>assets/front/images/location.png"/> Boutiques</a>
+                        </li>
+                        <li><a href="#"><img src="<?php echo base_url(); ?>assets/front/images/wishlist.png"/> Wishlist</a>
+                        </li>
+                        <li class="mobilecart"><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>0</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="scheme-top-nav-right userdropdown">
+                    <ul>
+                        <?php
+                        if ($this->session->userdata('USER_ID') != '') {
+                            ?>
+
+                            <div class="dropdown">
+                                <img src="<?php echo base_url(); ?>assets/front/images/user.jpg" class="img-circle"/>
+                                <button class="dropdown-toggle" type="button"
+                                        data-toggle="dropdown"><?php echo $this->session->userdata('USER_FNAME') . " " . $this->session->userdata('USER_LNAME'); ?>
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo base_url(); ?>store_account" class="">My Account</a></li>
+                                    <li><a href="<?php echo base_url(); ?>logout" class="">Logout</a></li>
+                                </ul>
+                            </div>
+
+
+                            <?php
+                        } else {
+                            ?>
+                            <li><a href="<?php echo base_url(); ?>login">Login</a> |</li>
+                            <li><a href="<?php echo base_url(); ?>register" class="">Register</a></li>
+                            <?php
+                        }
+                        ?>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mobilesearch">
+            <form>
+                <input type="text" class="form-control" placeholder="Search Here"/>
+                <button class="mobile-search-btn"><img src="<?php echo base_url(); ?>assets/front/images/search.png"/>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="clearfix"></div>
+
+<section id="scheme-navbar">
+
+    <nav class="navbar navbar-default">
+        <div class="custom-width">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a class="navbar-brand" href="<?php echo base_url(); ?>"><img src="<?php echo base_url(); ?>assets/front/images/logo.png"/></a>-->
+                <a class="navbar-brand" href="<?php echo base_url(); ?>"><img
+                            src="<?php echo base_url(); ?>uploads/<?php echo $settings['header_logo']; ?>"/></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <?php $cart = $this->cart->contents();
+
+                $i = 0;
+                $no_product = 0;
+                foreach ($cart as $item) {
+                    $no_product = $i + 1;
+                    $i++;
+                }
+                ?>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="<?php echo base_url(); ?>products">Product</a></li>
+                    <li><a href="<?php echo base_url(); ?>artists">Artists</a></li>
+                    <li><a href="<?php echo base_url(); ?>shop">SHOP</a></li>
+                    <li><a href="#">EVENTS</a></li>
+                    <li><a href="#">Consultation</a></li>
+                    <li><a href="#">CONTACTS</a></li>
+                    <li class="cart-btn">
+                        <?php
+                        if (!empty($this->session->userdata('design_order_id'))) {
+                            $design_order_id = $this->session->userdata('design_order_id');
+                            $design_type_id = $this->session->userdata('design_type_id');
+                            $slug = get_design_type_slug($design_type_id);
+                            ?>
+                            <a href="<?php echo base_url('customer-request-cart/' . $slug . '/'.$design_order_id); ?>">CART(<?php echo $no_product; ?>
+                                )</a>
+                        <?php } else { ?>
+                            <a href="<?php echo base_url('cart'); ?>">CART(<?php echo $no_product; ?>)</a>
+                        <?php } ?>
+                    </li>
+                    <li class="search-btn">
+                        <a href="#" class="search">
+                            <img src="<?php echo base_url(); ?>assets/front/images/search.png"/>
+                        </a>
+                    </li>
+                </ul>
+                <div class="form">
+                    <label id="search">Search Here</label><br>
+                    <input type="text" class="input">
+                </div>
+            </div>
+        </div>
+
+    </nav>
+</section>
+
+<!-- add edit users -->
+
+
+<div class="modal fade" id="login_users" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <form action="<?php echo base_url(); ?>admin/home/Login/validateUser" method="POST"
+                  enctype="multipart/form-data">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"> User Login </h4>
+                    <p id="login_err"></p>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="username"> Email</label>
+                        <input type="text" name="username"
+                               value="<?= isset($_POST['username']) ? $_POST['username'] : '' ?>" class="form-control"
+                               id="user_name" required>
+                        <p class="error_msg"><?php echo form_error('username'); ?> </p>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password"
+                               value="<?= isset($_POST['password']) ? $_POST['password'] : '' ?>" class="form-control"
+                               id="password1" required>
+                        <p class="error_msg"><?php echo form_error('password'); ?> </p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Login">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+
+
+                        <li><a href="javascript:void(0);" id="forgotpassword_btn">Forgot password</a></li>
+
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="modal fade" id="regist_users" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"> Thanks for your registration. Please check your mailbox
+                        to confirm your email address. </h4>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Jquery script -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+    $(function () {
+        $("#forgotpassword_btn").click(function () {
+            $('#login_users').modal('toggle');
+            $('#forgotpassword').modal('show');
+        });
+
+    });
+
+
+</script>
+
+<script>
+
+    $('#sendMail').click(function () {
+
+        $(".error").removeClass('error');
+        $("#msg_box").html('');
+        if ($('#forgotemail').val() != '') {
+
+            var email = $('#forgotemail').val();
+        } else {
+
+            $("#forgotemail").addClass('error');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('resetLink'); ?>",
+            data: {chk_type: 'email', email: email},
+            async: false,
+            success: function (response) {
+
+                if (response == 'sent') {
+                    $("#msg_box").html('<div class="alert alert-success"> <strong>Success!</strong> Please check your register mail for OTP. </div>');
+                    $("#email_sec").hide();
+                    $("#change_sec").show();
+                } else if (response == 'not_sent') {
+                    $("#msg_box").html('<div class="alert alert-danger">Please try again. <strong></div>');
+                } else if (response == 'inactive') {
+                    $("#msg_box").html('<div class="alert alert-danger">Your mail id is not active. <strong></div>');
+                } else if (response == 'not') {
+                    $("#msg_box").html('<div class="alert alert-danger">Your mail id is not registered. <strong></div>');
+                }
+            },
+            error: function () {
+                alert('Error occured');
+            }
+        });
+
+    });
+    $('#changePass').click(function () {
+        $(".error").removeClass('error');
+        $("#msg_box").html('');
+
+        var email = $('#forgotemail').val();
+
+        if ($('#otp').val() != '') {
+            var otp = $('#otp').val();
+        } else {
+            $("#otp").addClass('error');
+            return false;
+        }
+        if ($('#passwor_forgot').val() != '') {
+            var password = $('#passwor_forgot').val();
+        } else {
+            $("#passwor_forgot").addClass('error');
+            return false;
+        }
+        if ($('#con_password').val() != '') {
+            var con_password = $('#con_password').val();
+        } else {
+            $("#con_password").addClass('error');
+            return false;
+        }
+        if (password != '' && con_password != '') {
+            if (password != con_password) {
+                $("#con_password").addClass('error');
+            }
+        }
+
+        $.ajax({
+            type: "post",
+            url: "<?php echo base_url('resetLink'); ?>",
+            data: {chk_type: 'otp', otp: otp, password: password, email: email},
+            async: false,
+            success: function (response) {
+                if (response == 'ok') {
+                    $("#msg_box").html('<div class="alert alert-success"> <strong>Success!</strong> Password Update Successful. </div>');
+                    $("#change_sec").hide();
+                } else if (response == 'no') {
+                    $("#msg_box").html('<div class="alert alert-danger">Please try again. <strong></div>');
+                }
+            },
+            error: function () {
+                alert('Error occured');
+            }
+        });
+
+    });
+</script>
+

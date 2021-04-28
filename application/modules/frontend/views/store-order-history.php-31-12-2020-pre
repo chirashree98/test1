@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php $this->load->view('common/header'); ?>
+</head>
+<body>
+<?php $this->load->view('common/header_nav'); ?>
+
+<!--+++++++++++++ Header End +++++++++++++++++++-->
+
+<div class="clearfix"></div>
+
+
+<section id="my-account">
+    <div class="custom-width">
+        <div class="page-heading">
+            <h1>Order History</h1>
+        </div>
+
+        <div class="my-account-inner">
+		<div class="col-md-3">
+                            <div class="artist-left-panel">
+                               <?php $this->load->view('common/myaccount_side_panel'); ?> 
+                            </div>
+                        </div>
+       
+            
+                <div class="col-sm-9">
+                    <div class="my-account-left-panel">
+                        <div class="my-account-left-panel-sec1">
+                            <h4>Order History</h4>
+                            <div class="my-account-left-panel-sec1-inner wishlisttable">
+                                <p>Your Order History</p>
+                                <div class="wishlist-area">
+                                    <div class="cart">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Order No</th>
+                                                <th>Image</th>
+                                                <th>Product Name</th>
+                                                <th>Total Price</th>
+                                                <th style="text-align: center;">Status</th>
+                                                <th style="text-align: center;">Delivery Method</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach ($order_transaction_data as $value) { ?>
+                                                <tr>
+                                                    <td><?= $value['order_no'] ?></td>
+                                                    <td>
+                                                        <img src="<?= base_url('uploads/product/' . $value['image']) ?>"
+                                                             width="100"/>
+                                                    </td>
+                                                    <td><?= $value['name'] ?></td>
+                                                    <td>
+                                                        SR <?= $value['product_total_amount'] + 0 ?>
+                                                    </td>
+                                                    <td style="text-align: center;"><?= $value['order_activity'] ?></td>
+                                                    <td style="text-align: center;">
+                                                        <?php if(variable_value_check($value['pickup_address_id'])){ ?>
+                                                            Pickup
+                                                        <?php }else{ ?>
+                                                            Delivery
+                                                        <?php } ?>
+                                                    </td>
+                                                    <td><a href="<?= base_url('store-order-history/details/'.$value['id']) ?>">
+                                                            <img src="<?= base_url('assets/front/images/eye.png') ?>">
+                                                        </a></td>
+                                                </tr>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+</section>
+
+
+<div class="clearfix"></div>
+
+<?php $this->load->view('common/footer'); ?>
+
+
+</body>
+<?php $this->load->view('common/footer_js'); ?>
+
+</html>

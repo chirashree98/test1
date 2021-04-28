@@ -1,0 +1,955 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class User_management extends MX_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper(array('url', 'form', 'html', 'text'));
+        $this->load->library(array('session', 'form_validation', 'email', 'upload', 'image_lib'));
+        $this->load->model(array('common_model', 'custom_model'));
+        if ($this->session->userdata('ADMIN_ID') == '') {
+            redirect('admin');
+        }
+    }
+ public function all_artist()
+    {
+        $this->db->select('ds_designer_worksample.*,ds_users.first_name,ds_users.last_name,ds_currency.currency_id,ds_currency.currency_name');
+        $this->db->from('ds_designer_worksample');
+        $this->db->Join('ds_users', 'ds_designer_worksample.user_id = ds_users.id');
+		$this->db->Join('ds_currency', 'ds_currency.currency_id = ds_designer_worksample.currency','left');
+        $this->db->where('ds_users.role_id', 1);
+        // $this->db->Join('ds_category', 'ds_products.cat_id = ds_category.id');
+        $this->db->order_by('ds_designer_worksample.id', 'DESC');
+        $data['query'] = $this->db->get();
+//        print_R($data['query']);
+//        exit();
+        $data['ss_users'] = $this->common_model->RetriveRecordByWhere('ds_users', array('role_id' => 1, 'is_approved' => '1'));
+		 
+        $this->load->view('artist/all-artist', $data);
+    }
+
+    public function add_artist()
+    {
+        $data = array();
+        $data['ss_users'] = $this->common_model->RetriveRecordByWhere('ds_users', array('role_id' => 1, 'is_approved' => '1'));
+$data['currency'] = $this->common_model->RetriveRecordByWhere('ds_currency', array());
+
+        $this->load->view('artist/add-artist', $data);
+    }
+
+    public function save_artist()
+    {
+        $data = array();
+        $getData = array(
+
+            'user_id' => $this->input->post('user_id'),
+            'name' => $this->input->post('name'),
+            'details' => $this->input->post('details'),
+            'description' => $this->input->post('description'),
+            'cost' => $this->input->post('cost'),
+            'currency' => $this->input->post('currency'),
+            'status' => 'Y'
+
+        );
+
+        if ($_FILES['image']['name'] != '') {
+            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_dir = "uploads/artist/";
+            $file_name = time() . '_artist_main_image.' . $ext;
+            $target_file = $target_dir . $file_name;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+
+            $getData['image'] = $file_name;
+        }
+        for ($i = 0; $i < count($_FILES['extra_images']); $i++) {
+            if ($_FILES['extra_images']['name'][$i] != '') {
+                $ext = strtolower(pathinfo($_FILES['extra_images']['name'][$i], PATHINFO_EXTENSION));
+                $target_dir = "uploads/artist/";
+                $file_name = time() . '_' . $i . '_artist_image.' . $ext;
+                $target_file = $target_dir . $file_name;
+                move_uploaded_file($_FILES["extra_images"]["tmp_name"][$i], $target_file);
+
+                $images[] = $file_name;
+            }
+        }
+        $getData['extra_images'] = json_encode($images);
+
+
+//        echo "<pre>";
+//print_r($getData);
+//exit();
+        $this->common_model->AddRecord($getData, 'ds_designer_worksample');
+		
+        $message = '<div class="alert alert-success"><p>Work Samples has been successfully added.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_artist');
+    }
+
+    public function edit_artist()
+    {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_designer_worksample', array('id' => $id));
+        $data['ss_users'] = $this->common_model->RetriveRecordByWhere('ds_users', array('role_id' => 1, 'is_approved' => '1'));
+$data['currency'] = $this->common_model->RetriveRecordByWhere('ds_currency', array());
+
+        $this->load->view('artist/edit-artist', $data);
+    }
+	 public function delete_worksamples()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_designer_worksample', $id, 'id');
+        $message = '<div class="alert alert-success"><p>Work Samples has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_artist');
+    }
+
+    public function update_artist()
+    {
+//        print_r($_POST);exit();
+        $id = $this->input->post("id");
+        $data = array();
+        $getData = array(
+            'user_id' => $this->input->post('user_id'),
+            'name' => $this->input->post('name'),
+            'description' => $this->input->post('description'),
+            'details' => $this->input->post('details'),
+            'cost' => $this->input->post('cost'),
+            'currency' => $this->input->post('currency'),
+
+        );
+
+        if ($_FILES['image']['name'] != '') {
+            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_dir = "uploads/artist/";
+            $file_name = time() . '_artist_main_image.' . $ext;
+            $target_file = $target_dir . $file_name;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+
+            $getData['image'] = $file_name;
+        }
+        if ($_FILES['imagefile']['name'] == '') {
+             $ext = strtolower(pathinfo($_FILES['imagefile']['name'], PATHINFO_EXTENSION));
+            $target_dir = "uploads/artist/";
+            $file_name = time() . '_artist_main_image.' . $ext;
+            $target_file = $target_dir . $file_name;
+            move_uploaded_file($_FILES["imagefile"]["tmp_name"], $target_file);
+        }
+        for ($i = 0; $i < count($_POST['old_extra_images']); $i++) {
+            $images[] = $_POST['old_extra_images'][$i];
+        }
+        for ($i = 0; $i < count($_FILES['extra_images']); $i++) {
+            if ($_FILES['extra_images']['name'][$i] != '') {
+                $ext = strtolower(pathinfo($_FILES['extra_images']['name'][$i], PATHINFO_EXTENSION));
+                $target_dir = "uploads/artist/";
+                $file_name = time() . '_' . $i . '_artist_image.' . $ext;
+                $target_file = $target_dir . $file_name;
+                move_uploaded_file($_FILES["extra_images"]["tmp_name"][$i], $target_file);
+
+                $images[] = $file_name;
+            }
+        }
+        $getData['extra_images'] = json_encode($images);
+//        echo "<pre>";
+//print_r($getData);
+//exit();
+		
+        $this->common_model->UpdateRecord($getData, 'ds_designer_worksample', 'id', $id);
+        $message = '<div class="alert alert-success"><p>Work Samples has been successfully updated.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_artist');
+    }
+    public function all_user()
+    {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+//        $this->db->Join('ds_user_membership', 'ds_users.membership_id = ds_user_membership.id');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-user', $data);
+    }
+
+    public function view_user()
+    {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+//        $this->db->Join('ds_user_membership', 'ds_users.membership_id = ds_user_membership.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-user', $data);
+    }
+    public function inbox(){
+        $data = array();
+        $this->db->select('ds_Store_designer_email.*');
+        $this->db->from('ds_Store_designer_email');
+        
+        $this->db->group_by('ds_Store_designer_email.user_id'); 
+        $this->db->order_by('ds_Store_designer_email.id','desc');
+        $data['query'] = $this->db->get();
+
+        $this->load->view('user/view-inbox', $data);
+
+    }
+    public function mailhistory(){
+        $user_id=$this->uri->segment(4);
+        $this->db->select('ds_Store_designer_email.*');
+        $this->db->from('ds_Store_designer_email');
+        
+        $this->db->where('ds_Store_designer_email.user_id', $user_id);
+        $this->db->order_by('ds_Store_designer_email.id','desc');
+        $data['users'] = $this->db->get();
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $user_id));
+        $this->load->view('user/mail-history', $data);
+
+    }
+
+    public function delete_user()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_user');
+    }
+
+    public function all_customer()
+    {
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.role_id', '4');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-customer', $data);
+    }
+
+    public function view_customer()
+    {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $this->db->select('*,ds_users.id as user_id');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $this->load->view('user/view-customer', $data);
+    }
+
+    public function delete_customer()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_customer');
+    }
+
+    public function all_designer()
+    {
+        $this->db->select('*,ds_users.id as user_id, MEM.name AS membership_name, MEM.price AS membership_price');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->Join('ds_membership AS MEM', 'ds_users.membership_id = MEM.id', 'left');
+        $this->db->where('ds_users.role_id', '1');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        //pr($data['query']->result_array());
+
+        $this->load->view('user/all-designer', $data);
+    }
+
+    public function view_designer()
+    {
+
+        $data = array();
+
+        $id = $this->uri->segment(4);
+		if($this->input->post('account_no')){
+			$query = $this->db->select('ds_designer_store_bank_details.*')
+                ->from('ds_designer_store_bank_details')
+                ->where(array('user_id' => $id))
+                ->get();
+        $chkUserExist = $query->num_rows();
+		$getData2 = array(
+            'account_no' => $this->input->post('account_no'),
+            'account_holder' => $this->input->post('account_holder'),
+            'iban_code' => $this->input->post('iban_code'),
+            'user_id' => $id,
+            'user_type' => $user_type,
+            'branch_name' => $this->input->post('branch_name'),
+            'branch_address' => $this->input->post('branch_address')
+
+        );
+		if ($chkUserExist == 0) {
+			 $this->common_model->AddRecord($getData2, 'ds_designer_store_bank_details');
+            $message = '<div class="alert alert-success"><p>Bank Details For Designer  has been successfully Add.</p></div>';
+            $this->session->set_flashdata('success', $message);
+		}else{
+		$this->common_model->UpdateRecord($getData2, 'ds_designer_store_bank_details', 'user_id', $id);
+            //$this->session->sess_destroy();
+            $message = '<div class="alert alert-success"><p>Bank Details For Designer  has been successfully updated.</p></div>';
+            $this->session->set_flashdata('success', $message);
+		}
+		}
+		 if ($this->input->post('first_name')) {
+//            echo "<pre>";
+//            print_r($_POST);
+//            print_r($_FILES);
+            $getData = array();
+
+			 
+            $getData = array(
+                'first_name' => $this->input->post('first_name'),
+                'last_name' => $this->input->post('last_name'),
+                'email' => $this->input->post('email'),
+                'country_id' => $this->input->post('country_id'),
+                'city' => $this->input->post('city'),
+                'mobile' => $this->input->post('mobile'),
+                'accrediation_no' => $this->input->post('accrediation_no'),
+                'accrediation_name' => $this->input->post('accrediation_name'),
+                'service_id' => $this->input->post('service_id'),
+                //'membership_id'  => $this->input->post('membership_id'),
+                'virtual_studio' => $this->input->post('virtual_studio'),
+                'std_code'=>$this->input->post('dialcode'),
+				'others'=>$this->input->post('others')
+            );
+          
+
+            if ($_FILES['certificate']['name'] != '') {
+                $ext = strtolower(pathinfo($_FILES['certificate']['name'], PATHINFO_EXTENSION));
+                $target_dir = "uploads/users/";
+                $file_name = time() . '_certificate.' . $ext;
+                $target_file = $target_dir . $file_name;
+                move_uploaded_file($_FILES["certificate"]["tmp_name"], $target_file);
+
+                $getData['certificate_file_name'] = $file_name;
+            }
+ 
+            $this->common_model->UpdateRecord($getData, 'ds_users', 'id', $id);
+			
+           
+            //$this->common_model->UpdateRecord($getData_v2, 'ds_user_other_details', 'user_id', $user_id);
+
+
+            $message = '<div class="alert alert-success"><p>You have successfully update your profile.</p></div>';
+            $this->session->set_flashdata('success', $message);
+            //redirect('artist_edit_profile');
+        }
+		
+		
+        $this->db->select('*,ds_users.id as user_id,ds_membership.name as membership_name,ds_membership.description as membership_description, ds_membership.price AS membership_price');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id', 'left');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id', 'left');
+        $this->db->Join('ds_artist_service', 'ds_users.service_id = ds_artist_service.id', 'left');
+        $this->db->Join('ds_membership', 'ds_users.membership_id = ds_membership.id', 'left');
+        $this->db->where('ds_users.id', $id);
+
+        $data['query'] = $this->db->get()->row_array();
+        $data['query2'] = $this->common_model->RetriveRecordByWhereRow('ds_designer_store_bank_details', array('user_id' => $id));
+		 $data['country'] = $this->common_model->RetriveRecordByWhere('ds_country', array());
+		$data['service'] = $this->common_model->RetriveRecordByWhere('ds_artist_service', array());
+         $data['dialcode'] = $this->common_model->RetriveRecordByWhere('ds_country', array('dial_code!='=>''));
+		  //$data['service'] = $this->common_model->getService();
+        $this->load->view('user/view-designer', $data);
+    }
+
+    public function delete_designer()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_designer');
+    }
+
+    public function all_designstore()
+    {
+        $this->db->select('*,ds_users.id as user_id, MEM.name AS membership_name, MEM.price AS membership_price');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->Join('ds_membership AS MEM', 'ds_users.membership_id = MEM.id', 'left');
+
+        $this->db->where('ds_users.role_id', '6');
+        $this->db->order_by('ds_users.id', 'DESC');
+        $data['query'] = $this->db->get();
+        $this->load->view('user/all-designstore', $data);
+    }
+
+    public function view_designstore()
+    {
+        $data = array();
+        $id = $this->uri->segment(4);
+		if($this->input->post('account_no')){
+			$query = $this->db->select('ds_designer_store_bank_details.*')
+                ->from('ds_designer_store_bank_details')
+                ->where(array('user_id' => $id))
+                ->get();
+        $chkUserExist = $query->num_rows();
+		$getData2 = array(
+            'account_no' => $this->input->post('account_no'),
+            'account_holder' => $this->input->post('account_holder'),
+            'iban_code' => $this->input->post('iban_code'),
+            'user_id' => $id,
+            'user_type' => $user_type,
+            'branch_name' => $this->input->post('branch_name'),
+            'branch_address' => $this->input->post('branch_address')
+
+        );
+		if ($chkUserExist == 0) {
+			 $this->common_model->AddRecord($getData2, 'ds_designer_store_bank_details');
+            $message = '<div class="alert alert-success"><p>Bank Details For Designer  has been successfully Add.</p></div>';
+            $this->session->set_flashdata('success', $message);
+		}else{
+		$this->common_model->UpdateRecord($getData2, 'ds_designer_store_bank_details', 'user_id', $id);
+            //$this->session->sess_destroy();
+            $message = '<div class="alert alert-success"><p>Bank Details For Store has been successfully updated.</p></div>';
+            $this->session->set_flashdata('success', $message);
+		}
+		}
+		 if ($this->input->post('first_name')) {
+//            echo "<pre>";
+//            print_r($_POST);
+//            print_r($_FILES);
+            $getData = array();
+
+			 
+            $getData = array(
+                'first_name' => $this->input->post('first_name'),
+                'last_name' => $this->input->post('last_name'),
+                'email' => $this->input->post('email'),
+                'country_id' => $this->input->post('country_id'),
+                'city' => $this->input->post('city'),
+                'mobile' => $this->input->post('mobile'),
+				'products_types_id' => $this->input->post('products_types_id'),
+				 'virtual_studio' => $this->input->post('virtual_studio')
+                
+            );
+          
+						$this->common_model->UpdateRecord($getData, 'ds_users', 'id', $id);
+						$message = '<div class="alert alert-success"><p>You have successfully update your profile.</p></div>';
+            $this->session->set_flashdata('success', $message);
+		 }
+ 
+            
+        $this->db->select('*,ds_users.id as user_id,ds_membership.name as membership_name,ds_membership.description as membership_description, ds_membership.price AS membership_price,ds_product_types.id,ds_users.products_types_id,ds_product_types.product_types');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_types', 'ds_users.role_id = ds_user_types.id');
+		$this->db->Join('ds_product_types', 'ds_users.products_types_id=ds_product_types.id','left');
+        $this->db->Join('ds_country', 'ds_users.country_id = ds_country.id');
+        $this->db->Join('ds_membership', 'ds_users.membership_id = ds_membership.id');
+        $this->db->where('ds_users.id', $id);
+        $data['query'] = $this->db->get()->row_array();
+
+        $data['query2'] = $this->common_model->RetriveRecordByWhereRow('ds_designer_store_bank_details', array('user_id' => $id));
+		 $data['country'] = $this->common_model->RetriveRecordByWhere('ds_country', array());
+		 $data['products'] = $this->common_model->RetriveRecordByWhere('ds_product_types', array());
+         $data['dialcode'] = $this->common_model->RetriveRecordByWhere('ds_country', array('dial_code!='=>''));
+
+        $this->load->view('user/view-designstore', $data);
+    }
+
+    public function delete_designstore()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_designstore');
+    }
+
+    public function change_user_status()
+    {
+
+        $data = array();
+        $id = $this->input->post('id');
+        $value = $this->input->post('val');
+        $save_data['is_approved'] = $value;
+        $this->common_model->UpdateRecord($save_data, 'ds_users', 'id', $id);
+
+        $user_info = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $id));
+        $from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+        foreach ($from_mail->result() as $row) {
+            $settings[$row->settings_name] = $row->settings_value;
+        }
+        if ($value == '1') {
+            $maildata['subject'] = 'Approval of Registration Request  ';
+            $maildata['email_template'] = 'user_approve_by_admin';
+        } else {
+            $maildata['subject'] = 'Not Approval of Registration Request  ';
+            $maildata['email_template'] = 'user_not_approve_by_admin';
+        }
+        $maildata['to'] = $user_info['email'];
+        $maildata['dear_name'] = $getData['first_name'];
+        $maildata['site_url'] = base_url();
+        $maildata['user_email'] = $user_info['email'];
+        $maildata['user_pass'] = base64_decode($user_info['password']);
+        $maildata['from'] = $settings['admin_from_mail_id'];
+        $maildata['facebook_url'] = $settings['facebook_url'];
+        $maildata['twitter_url'] = $settings['twitter_url'];
+        $maildata['pinterest'] = $settings['pinterest'];
+        $maildata['footer_copyright_text'] = $settings['footer_copyright_text'];
+        $result = send_mail($maildata);
+
+//        ******* Send mail End ************
+
+
+        echo 'ok';
+    }
+
+    public function subscription_log()
+    {
+        $id = $this->uri->segment(4);
+        $data['user_info'] = $this->common_model->RetriveRecordByWhereRow('ds_subscribed', array('id' => $id));
+        $data['from_mail'] = $this->common_model->RetriveRecordByWhere('ds_settings', array('id' => 4));
+
+
+        $this->load->view('subscription/newsform', $data);
+
+        $id = $this->uri->segment(4);
+        $user_info = $this->common_model->RetriveRecordByWhereRow('ds_subscribed', array('id' => $id));
+        $from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+
+        foreach ($from_mail->result() as $row) {
+            $settings[$row->settings_name] = $row->settings_value;
+        }
+        $subject = $this->input->post('subject');
+        $message = $this->input->post('message');
+
+        $maildata['subject'] = $subject;
+        //$maildata['message'] = $body;
+        $maildata['email_template'] = 'user_approve_by_admin';
+        $maildata['to'] = $user_info['email'];
+        $maildata['site_url'] = base_url();
+        $maildata['user_email'] = $user_info['email'];
+        $maildata['from'] = $settings['admin_from_mail_id'];
+        $maildata['message'] = $message;
+        $maildata['email_template'] = 'subscription_mail';
+        $maildata['facebook_url'] = $settings['facebook_url'];
+        $maildata['twitter_url'] = $settings['twitter_url'];
+        $maildata['pinterest'] = $settings['pinterest'];
+        $maildata['footer_copyright_text'] = $settings['footer_copyright_text'];
+        $result = send_mail($maildata);
+        //pr($result);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $getdata = array('to_email' => $user_info['email'],
+                'from_email' => $settings['admin_from_mail_id'],
+                'subject' => $this->input->post('subject'),
+                'message' => $this->input->post('message'),
+                'date' => date('Y-m-d h:m:s')
+            );
+
+            $this->common_model->AddRecord($getdata, 'ds_subscribe_log');
+			$message = '<div class="alert alert-success"><p>Email has been send successfully.</p></div>';
+		 $this->session->set_flashdata('success', $message);
+		redirect('admin/user_management/news_letter');
+            
+        }
+        
+
+
+    }
+
+    public function news_letter()
+    {
+        $this->db->from('ds_subscribe_log');
+        $this->db->order_by('ds_subscribe_log.id', 'DESC');
+
+        $data['subscribe'] = $this->db->get();
+        $this->load->view('subscription/newsletter', $data);
+
+    }
+
+    public function delete_newsletter()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_subscribe_log', $id, 'id');
+        $message = '<div class="alert alert-success"><p>Email has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/news_letter');
+    }
+
+    public function all_subscription()
+    {
+        //$data['users'] = $this->common_model->RetriveRecordByWhere('ds_subscribed', array());
+        $this->db->select('*');
+
+        $this->db->from('ds_subscribed');
+        $this->db->order_by('ds_subscribed.id', 'DESC');
+
+        $data['users'] = $this->db->get();
+
+
+        $this->load->view('subscription/all-subscription', $data);
+    }
+
+    public function delete_subscription()
+    {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('ds_subscribed', $id, 'id');
+        $message = '<div class="alert alert-success"><p>Email has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/user_management/all_subscription');
+    }
+
+    public function view_service()
+    {
+        $user_id = $this->uri->segment(4);
+        if ($_POST) {
+            $getData_v2 = array(
+                'about_work' => $this->input->post('about_work'),
+				
+            );
+            //print_r( $getData_v2);
+            $getData_v2_insert = array(
+                'user_id' => $user_id,
+                'about_work' => $this->input->post('about_work'),
+				
+            );
+            foreach ($_POST['service_id'] as $key => $val) {
+                $getData_service = array();
+                $getData_service['artist_id'] = $user_id;
+                $getData_service['service_type_id'] = $val;
+
+                if ($_POST['service_description'][$key] != '') {
+                    $getData_service['description'] = $_POST['service_description'][$key];
+                }
+                if ($_POST['service_cost'][$key] != '' && $_POST['cost_type'][$key] != 'VARIABLE') {
+                    $getData_service['cost'] = $_POST['service_cost'][$key];
+                } else {
+                    $getData_service['cost'] = 0;
+                }
+                
+				 if ($_POST['currency_id'][$key] != '') {
+                    $getData_service['currency_id'] = $_POST['currency_id'][$key];
+                }
+                if ($_POST['cost_type'][$key] != '') {
+                    $getData_service['cost_type'] = $_POST['cost_type'][$key];
+                }
+                $get_ser = $this->common_model->RetriveRecordByWhere('ds_all_artist_services_details', array('service_type_id' => $key, 'artist_id' => $user_id));
+                $result = $get_ser->result();
+                if (count($result) > 0) {
+                    $this->common_model->UpdateRecord($getData_service, 'ds_all_artist_services_details', 'id', $result[0]->id);
+                } else {
+                    $this->common_model->AddRecord($getData_service, 'ds_all_artist_services_details');
+                }
+                if ($_FILES['profile_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/artist/";
+                    $file_name = time() . '_profile_image.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["profile_image"]["tmp_name"], $target_file);
+
+                    $getData_v2['profile_image'] = $file_name;
+                    $getData_v2_insert['profile_image'] = $file_name;
+                }
+                $get_other_details = $this->common_model->RetriveRecordByWhere('ds_user_other_details', array('user_id' => $user_id));
+                $result_other_details = $get_other_details->result();
+                if (count($result_other_details) > 0) {
+                    $this->common_model->UpdateRecord($getData_v2, 'ds_user_other_details', 'user_id', $user_id);
+                } else {
+                    $this->common_model->AddRecord($getData_v2_insert, 'ds_user_other_details');
+                }
+                $message = '<div class="alert alert-success"><p>You have successfully update your service profile.</p></div>';
+                $this->session->set_flashdata('success', $message);
+                // redirect('admin/user_management/all_designer');
+            }
+        }
+
+        $this->db->select('ds_users.*,ds_users.id as user_main_id,ds_user_other_details.*');
+        $this->db->from('ds_users');
+        $this->db->Join('ds_user_other_details', 'ds_user_other_details.user_id = ds_users.id', 'left');
+        $this->db->where('ds_users.id', $user_id);
+        $data['query'] = $this->db->get()->row_array();
+        $data['all_services'] = $this->common_model->RetriveRecordByWhere('ds_all_artist_services_details', array('artist_id' => $user_id));
+        $data['services'] = $this->common_model->RetriveRecordByWhere('ds_services_types', array('status' => 'Y'));
+		 $data['currency'] = $this->common_model->RetriveRecordByWhere('ds_currency', array());
+        $this->load->view('user/view-service', $data);
+    }
+
+    public function add_invitation()
+    {
+        $from_admin_message = $this->common_model->RetriveRecordByWhereRow('ds_email_template', array('id' => 1));
+        $from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+
+        foreach ($from_mail->result() as $row) {
+            $settings[$row->settings_name] = $row->settings_value;
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $email = $this->input->post('to_email');
+            $user_type = $this->input->post('user_type');
+            $email2 = explode(',', $email);
+            $code = '';
+
+            foreach ($email2 as $val) {
+
+                $code = 'DSRC' . mt_rand(100000, 999999);
+
+                $getdata = array('email' => $val,
+                    'from_email' => $settings['admin_from_mail_id'],
+                    'd_code' => $code,
+                    'user_type' => $user_type
+                );
+
+
+                $this->common_model->AddRecord($getdata, 'ds_invitation_email');
+                $message = '<div class="alert alert-success"><p>Email has been Send successfully .</p></div>';
+                $this->session->set_flashdata('success', $message);
+
+                $from_mail = $this->common_model->RetriveRecordByWhere('ds_settings', array());
+
+                foreach ($from_mail->result() as $row) {
+                    $settings[$row->settings_name] = $row->settings_value;
+                }
+
+                $maildata['subject'] = 'Invitation Email';
+//$maildata['message'] = $body;
+                $maildata['to'] = $val;
+                $maildata['invitation_link'] = base_url('register/'.$user_type.'/'.$code);
+                $maildata['site_url'] = base_url();
+                $maildata['user_email'] = $val;
+
+                $maildata['from'] = $settings['admin_from_mail_id'];
+//$maildata['message'] =$code;
+                $maildata['invitation_code'] = $code;
+
+
+                $maildata['email_template'] = 'invitation_email';
+                $maildata['facebook_url'] = $settings['facebook_url'];
+                $maildata['twitter_url'] = $settings['twitter_url'];
+                $maildata['pinterest'] = $settings['pinterest'];
+                $maildata['footer_copyright_text'] = $settings['footer_copyright_text'];
+                $result = send_mail($maildata);
+            }
+            redirect('admin/user_management/invitation');
+        }
+        $data['from_mail'] = $this->common_model->RetriveRecordByWhere('ds_settings', array('id' => 4));
+
+        $select = '*';
+        $table = 'ds_user_types';
+        $whereInColumn = 'id';
+        $whereInValues = [1,6];
+        $order = 'user_type_name ASC';
+
+        $data['user_type'] = $this->custom_dev_model->select_table_whereInColumn_whereInValues_order($select, $table, $whereInColumn, $whereInValues, $order);
+
+        $this->load->view('user/invitation', $data);
+
+
+    }
+
+    public function invitation()
+    {
+        $this->db->select('IE.*, UT.user_type_name');
+        $this->db->from('ds_invitation_email AS IE');
+        $this->db->join('ds_user_types AS UT', 'UT.id = IE.user_type', 'left');
+        $this->db->order_by('IE.id', 'DESC');
+
+        $data['users'] = $this->db->get();
+        $this->load->view('user/invitationlist', $data);
+
+    }
+
+    public function view_designstore_service()
+    {
+        $user_id = $this->uri->segment(4);
+
+
+        if ($_POST) {
+            $data = array();
+
+            $query = $this->db->select('ds_shop_store_details.*')
+                ->from('ds_shop_store_details')
+                ->where(array('user_id' => $user_id))
+                ->get();
+            $chkUserExist = $query->num_rows();
+
+            if ($chkUserExist == 0) {
+                $getData = array(
+                   
+                    'shop_description' => $this->input->post('shop_description'),
+                    'featured_image' => json_encode($this->input->post('featured_product'), true),
+                    'title' => $this->input->post('title'),
+                    'text' => $this->input->post('text'),
+                    'user_id' => $user_id,
+                    'products' => json_encode($this->input->post('products'), true),
+                    'message_heading' => $this->input->post('message_heading'),
+                    'message_content' => $this->input->post('message_content'),
+                );
+
+                if ($_FILES['banner_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['banner_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["banner_image"]["tmp_name"], $target_file);
+
+                    $getData['banner_image'] = $file_name;
+                }
+                if ($_FILES['portfolio_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['portfolio_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image3.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["portfolio_image"]["tmp_name"], $target_file);
+
+                    $getData['portfolio_image'] = $file_name;
+                }
+                if ($_FILES['background_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['background_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image2.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["background_image"]["tmp_name"], $target_file);
+
+                    $getData['background_image'] = $file_name;
+                }
+
+                $this->common_model->AddRecord($getData, 'ds_shop_store_details');
+
+            }
+            else{
+                $getData = array(
+                    
+                    'shop_description' => $this->input->post('shop_description'),
+                    'featured_image' => json_encode($this->input->post('featured_product'), true),
+                    'products' => json_encode($this->input->post('products'), true),
+                    'title' => $this->input->post('title'),
+                    'text' => $this->input->post('text'),
+                    'message_heading' => $this->input->post('message_heading'),
+                    'message_content' => $this->input->post('message_content'),
+                    'user_id' => $user_id
+
+                );
+                if ($_FILES['banner_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['banner_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["banner_image"]["tmp_name"], $target_file);
+
+                    $getData['banner_image'] = $file_name;
+                }
+                if ($_FILES['portfolio_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['portfolio_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image3.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["portfolio_image"]["tmp_name"], $target_file);
+
+                    $getData['portfolio_image'] = $file_name;
+                }
+                if ($_FILES['background_image']['name'] != '') {
+                    $ext = strtolower(pathinfo($_FILES['background_image']['name'], PATHINFO_EXTENSION));
+                    $target_dir = "uploads/product/";
+                    $file_name = time() . '_product_main_image2.' . $ext;
+                    $target_file = $target_dir . $file_name;
+                    move_uploaded_file($_FILES["background_image"]["tmp_name"], $target_file);
+
+                    $getData['background_image'] = $file_name;
+                }
+
+
+                $this->common_model->UpdateRecord($getData, 'ds_shop_store_details', 'user_id', $user_id);
+            }
+            //Delivery method code start
+            $this->common_model->Delete('ds_delivery_method_map', $user_id, 'store_id');
+
+            foreach ($this->input->post('delivery_service_id') as $value){
+                $add_values = array(
+                    'store_id' => $user_id,
+                    'delivery_service_id' => $value,
+                );
+                $this->common_model->AddRecord($add_values, 'ds_delivery_method_map');
+            }
+            //Delivery method code end
+
+            //Pickup code start
+            if(variable_value_check($this->input->post('company_name'))){
+
+                $table = 'ds_pickup_address';
+                $where_clause = ['user_id' => $user_id];
+
+                $check = $this->common_model->RetriveRecordByWhere($table,$where_clause);
+
+                if($check->num_rows() > 0){
+                    $getData = array(
+                        'name' => $this->input->post('name'),
+                        'email' => $this->input->post('email'),
+                        'company_name' => $this->input->post('company_name'),
+                        'address2' => $this->input->post('address2'),
+                        'postcode' => $this->input->post('postcode'),
+                        'phone' => $this->input->post('phone'),
+                        'country_id' => $this->input->post('country_id'),
+                        'state_id' => $this->input->post('state_id'),
+                        'city' => $this->input->post('city')
+                    );
+                    $this->common_model->UpdateRecord($getData, 'ds_pickup_address', 'user_id', $user_id);
+                }else{
+
+                    $getData = array(
+                        'user_id' => $user_id,
+                        'company_name' => $this->input->post('company_name'),
+                        'address2' => $this->input->post('address2'),
+                        'postcode' => $this->input->post('postcode'),
+                        'phone' => $this->input->post('phone'),
+                        'country_id' => $this->input->post('country_id'),
+                        'state_id' => $this->input->post('state_id'),
+                        'city' => $this->input->post('city'),
+                    );
+                    $this->common_model->AddRecord($getData, 'ds_pickup_address');
+                }
+            }
+
+            //Delivery method code end
+
+            $message = '<div class="alert alert-success"><p> Service Profile Details has been successfully updated.</p></div>';
+            $this->session->set_flashdata('success', $message);
+        }
+
+
+        $data['products2'] = $this->common_model->RetriveRecordByWhere('ds_products', array('u_id' => $user_id));
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_shop_store_details', array('user_id' => $user_id));
+
+        $data['delivery_service'] = $this->common_model->RetriveRecordByWhere('ds_delivery_service_master', array());
+
+        $selected_delivery_service = $this->common_model->RetriveRecordByWhere('ds_delivery_method_map', array('store_id' => $user_id));
+        $selected_delivery_service_array = [];
+        if($selected_delivery_service->num_rows() > 0){
+            foreach ($selected_delivery_service->result() as $value) {
+                $selected_delivery_service_array[] = $value->delivery_service_id;
+            }
+        }
+
+        $data['selected_delivery_service_array'] = $selected_delivery_service_array;
+        $this->load->view('user/view-store-service', $data);
+    }
+
+    public function get_pickup_address_ajax($store_id)
+    {
+        $data = array();
+        $id = $store_id;
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_pickup_address', array('user_id' => $id));
+        $data['country'] = $this->common_model->RetriveRecordByWhere('ds_country', array());
+        $data['state'] = $this->common_model->RetriveRecordByWhere('ds_states', array('country_id' => $data['query']['country_id']));
+
+        echo $this->load->view('user/get_pickup_address_ajax', $data, true);
+    }
+}

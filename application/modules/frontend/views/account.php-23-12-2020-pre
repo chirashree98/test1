@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+
+
+
+
+
+
+        <section id="my-account">
+            <div class="custom-width">
+                <div class="page-heading">
+                    <h1>Welcome <?php echo $user_type['user_type_name']; ?> Account</h1>
+                </div>
+
+                <div class="my-account-inner">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="my-account-left-panel">
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>My Account</h4>
+                                    <div class="my-account-left-panel-sec1-inner">
+                                        <p><a href="<?php echo base_url(); ?>edit-account">Edit your account information</a></p>
+                                        <p><a href="<?php echo base_url(); ?>change-password">Change your password</a></p>
+                                        <p><a href="<?php echo base_url(); ?>all-addressbook">Modify your address book entries</a></p>
+                                        <p><a href="<?php echo base_url(); ?>wishlist">Modify your wishlist</a></p>
+                                    </div>
+                                </div>
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>My Orders</h4>
+                                    <div class="my-account-left-panel-sec1-inner">
+                                        <p><a href="<?php echo base_url(); ?>order-history">View your order history</a></p>
+                                      <!--<p><a href="#">Downloads</a></p>
+                                      <p><a href="#">Your Reward Points</a></p>
+                                      <p><a href="#">View your return requests</a></p>
+                                      <p><a href="#">Your Transactions</a></p>
+                                      <p><a href="#">Recurring payments</a></p>-->
+                                    </div>
+                                </div>
+                                <!--<div class="my-account-left-panel-sec1">
+                               <h4>My Affiliate Account</h4>
+                               <div class="my-account-left-panel-sec1-inner">
+                               <p><a href="#">Register for an affiliate account</a></p>
+                               </div>
+                                </div>-->
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>Newsletter</h4>
+                                    <div class="my-account-left-panel-sec1-inner">
+                                        <p><a href="<?php echo base_url(); ?>user-newsletter">Subscribe / unsubscribe to newsletter</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="my-account-right-panel">
+                                <?php $this->load->view('common/myaccount_side_panel'); ?>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <div class="clearfix"></div> 
+
+        <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+    <?php $this->load->view('common/footer_js'); ?>  
+
+</html>

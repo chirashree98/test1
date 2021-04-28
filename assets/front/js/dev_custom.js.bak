@@ -1,0 +1,891 @@
+$(document).ready(function () {
+    if (window.File && window.FileList && window.FileReader) {
+        $("#chooseFile").on("change", function (e) {
+            var files = e.target.files,
+                filesLength = files.length;
+//            $('.files').hide();
+            for (var i = 0; i < filesLength; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+
+                var file_ck = this.files[i];
+                var fileType = file_ck["type"];
+                var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+
+                fileReader.onload = (function (e) {
+                    var file = e.target;
+
+                    if ($.inArray(fileType, validImageTypes) > 0) {
+                        $("<div class=\"pip col-md-2 temp_image\">" +
+                            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" height='120' title=\"" + file.name + "\"/>" +
+                            "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                            "</div>").insertAfter(".image_preview");
+
+                    } else {
+                        $("<div class=\"pip col-md-2 temp_image\">" +
+                            "<img src='" + base_url + "assets/front/images/icons8-file-48.png' height='120'/>" +
+                            "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                            "</div>").insertAfter(".image_preview");
+                    }
+
+                    $(".remove").click(function () {
+                        $(this).parent(".pip").remove();
+                        if ($('.pip').length == 0) {
+                            $('.files').show();
+                        }
+                    });
+
+                });
+                fileReader.readAsDataURL(f);
+            }
+        });
+    } else {
+        alert("Your browser doesn't support to File API")
+    }
+});
+
+
+//$(document).on('click', '.form_submit', function (e) {
+//    swal({
+//        title: "Are you sure ?",
+//        text: "Please recheck the form before submitting!",
+//        type: "warning",
+//        buttons: [
+//            'No',
+//            'Yes'
+//        ],
+//        reverseButtons: true,
+//        confirmButtonColor: "#ff0000",
+//        confirmButtonText: "Yes",
+//        showCancelButton: true,
+//        focusCancel: true,
+//        cancelButtonColor: "#4caf50",
+//        cancelButtonText: "No",
+//    }).then(function(value) {
+//        if (value) {
+//            $(".swt_form").submit();
+//        }
+//    });
+//});
+
+$(document).on('click', '.onclick_show', function () {
+    $(".cart_link").show();
+});
+
+
+//related product assign to vendor code end
+$(document).ready(function () {
+    if (window.File && window.FileList && window.FileReader) {
+        $("#files").on("change", function (e) {
+            $('.files').hide();
+            var files = e.target.files,
+                filesLength = files.length;
+            for (var i = 0; i < filesLength; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+                fileReader.onload = (function (e) {
+                    var file = e.target;
+                    $("<div class=\"pip col-md-2\">" +
+                        "<img src='" + base_url + "assets/front/images/icons8-file-48.png' width='50' height='50'/>" +
+                        "<br/><a href='javascript:void(0);' class=\"remove\">Remove</a>" +
+                        "</div>").insertAfter(".image_preview");
+
+                    $(".remove").click(function () {
+                        $(this).parent(".pip").remove();
+                        if ($('.pip').length == 0) {
+                            $('.files').val();
+                            $('.files').show();
+                        }
+                    });
+
+                });
+                fileReader.readAsDataURL(f);
+            }
+        });
+    } else {
+        alert("Your browser doesn't support to File API")
+    }
+});
+
+
+
+
+$(document).ready(function () {
+    $('#deliveryContinue').on('click', function () {
+
+        if ($("#collapsezero").attr("aria-expanded") == 'true') {
+            $('#collapsezero').removeClass('collapse in').addClass('collapse');
+            $("#collapsezero").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseDeliveryMethodTab").attr("aria-expanded") == 'true') {
+            $('#collapseDeliveryMethodTab').removeClass('collapse in').addClass('collapse');
+            $("#collapseDeliveryMethodTab").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseFour").attr("aria-expanded") == 'true') {
+            $('#collapseFour').removeClass('collapse in').addClass('collapse');
+            $("#collapseFour").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseThree").attr("aria-expanded") == 'true') {
+            $('#collapseThree').removeClass('collapse in').addClass('collapse');
+            $("#collapseThree").attr("aria-expanded", "false");
+        }
+
+        $('.alert').remove();
+        //Billing address code start
+
+        var billing_address_details = $('input[name="billing_address"]:checked').val();
+        if (billing_address_details == 'new_address') {
+
+            var billingname = $('#billingname').val();
+            var billingemail = $('#billingemail').val();
+            var billingphone = $('#billingphone').val();
+            var billingaddress = $('#billingaddress').val();
+            var billingcity = $('#billingcity').val();
+            var billingzip = $('#billingzip').val();
+
+            var billingcountry = $("#billingcountry option:selected").val();
+            var billingstate = $("#billingstate option:selected").val();
+
+            if (billingname == '') {
+
+                $('input[name="billingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+                $("#billingDetailsTab").removeClass('collapsed');
+
+                if ($("#demo").attr("aria-expanded") == 'false') {
+                    $('#demo').removeClass('collapse').addClass('collapse in');
+                    $("#demo").attr("aria-expanded", "true");
+                }
+
+                if ($("#collapseOne").attr("aria-expanded") == 'false') {
+                    $('#collapseOne').removeClass('collapse').addClass('collapse in');
+                    $("#collapseOne").attr("aria-expanded", "true");
+                }
+
+                if ($("#collapseTwo").attr("aria-expanded") == 'true') {
+                    $('#collapseTwo').removeClass('collapse in').addClass('collapse');
+                    $("#collapseTwo").attr("aria-expanded", "false");
+                }
+                return false;
+            }
+
+            if (billingemail == '') {
+                $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+
+                return false;
+            }
+
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(billingemail)) {
+                $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+                return false;
+            }
+
+            if (billingphone == '') {
+                $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+                return false;
+            }
+
+            var regexPattern = /^[0-9-+]+$/;
+            if (!regexPattern.test(billingphone)) {
+                $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Mobile not valid</div>');
+                return false;
+            }
+
+            if (billingaddress == '') {
+                $('input[name="billingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+                return false;
+            }
+
+            if (billingcity == '') {
+                $('input[name="billingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+                return false;
+            }
+
+            if (billingzip == '') {
+                $('input[name="billingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+                return false;
+            }
+
+            if (billingcountry == '') {
+                $('#billingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+                return false;
+            }
+
+            if (billingstate == '') {
+                $('#billingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+                return false;
+            }
+        }
+        //Billing address code end
+        if ($("#collapseOne").attr("aria-expanded") == 'true') {
+            $('#collapseOne').removeClass('collapse in').addClass('collapse');
+            $("#collapseOne").attr("aria-expanded", "false");
+        }
+        var delivery_address = $('input[name="delivery_address"]:checked').val();
+
+        if (delivery_address == 'new_address') {
+            var shippingname = $('#shippingname').val();
+            var shippingemail = $('#shippingemail').val();
+            var shippingphone = $('#shippingphone').val();
+            var shippingaddress = $('#shippingaddress').val();
+            var shippingcity = $('#shippingcity').val();
+            var shippingzip = $('#shippingzip').val();
+
+            var shippingcountry = $("#shippingcountry option:selected").val();
+            var shippingstate = $("#shippingstate option:selected").val();
+
+            if ($("#add_new_delivery_address_accordion").attr("aria-expanded") == 'false') {
+                $('#add_new_delivery_address_accordion').removeClass('collapse').addClass('collapse in');
+                $("#add_new_delivery_address_accordion").attr("aria-expanded", "true");
+            }
+
+            if ($("#collapseTwo").attr("aria-expanded") == 'false') {
+                $('#collapseTwo').removeClass('collapse').addClass('collapse in');
+                $("#collapseTwo").attr("aria-expanded", "true");
+            }
+
+            if (shippingname == '') {
+                $('input[name="shippingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+                return false;
+            }
+
+            if (shippingemail == '') {
+                $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+                return false;
+            }
+
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(shippingemail)) {
+                $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+                return false;
+            }
+
+            if (shippingphone == '') {
+                $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+                return false;
+            }
+
+            var regexPattern = /^[0-9-+]+$/;
+            if (!regexPattern.test(shippingphone)) {
+                $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone not valid</div>');
+                return false;
+            }
+
+            if (shippingaddress == '') {
+                $('input[name="shippingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+                return false;
+            }
+
+            if (shippingcity == '') {
+                $('input[name="shippingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+                return false;
+            }
+
+            if (shippingzip == '') {
+                $('input[name="shippingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+                return false;
+            }
+
+            if (shippingcountry == '') {
+                $('#shippingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+                return false;
+            }
+
+            if (shippingstate == '') {
+                $('#shippingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+                return false;
+            }
+        }
+
+        $('#collapseFour').removeClass('collapse').addClass('collapse in');
+        $("#collapseFour").attr("aria-expanded", "true");
+
+        $('#collapseTwo').removeClass('collapse in').addClass('collapse');
+        $("#collapseTwo").attr("aria-expanded", "false");
+
+    });
+});
+$(document).ready(function () {
+    $("input[name='delivery_type']").change(function () {
+        var delivery_type = $("input[name='delivery_type']:checked").val();
+        if (delivery_type == 'DELIVERY') {
+            $(".delivery_type_delivery").show();
+            $(".delivery_type_pickup").hide();
+        } else {
+            $(".delivery_type_delivery").hide();
+            $(".delivery_type_pickup").show();
+        }
+
+    });
+});
+
+$(document).ready(function () {
+    $('.add_new_delivery').on('click', function () {
+        $(".new_delivery_address_form").show();
+        $("#new_add_delivery").click();
+    });
+});
+$(document).ready(function () {
+    $('.delivery_method_continue').on('click', function () {
+
+        var total_cart_product_count = $(".total_cart_product_count").val();
+        var total_pickup_address_count = $('[name="pickup_address[]"]:checked').length;
+
+        if (total_cart_product_count == total_pickup_address_count) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "All products are selected pickup address. Now you can not choose delivery address.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(".th_delivery_method").show();
+                    $(".td_delivery_method").show();
+                    $('[name="pickup_address[]"]:checked').each(function () {
+                        var full_data = $(this).val();
+                        var parts = full_data.split('/');
+                        var cart_id = parts[1];
+                        $("#td_delivery_method_id_" + cart_id).empty();
+                        $("#td_delivery_method_id_" + cart_id).html('Pickup');
+                    });
+
+                    $('#deliveryDetailsTab').prop('disabled', true);
+                    $("#collapseTwo").removeClass('collapse in').addClass('collapse');
+
+                    if ($("#collapsezero").attr("aria-expanded") == 'true') {
+                        $('#collapsezero').removeClass('collapse in').addClass('collapse');
+                        $("#collapsezero").attr("aria-expanded", "false");
+                    }
+                    if ($("#collapseOne").attr("aria-expanded") == 'true') {
+                        $('#collapseOne').removeClass('collapse in').addClass('collapse');
+                        $("#collapseOne").attr("aria-expanded", "false");
+                    }
+                    if ($("#collapseDeliveryMethodTab").attr("aria-expanded") == 'true') {
+                        $('#collapseDeliveryMethodTab').removeClass('collapse in').addClass('collapse');
+                        $("#collapseDeliveryMethodTab").attr("aria-expanded", "false");
+                    }
+
+                    if ($("#collapseFour").attr("aria-expanded") == 'false') {
+                        $('#collapseFour').removeClass('collapse').addClass('collapse in');
+                        $("#collapseFour").attr("aria-expanded", "true");
+                    }
+
+                    if ($("#collapseThree").attr("aria-expanded") == 'true') {
+                        $('#collapseThree').removeClass('collapse in').addClass('collapse');
+                        $("#collapseThree").attr("aria-expanded", "false");
+                    }
+                }
+            })
+        } else {
+            if (total_pickup_address_count > 0) {
+                $('[name="pickup_address[]"]:checked').each(function () {
+                    var full_data = $(this).val();
+                    var parts = full_data.split('/');
+                    var cart_id = parts[1];
+
+                    $(".th_delivery_method").show();
+                    $(".td_delivery_method").show();
+                    $("#td_delivery_method_id_" + cart_id).empty();
+                    $("#td_delivery_method_id_" + cart_id).html('Pickup');
+                });
+            } else {
+                $(".th_delivery_method").show();
+                $(".td_delivery_method").show();
+            }
+
+            if ($("#collapsezero").attr("aria-expanded") == 'true') {
+                $('#collapsezero').removeClass('collapse in').addClass('collapse');
+                $("#collapsezero").attr("aria-expanded", "false");
+            }
+            if ($("#collapseOne").attr("aria-expanded") == 'true') {
+                $('#collapseOne').removeClass('collapse in').addClass('collapse');
+                $("#collapseOne").attr("aria-expanded", "false");
+            }
+            if ($("#collapseDeliveryMethodTab").attr("aria-expanded") == 'true') {
+                $('#collapseDeliveryMethodTab').removeClass('collapse in').addClass('collapse');
+                $("#collapseDeliveryMethodTab").attr("aria-expanded", "false");
+            }
+
+
+            if ($("#collapseTwo").attr("aria-expanded") == 'false') {
+                $('#collapseTwo').removeClass('collapse').addClass('collapse in');
+                $("#collapseTwo").attr("aria-expanded", "true");
+            }
+            if ($("#collapseFour").attr("aria-expanded") == 'true') {
+                $('#collapseFour').removeClass('collapse in').addClass('collapse');
+                $("#collapseFour").attr("aria-expanded", "false");
+            }
+
+
+            if ($("#collapseThree").attr("aria-expanded") == 'true') {
+                $('#collapseThree').removeClass('collapse in').addClass('collapse');
+                $("#collapseThree").attr("aria-expanded", "false");
+            }
+        }
+
+    });
+});
+$(document).ready(function () {
+    $('#product_confirm').on('click', function () {
+        $("#confirmOrderTab").click();
+        $("#paymentMethodTab").click();
+    });
+});
+
+$(document).on("click", '.show_pick_up', function (e) {
+    console.log(base_url);
+    var id = $(this).attr('data-id');
+    var delivery_method = $(this).attr('data-delivery');
+    if (id != '') {
+        $.ajax({
+            url: base_url + 'show-pickup-address/' + id + '/' + delivery_method,
+            type: 'GET',
+            success: function (result) {
+                $('.pickup_details_ajax').html(result);
+                $('.delivery_method').html(delivery_method + ' ADDRESS');
+            }
+        });
+    }
+});
+
+
+$(document).ready(function () {
+    $('.expected_delivery_date').change(function () {
+        var transaction_id = $(this).data('transaction-id');
+        var expected_delivery_date = $(this).val();
+        if (expected_delivery_date) {
+            $.ajax({
+                type: "GET",
+                url: base_url + '/product-expected-delivery-date-change/' + transaction_id + '/' + expected_delivery_date,
+                success: function (res) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$(document).ready(function () {
+    $('.product_order_activity').change(function () {
+        var transaction_id = $(this).data('transaction-id');
+        var product_order_activity = $(this).val();
+        if (product_order_activity) {
+            $.ajax({
+                type: "GET",
+                url: base_url + 'product-order-activity-change/' + transaction_id + '/' + product_order_activity,
+                success: function (res) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$(function () {
+    if ($('.ui_datepicker').length > 0) {
+        $(".ui_datepicker").datepicker({
+            dateFormat: 'yy-mm-dd',
+            showOn: "button",
+            buttonImage: base_url + 'assets/front/images/calendar.png',
+            buttonImageOnly: true,
+        });
+    }
+});
+
+$(document).on("click", '#check_invitation_code', function (e) {
+    var invitation_code = $('#invitation_code').val();
+    //var role_id = $('#role_id').val();
+    var email = $('#email').val();
+    $('.alert').remove();
+
+    if (invitation_code != '' && email != '') {
+        $.ajax({
+            url: base_url + 'check-invitation-code/' + invitation_code + '/' + email,
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                if (result.status == 'success') {
+                    $('#invitation_code').after('<div class="alert alert-success" role="alert">Your invitation code is verified. Now you can proceed with zero membership charge..</div>');
+                } else {
+                    $('#invitation_code').after('<div class="alert alert-danger" role="alert">Invitation code is not valid.</div>');
+                    return false;
+                }
+                //$('.pickup_details_ajax').html(result);
+            },
+            error: function (result) {
+                $('#invitation_code').after('<div class="alert alert-danger" role="alert">Something wrong please try again.</div>');
+                return false;
+            }
+        });
+    } else {
+        if (email == '' && invitation_code == '') {
+            $('#email').focus().after('<div class="alert alert-danger" role="alert">Email is required</div>');
+            $('#invitation_code').after('<div class="alert alert-danger" role="alert">Invitation code is required</div>');
+            return false;
+        }
+        if (email == '') {
+            $('#email').focus().after('<div class="alert alert-danger" role="alert">Email is required</div>');
+            return false;
+        }
+        if (invitation_code == '') {
+            $('#invitation_code').focus().after('<div class="alert alert-danger" role="alert">Invitation code is required</div>');
+            return false;
+        }
+    }
+});
+
+$(document).on("click", '.delivery_service_id', function (e) {
+    var store_id = $('#id').val();
+    if ($('.delivery_service_id').is(":checked")) {
+        $.ajax({
+            url: base_url + 'user/get-pickup-address-ajax/' + store_id,
+            type: 'GET',
+            success: function (result) {
+                $('.pickup_address_ajax').html(result);
+            }
+        });
+    } else {
+        $('.pickup_address_ajax').html('');
+    }
+});
+
+$(document).ready(function () {
+    $('input[name="billing_address"]').change(function () {
+        if ($(this).is(":checked")) {
+            var val = $(this).val();
+            if (val != 'new_address') {
+                $('#demo').removeClass('collapse in').addClass('collapse');
+                $("#demo").attr("aria-expanded", "false");
+            }
+        }
+    });
+});
+
+$(document).ready(function () {
+    $('input[name="delivery_address"]').change(function () {
+        if ($(this).is(":checked")) {
+            var val = $(this).val();
+            if (val != 'new_address') {
+                $('#add_new_delivery_address_accordion').removeClass('collapse in').addClass('collapse');
+                $("#add_new_delivery_address_accordion").attr("aria-expanded", "false");
+            }
+        }
+    });
+});
+
+$(document).on("click", '#paymentContinue', function (e) {
+
+    $('.alert').remove();
+
+    var billing_address_details = $('input[name="billing_address"]:checked').val();
+
+    if (billing_address_details == 'new_address') {
+
+        var billingname = $('#billingname').val();
+        var billingemail = $('#billingemail').val();
+        var billingphone = $('#billingphone').val();
+        var billingaddress = $('#billingaddress').val();
+        var billingcity = $('#billingcity').val();
+        var billingzip = $('#billingzip').val();
+
+        var billingcountry = $("#billingcountry option:selected").val();
+        var billingstate = $("#billingstate option:selected").val();
+
+        if ($("#demo").attr("aria-expanded") == 'false') {
+            $('#demo').removeClass('collapse').addClass('collapse in');
+            $("#demo").attr("aria-expanded", "true");
+        }
+
+        if ($("#collapseOne").attr("aria-expanded") == 'false') {
+            $('#collapseOne').removeClass('collapse').addClass('collapse in');
+            $("#collapseOne").attr("aria-expanded", "true");
+        }
+
+        if ($("#collapsezero").attr("aria-expanded") == 'true') {
+            $('#collapsezero').removeClass('collapse in').addClass('collapse');
+            $("#collapsezero").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseTwo").attr("aria-expanded") == 'true') {
+            $('#collapseTwo').removeClass('collapse in').addClass('collapse');
+            $("#collapseTwo").attr("aria-expanded", "false");
+        }
+        if ($("#collapseFour").attr("aria-expanded") == 'true') {
+            $('#collapseFour').removeClass('collapse in').addClass('collapse');
+            $("#collapseFour").attr("aria-expanded", "false");
+        }
+        if ($("#collapseThree").attr("aria-expanded") == 'true') {
+            $('#collapseThree').removeClass('collapse in').addClass('collapse');
+            $("#collapseThree").attr("aria-expanded", "false");
+        }
+
+        if (billingname == '') {
+            $('input[name="billingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+            return false;
+        }
+
+        if (billingemail == '') {
+            $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+            return false;
+        }
+
+        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(billingemail)) {
+            $('input[name="billingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+            return false;
+        }
+
+        if (billingphone == '') {
+            $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+            return false;
+        }
+
+        var regexPattern = /^[0-9-+]+$/;
+        if (!regexPattern.test(billingphone)) {
+            $('input[name="billingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone not valid</div>');
+            return false;
+        }
+
+        if (billingaddress == '') {
+            $('input[name="billingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+            return false;
+        }
+
+        if (billingcity == '') {
+            $('input[name="billingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+            return false;
+        }
+
+        if (billingzip == '') {
+            $('input[name="billingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+            return false;
+        }
+
+        if (billingcountry == '') {
+            $('#billingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+            return false;
+        }
+
+        if (billingstate == '') {
+            $('#billingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+            return false;
+        }
+
+    }
+
+    var delivery_address = $('input[name="delivery_address"]:checked').val();
+
+    if (delivery_address == 'new_address') {
+        var shippingname = $('#shippingname').val();
+        var shippingemail = $('#shippingemail').val();
+        var shippingphone = $('#shippingphone').val();
+        var shippingaddress = $('#shippingaddress').val();
+        var shippingcity = $('#shippingcity').val();
+        var shippingzip = $('#shippingzip').val();
+
+        var shippingcountry = $("#shippingcountry option:selected").val();
+        var shippingstate = $("#shippingstate option:selected").val();
+
+        if ($("#collapsezero").attr("aria-expanded") == 'true') {
+            $('#collapsezero').removeClass('collapse in').addClass('collapse');
+            $("#collapsezero").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseOne").attr("aria-expanded") == 'true') {
+            $('#collapseOne').removeClass('collapse in').addClass('collapse');
+            $("#collapseOne").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseDeliveryMethodTab").attr("aria-expanded") == 'true') {
+            $('#collapseDeliveryMethodTab').removeClass('collapse in').addClass('collapse');
+            $("#collapseDeliveryMethodTab").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseFour").attr("aria-expanded") == 'true') {
+            $('#collapseFour').removeClass('collapse in').addClass('collapse');
+            $("#collapseFour").attr("aria-expanded", "false");
+        }
+
+        if ($("#collapseThree").attr("aria-expanded") == 'true') {
+            $('#collapseThree').removeClass('collapse in').addClass('collapse');
+            $("#collapseThree").attr("aria-expanded", "false");
+        }
+
+        if ($("#add_new_delivery_address_accordion").attr("aria-expanded") == 'false') {
+            $('#add_new_delivery_address_accordion').removeClass('collapse').addClass('collapse in');
+            $("#add_new_delivery_address_accordion").attr("aria-expanded", "true");
+        }
+
+        if ($("#collapseTwo").attr("aria-expanded") == 'false') {
+            $('#collapseTwo').removeClass('collapse').addClass('collapse in');
+            $("#collapseTwo").attr("aria-expanded", "true");
+        }
+
+        if (shippingname == '') {
+            $('input[name="shippingname"]').focus().after('<div class="alert alert-danger" role="alert">Name required</div>');
+            return false;
+        }
+
+        if (shippingemail == '') {
+            $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email required</div>');
+            return false;
+        }
+
+        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test(shippingemail)) {
+            $('input[name="shippingemail"]').focus().after('<div class="alert alert-danger" role="alert">Email not valid</div>');
+            return false;
+        }
+
+        if (shippingphone == '') {
+            $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone required</div>');
+            return false;
+        }
+
+        var regexPattern = /^[0-9-+]+$/;
+        if (!regexPattern.test(shippingphone)) {
+            $('input[name="shippingphone"]').focus().after('<div class="alert alert-danger" role="alert">Phone not valid</div>');
+            return false;
+        }
+
+        if (shippingaddress == '') {
+            $('input[name="shippingaddress"]').focus().after('<div class="alert alert-danger" role="alert">Address required</div>');
+            return false;
+        }
+
+        if (shippingcity == '') {
+            $('input[name="shippingcity"]').focus().after('<div class="alert alert-danger" role="alert">City required</div>');
+            return false;
+        }
+
+        if (shippingzip == '') {
+            $('input[name="shippingzip"]').focus().after('<div class="alert alert-danger" role="alert">Post Code required</div>');
+            return false;
+        }
+
+        if (shippingcountry == '') {
+            $('#shippingcountry').focus().after('<div class="alert alert-danger" role="alert">Country required</div>');
+            return false;
+        }
+
+        if (shippingstate == '') {
+            $('#shippingstate').focus().after('<div class="alert alert-danger" role="alert">State required</div>');
+            return false;
+        }
+    }
+});
+
+$(document).ready(function () {
+    $("#show_hide").click(function () {
+        if($('.show_hide').is(":hidden")){
+            $(".show_hide").show();
+        }else{
+            $(".show_hide").hide();
+
+        }
+    });
+});
+
+$(document).ready(function () {
+    $(".wishlist_functionality").click(function (e) {
+        e.preventDefault(e);
+        var product_id = $(this).attr('data-Pid');
+        var user_id = $(this).attr('data-userid');
+
+        var attrpro = $(".attrpro").map(function(){return $(this).val();}).get();
+        // var product_id = data.split('/', 1);
+        // var array_data = data.split('/');
+        //var user_id = array_data[1];
+        if(user_id != 0){
+            $.ajax({
+                type: "POST",
+                url: base_url + "wishlist-ajax-request/",
+                data:{p_id:product_id,u_id:user_id,attrpro:attrpro},
+                beforeSend: function () {
+                    $('.content_change_' + product_id).empty();
+                    $('.content_change_' + product_id).html('<i class="fa fa-spinner fa-pulse"></i>');
+                },
+                success: function (value) {
+
+                    if (true == value.success) {
+                        $(".wishlist_count").text(value.count);
+                        $(".text_change").text(value.text);
+                        
+                        if(value.status == "ADD"){
+                             $(".wishlisremove").addClass('wishlist-active');
+                        }
+                        if(value.status == "REMOVE"){
+                            $(".wishlisremove").removeClass('wishlist-active');
+                        }
+                        
+                        $('.content_change_' + product_id).html(value.font);
+                        $('.notifications').html(value.message);
+                        $('.notifications').animate({right: 0}, 1000);
+                        intrval = setInterval(function () {
+                            $('.notifications').animate({right: -($('.notifications').width() + 30)}, 1000);
+                            clearInterval(intrval);
+                        }, 5000);
+
+                    } else {
+                        // Swal.fire({
+                        //     icon: 'error',
+                        //     title: value.message,
+                        //     showConfirmButton: false,
+                        //     timer: 3000
+                        // })
+                    }
+                    //footer_js.php function call  || count total wishlist
+                    total_wishlist_data();
+                },
+                error: function (data) {
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Something wrong, please try again',
+                    //     showConfirmButton: false,
+                    //     timer: 1500
+                    // })
+                }
+            })
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Please login, then you can add product in wishlist.',
+                showConfirmButton: false,
+                timer: 3000
+            })
+        }
+
+    });
+});
+
+
+//Message code start
+function ntfDisplay(content) {
+    var builder = $('<div/>', {class: 'ntf-container'});
+    builder.text(content)
+        .appendTo('body');
+
+    var height = builder.outerHeight();
+    var total = $('div.ntf-container').length;
+    var targetTop = (total - 1) * height + total * 10;
+
+    builder.css({top: targetTop + 'px'})
+        .animate({left: 10 + 'px'}, 260, function () {
+            $(this).animate({left: 40 + 'px'}, 900, 'linear', function () {
+                $(this).animate({left: 360 + 'px', opacity: 0}, 450, function () {
+                    $(this).remove();
+                    $('div.ntf-container').css({top: '-=' + (height + 10) + 'px'});
+                });
+            });
+        });
+
+}
+
+//Message code end

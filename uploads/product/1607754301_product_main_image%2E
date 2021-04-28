@@ -1,0 +1,1073 @@
+﻿-- phpMyAdmin SQL Dump
+-- version 4.9.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Sep 16, 2020 at 04:38 AM
+-- Server version: 5.6.41-84.1
+-- PHP Version: 7.3.6
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `ubkin6mk_pathology`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `role_id` text,
+  `password` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `admin_type` enum('superadmin','cityadmin') NOT NULL DEFAULT 'cityadmin',
+  `username` varchar(100) NOT NULL,
+  `status` enum('active','deactive') NOT NULL,
+  `address` text NOT NULL,
+  `phone` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `image` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `city_id`, `role_id`, `password`, `name`, `admin_type`, `username`, `status`, `address`, `phone`, `email`, `image`) VALUES
+(1, 0, '1', '21232f297a57a5a743894a0e4a801fc3', 'pathalogy', 'superadmin', 'adminpathalogy', 'active', 'kolkata', '9433722030', 'adminpathalogy@gmail.com', 'logo.png'),
+(22, 3, '2', '827ccb0eea8a706c4c34a16891f84e7b', 'Balurghadmin', 'cityadmin', 'mailanimesh', 'active', 'barasat', '86665432190', 'mail76@gmail.com', '1597208650_artboard_2-100__1_.jpg'),
+(26, 1, '2', '202cb962ac59075b964b07152d234b70', 'Kolkatadmin', 'cityadmin', 'koltest@gmail.com', 'active', 'kolkata 5658952', '5555522222', 'koltest@gmail.com', '1597669719_asfdfsad.jpg'),
+(27, 2, '2', '1cc39ffd758234422e1f75beadfc5fb2', 'Maldaadmin', 'cityadmin', 'mailasima@gmail.com', 'active', 'kolkata', '8765432190', 'mail7@gmail.com', '1599193090_As.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `cat_id` int(11) NOT NULL,
+  `cat_lang_id` int(11) NOT NULL,
+  `cat_name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `icon` text,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`cat_id`, `cat_lang_id`, `cat_name`, `icon`, `city_id`, `vendor_id`) VALUES
+(1, 1, 'Kidney', '1597100648_kidneys.png', 1, 1),
+(2, 2, 'কিডনি', '1599916962_1597100648_kidneys.png', 0, 1),
+(3, 3, 'गुर्दा', '1600064213_1597100648_kidneys.png', 0, 1),
+(4, 1, 'orthopedic', '1597100973_joint.png', 1, 1),
+(5, 2, 'অর্থোপেডিক', '1600063798_1597100973_joint.png', 0, 1),
+(6, 3, 'हड्डी का डॉक्टर', '1600075961_1597100973_joint.png', 0, 1),
+(7, 1, 'Thyroid', '1597101521_thyroid-gland.png', 1, 1),
+(8, 2, 'থাইরয়েড', '1600074549_1597101521_thyroid-gland.png', 0, 1),
+(9, 3, 'थाइरोइड', '1600075579_1597101521_thyroid-gland.png', 0, 1),
+(10, 1, 'Covid-19', '1597100749_covid.png', 1, 24),
+(11, 2, 'কোভিড -19', '1600073424_1597100749_covid.png', 0, 1),
+(12, 3, 'कोबिद १ ९', '1600073625_1597100749_covid.png', 0, 1),
+(13, 1, 'Gynocology & pregnancy', '1597100852_pregnant.png', 1, 1),
+(14, 2, 'স্ত্রীরোগবিদ্যা এবং গর্ভাবস্থা', '1600074761_1597100852_pregnant.png', 0, 1),
+(15, 3, 'स्त्री रोग और गर्भावस्था', '1600075834_1597100852_pregnant.png', 0, 1),
+(16, 1, 'Diabetes', '1597101204_diabetes.png', 1, 1),
+(17, 2, 'ডায়াবেটিস', '1600074070_1597101204_diabetes.png', 0, 1),
+(18, 3, 'मधुमेह', '1600073980_1597101204_diabetes.png', 0, 1),
+(19, 1, 'Liver profile', '1597101383_liver.png', 4, 1),
+(20, 2, 'লিভারের প্রোফাইল', '1600074244_1597101383_liver.png', 0, 1),
+(21, 3, 'यकृत प्रोफ़ाइल', '1600074358_1597101383_liver.png', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `city`
+--
+
+CREATE TABLE `city` (
+  `city_id` int(11) NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `city`
+--
+
+INSERT INTO `city` (`city_id`, `city_name`, `create_at`) VALUES
+(1, 'kolkata', '2020-08-12 00:57:45'),
+(2, 'Malda', '2020-08-12 00:57:45'),
+(3, 'Balurghat', '2020-08-12 00:58:31'),
+(4, 'Hydebrad', '2020-08-12 00:59:44'),
+(5, 'Gangtok', '2020-08-12 01:07:21'),
+(6, 'Jaipur', '2020-08-12 01:08:03'),
+(7, 'Chandigarh', '2020-08-12 01:08:57'),
+(8, 'Pondicherry', '2020-08-12 01:09:47'),
+(9, 'Bhubanaswar', '2020-08-12 01:10:31'),
+(10, 'Bhopal', '2020-08-12 01:11:34'),
+(11, 'Andrott', '2020-08-12 01:11:58'),
+(12, 'Mumbai', '2020-08-12 01:16:40'),
+(13, 'Imphal', '2020-08-12 01:16:52'),
+(14, 'Thruvantapurum', '2020-08-12 01:17:50'),
+(15, 'Bangalore', '2020-08-12 01:18:33'),
+(16, 'Shimla', '2020-08-12 01:19:18'),
+(19, 'Dheradun', '2020-08-12 21:14:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `city_labowner_payment`
+--
+
+CREATE TABLE `city_labowner_payment` (
+  `clp_id` int(11) NOT NULL,
+  `clp_city_id` int(11) DEFAULT NULL,
+  `city_admin` int(11) DEFAULT NULL,
+  `lab_owner` int(11) DEFAULT NULL,
+  `clp_order_id` text COLLATE utf8_unicode_ci,
+  `amount` int(11) DEFAULT NULL,
+  `status` text COLLATE utf8_unicode_ci,
+  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `city_labowner_payment`
+--
+
+INSERT INTO `city_labowner_payment` (`clp_id`, `clp_city_id`, `city_admin`, `lab_owner`, `clp_order_id`, `amount`, `status`, `create_at`) VALUES
+(1, 1, 26, 15, '5566', 150, 'Paid to Lab', '2020-09-02 05:46:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deliveryboy_feedback`
+--
+
+CREATE TABLE `deliveryboy_feedback` (
+  `id` int(11) NOT NULL,
+  `delivery_boy_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `feedback` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `deliveryboy_feedback`
+--
+
+INSERT INTO `deliveryboy_feedback` (`id`, `delivery_boy_id`, `city_id`, `feedback`, `created_at`) VALUES
+(1, 15, 1, 'good', '2020-09-08 13:54:41'),
+(3, 15, 1, 'hello .....', '2020-09-08 14:02:22'),
+(4, 15, 1, 'nice', '2020-09-14 05:11:13');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_boy`
+--
+
+CREATE TABLE `delivery_boy` (
+  `delivery_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `phone_no` varchar(50) NOT NULL,
+  `email_id` varchar(200) NOT NULL,
+  `password` varchar(80) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `delivery_boy_image` text,
+  `attendance` enum('yes','no') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `delivery_boy`
+--
+
+INSERT INTO `delivery_boy` (`delivery_id`, `first_name`, `last_name`, `phone_no`, `email_id`, `password`, `city_id`, `vendor_id`, `delivery_boy_image`, `attendance`) VALUES
+(1, 'raja', 'bh', '8765432190', 'mailraja2@gmail.com', 'b58c50e209762c24adb9f29daffe249c', 16, 1, '1599287975_index11.jpeg', 'yes'),
+(4, 'nita', 'Das', '8765432190', 'mailnita@gmail.com', '70873e8580c9900986939611618d7b1e', 1, 1, '1599287998_index12.png', 'yes'),
+(5, 'chj2', 'bhj', '9433722030', 'mailaj@gmail.com', 'd553f9e799f9cede876745b03dc32e58', 1, 1, '1599288045_index13.png', 'yes'),
+(6, 'Gifgd', 'Dey', '89765432190', 'mail2chirahree@gmail.com', '202cb962ac59075b964b07152d234b70', 13, 1, '1599288145_index99.png', 'yes'),
+(7, 'Nishana', 'Dey', '8965432190', 'mailnishana@gmail.com', '70873e8580c9900986939611618d7b1e', 11, 1, '1599288173_index10`.png', 'yes'),
+(15, 'Avijit', 'Paul', '2222255555', 'mail76@gmail.com', '8e296a067a37563370ded05f5a3bf3ec', 1, 1, 'IMG_20200822_202622.jpg', 'yes'),
+(16, 'Ratan', 'Das', '8765432190', 'mailratan@gmail.com', '1cc39ffd758234422e1f75beadfc5fb2', 1, 1, '1599221947_index5.jpeg', 'yes'),
+(17, 'Mala', 'Dey', '8765432190', 'mail76@gmail.com', '202cb962ac59075b964b07152d234b70', 13, 26, '1599223142_index.png', 'yes');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_boy_payment`
+--
+
+CREATE TABLE `delivery_boy_payment` (
+  `dbp_id` int(11) NOT NULL,
+  `db_id` int(11) DEFAULT NULL,
+  `dbp_city_id` text,
+  `order_id` text,
+  `total` int(11) DEFAULT NULL,
+  `db_amnt` int(11) DEFAULT NULL,
+  `dbp_status` enum('Unpaid','Paid') DEFAULT 'Unpaid'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `delivery_boy_payment`
+--
+
+INSERT INTO `delivery_boy_payment` (`dbp_id`, `db_id`, `dbp_city_id`, `order_id`, `total`, `db_amnt`, `dbp_status`) VALUES
+(1, 5, '1', '5625', 500, 50, 'Paid'),
+(2, 5, '1', '2565', 650, 50, 'Unpaid');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `labowner_feedback`
+--
+
+CREATE TABLE `labowner_feedback` (
+  `lf_id` int(11) NOT NULL,
+  `lab_owner_id` text COLLATE utf8_unicode_ci,
+  `city_id` text COLLATE utf8_unicode_ci,
+  `feedback` text COLLATE utf8_unicode_ci,
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `labowner_feedback`
+--
+
+INSERT INTO `labowner_feedback` (`lf_id`, `lab_owner_id`, `city_id`, `feedback`, `created`) VALUES
+(1, '15', '1', 'hello', '2020-08-29 05:28:19'),
+(2, '15', '1', 'please improve', '2020-08-29 05:28:19'),
+(4, '15', '1', 'please improvement', '2020-09-14 04:36:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `labowner_user_message`
+--
+
+CREATE TABLE `labowner_user_message` (
+  `lum_id` int(11) NOT NULL,
+  `lab_owner_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text COLLATE utf8_unicode_ci,
+  `city_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `labowner_user_message`
+--
+
+INSERT INTO `labowner_user_message` (`lum_id`, `lab_owner_id`, `user_id`, `message`, `city_id`, `created_at`) VALUES
+(1, 15, 6, 'hello customer ...', 1, '2020-08-28 13:27:51'),
+(3, 15, 6, 'hello customers', 1, '2020-09-14 11:37:29'),
+(4, 15, 6, 'hello', 1, '2020-09-14 11:38:12'),
+(5, 15, 6, 'hi', 1, '2020-09-14 11:38:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `labratory_owner`
+--
+
+CREATE TABLE `labratory_owner` (
+  `labratory_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `labratory_name` varchar(200) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `address` text NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `phone` varchar(100) NOT NULL,
+  `lab_image` text,
+  `type` varchar(100) DEFAULT 'lab',
+  `lab_lat` text,
+  `lab_lon` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `labratory_owner`
+--
+
+INSERT INTO `labratory_owner` (`labratory_id`, `name`, `labratory_name`, `city_id`, `role_id`, `password`, `address`, `email`, `username`, `phone`, `lab_image`, `type`, `lab_lat`, `lab_lon`) VALUES
+(7, 'Abishek', 'medlife2', 15, 1, '3406cf40003f1d45182a7d04fafd621b', 'kolkata', 'mailclinic2@gmail.com', 'mailclinic', '87776543290', NULL, 'lab', '22.6', '23.7'),
+(12, 'Test Center', 'Test Pathology Center', 1, 3, '202cb962ac59075b964b07152d234b70', '123 kolkata', 'testpath@gmail.com', 'testpath@gmail.com', '2222255555', NULL, 'lab', NULL, NULL),
+(13, 'Test Laboratory 22', 'Lab22', 1, 3, '202cb962ac59075b964b07152d234b70', '252, kolkata 852102', 'testlab22@gmail.com', 'testlab22@gmail.com', '5555566666', NULL, 'lab', NULL, NULL),
+(14, 'Lab5 name', 'Lab5', 13, 3, '202cb962ac59075b964b07152d234b70', 'kolkata 852145 egling road', 'lab5@gmail.com', 'lab5@gmail.com', '6666622222', NULL, 'lab', '22.255', '55.25874'),
+(15, 'Kaushik Modak', 'Hari Om Lab', 1, 3, '202cb962ac59075b964b07152d234b70', 'nager bazar, kolkata 85258', 'hariom@gmail.com', 'hariom', '9876543210', NULL, 'lab', '22.3658', '55.2547'),
+(19, 'cg', 'vv', 12, 1, '1f32aa4c9a1d2ea010adcf2348166a04', 'kolkata', 'mail76@gmail.com', 'mailasima@gmail.com', '895432190', NULL, 'lab', '23.2', '24.2'),
+(20, 'Rita', 'Mellinum', 13, 1, 'd9b1d7db4cd6e70935368a1efb10e377', 'Mumbaai', 'mailrita2@gmail.com', 'mailrita2', '8765432190', NULL, 'lab', '23.7', '24.7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `language`
+--
+
+CREATE TABLE `language` (
+  `language_id` int(11) NOT NULL,
+  `language_name` text COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `language`
+--
+
+INSERT INTO `language` (`language_id`, `language_name`) VALUES
+(1, 'English'),
+(2, 'Bengali'),
+(3, 'Hindi');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `language_field`
+--
+
+CREATE TABLE `language_field` (
+  `field_id` int(11) NOT NULL,
+  `lang_id` int(11) DEFAULT NULL,
+  `item_key` text COLLATE utf8_unicode_ci,
+  `item_value` text COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `language_field`
+--
+
+INSERT INTO `language_field` (`field_id`, `lang_id`, `item_key`, `item_value`) VALUES
+(1, 1, 'Login', 'Login'),
+(2, 2, 'Login', 'প্রস্থান'),
+(4, 3, 'Login', 'लॉग इन'),
+(5, 1, 'Often the Dawn Diagnostic Test', 'Often the Dawn Diagnostic Test'),
+(6, 2, 'Often the Dawn Diagnostic Test', ' প্রায়শই ডোন ডায়াগনস্টিক টেস্ট'),
+(9, 1, 'Our Associated Laboratories', 'Our Associated Laboratories'),
+(10, 3, 'Our Associated Laboratories', 'हमारी एसोसिएटेड प्रयोगशालाएँ'),
+(11, 2, 'Our Associated Laboratories', 'আমাদের অ্যাসোসিয়েটেড ল্যাবরেটরিগুলি'),
+(12, 3, 'Often the Dawn Diagnostic Test', 'श्री एन चांदस्वामी डेस्टीनेशन'),
+(13, 1, 'Get your test report', 'Get your test report'),
+(14, 2, 'Get your test report', 'আপনার পরীক্ষার রিপোর্ট পান'),
+(15, 3, 'Get your test report', 'अपने परीक्षण की रिपोर्ट प्राप्त करें'),
+(16, 2, 'Search for tests', 'পরীক্ষার জন্য অনুসন্ধান'),
+(17, 1, 'Search for tests', 'Search for tests'),
+(18, 3, 'Search for tests', 'परीक्षण के लिए खोजें'),
+(19, 1, 'Lab tests and other diagnostic tests.', 'Lab tests and other diagnostic tests.'),
+(20, 2, 'Lab tests and other diagnostic tests.', 'ল্যাব পরীক্ষা এবং অন্যান্য ডায়াগনস্টিক পরীক্ষার  সুবিধাগুলি পান'),
+(21, 3, 'Lab tests and other diagnostic tests.', 'लैब परीक्षण और अन्य नैदानिक ​​परीक्षण।'),
+(22, 2, 'View all test packages', 'সমস্ত পরীক্ষা প্যাকেজ দেখুন'),
+(23, 1, 'View all test packages', 'View all test packages'),
+(24, 3, 'View all test packages', 'सभी परीक्षण पैकेज देखें'),
+(25, 2, 'Diagnostic tests for this', 'এর জন্য ডায়াগনস্টিক টেস্টস'),
+(26, 1, 'Diagnostic tests for this', 'Diagnostic tests for this'),
+(27, 3, 'Diagnostic tests for this', 'इसके लिए नैदानिक ​​परीक्षण'),
+(28, 1, 'Call now to book lab tests', 'Call now to book lab tests'),
+(29, 2, 'Call now to book lab tests', 'ল্যাব পরীক্ষা বুক করতে এখনই কল করুন'),
+(30, 3, 'Call now to book lab tests', 'लैब टेस्ट बुक करने के लिए अभी कॉल करें');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_item`
+--
+
+CREATE TABLE `order_item` (
+  `item_id` int(11) NOT NULL,
+  `fk_order_id` int(11) NOT NULL,
+  `fkproduct_id` int(11) NOT NULL,
+  `quntity` int(11) NOT NULL,
+  `amount` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `order_item`
+--
+
+INSERT INTO `order_item` (`item_id`, `fk_order_id`, `fkproduct_id`, `quntity`, `amount`) VALUES
+(1, 2, 12, 3, 120),
+(2, 2, 14, 5, 100),
+(3, 5, 12, 5, 250),
+(4, 2, 15, 3, 525),
+(5, 2, 16, 5, 105);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_tbl`
+--
+
+CREATE TABLE `order_tbl` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status` enum('placed','accepted','ready_collection','done','declined','cancelled') NOT NULL,
+  `total_amount` int(11) DEFAULT NULL,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `productt_id` text,
+  `date` text NOT NULL,
+  `datestr` text,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `order_type` enum('COD','WALLET','ONLINE') NOT NULL,
+  `discount_amount` int(11) NOT NULL,
+  `assign` text,
+  `report_delivery_date` varchar(50) DEFAULT NULL,
+  `cause` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `order_tbl`
+--
+
+INSERT INTO `order_tbl` (`order_id`, `user_id`, `status`, `total_amount`, `city_id`, `vendor_id`, `productt_id`, `date`, `datestr`, `created_at`, `order_type`, `discount_amount`, `assign`, `report_delivery_date`, `cause`) VALUES
+(1, 6, 'done', 600, 1, 15, '12', '08/29/2020', '1598659200', '2020-09-08 11:20:03', 'COD', 250, '15', NULL, ''),
+(2, 6, 'cancelled', 550, 2, 15, '6', '08/26/2020', '1598400000', '2020-09-08 11:43:33', 'COD', 500, '15', '2020/08/29', 'Cancel order ...'),
+(3, 6, 'cancelled', 250, 1, 15, '2', '09/01/2020', '1598918400', '2020-09-08 11:39:59', 'COD', 225, '15', NULL, 'someproblemscause'),
+(4, 6, 'accepted', 100, 2, 15, '5', '09/02/2020', '1567382400', '2020-09-09 11:54:13', 'COD', 125, '15', NULL, ''),
+(5, 6, 'ready_collection', 400, 1, 15, '5', '09/05/2020', '1599264000', '2020-09-09 11:36:55', 'COD', 150, '16', NULL, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `package`
+--
+
+CREATE TABLE `package` (
+  `id` int(11) NOT NULL,
+  `pack_lang_id` int(11) NOT NULL,
+  `package_name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `package_desc` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `amount` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `product_id` text NOT NULL COMMENT 'json_format'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `package`
+--
+
+INSERT INTO `package` (`id`, `pack_lang_id`, `package_name`, `package_desc`, `amount`, `city_id`, `vendor_id`, `product_id`) VALUES
+(1, 1, 'BloodGlucoseTest', 'BloodGlucoseTest Special', '150', 2, 0, '[\"1\"]'),
+(2, 2, 'ব্লাডগ্লুকোজ টেস্ট', 'ব্লাডক্লুকোজ টেস্ট ডেসক্রিপশন', '১৫০', 2, 0, '[\"13\"]'),
+(3, 3, 'रक्त शर्करा परीक्षण', 'रक्त शर्करा परीक्षण विशेष', '१५० ', 2, 0, '[\"3\"]'),
+(4, 1, 'covid 19', 'Covid 19 test', '500', 1, 0, '[\"21\"]'),
+(5, 2, 'কোভিড 19', 'কোভিড 19 পরীক্ষা', '৫০০', 1, 0, '[\"8\"]'),
+(6, 3, 'कोविड 19', 'कोविद 19 परीक्षण', '५०० ', 1, 0, '[\"23\"]'),
+(7, 1, 'Lipid Profile', 'Lipid profile', '500', 2, 0, '[\"24\"]'),
+(8, 2, 'লিপিড প্রোফাইল', 'লিপিড প্রোফাইল', '৫০০', 2, 0, '[\"25\"]'),
+(9, 3, 'लिपिड प्रोफाइल', 'लिपिड प्रोफाइल', '५०० ', 2, 0, '[\"26\"]'),
+(10, 1, 'Thyroid Level(T3,T4)', 'Thyroid Level test', '350', 1, 0, '[\"18\"]'),
+(11, 2, 'থাইরয়েড স্তর (টি 3, টি 4)', ' থাইরয়েড স্তর (টি 3, টি 4) পরীক্ষা', '৩৫০', 1, 0, '[\"19\"]'),
+(12, 3, 'थायराइड स्तर (T3, T4)', 'थायराइड स्तर (T3, T4) परीक्षण', '३५० ', 1, 0, '[\"20\"]'),
+(15, 1, 'Covid+Diabetes', 'covid +diabtes', '2500', 1, 0, '[\"1\",\"21\"]'),
+(16, 2, 'কোভিড + ডায়াবেটিস', 'কোভিড + ডায়াবেটিস', '২৫০০', 1, 0, '[\"2\",\"8\"]'),
+(17, 3, 'कोविड + मधुमेह', 'कोविड + मधुमेह', '१५०० ', 1, 0, '[\"3\",\"23\"]'),
+(18, 1, 'Liver function Test', 'Liver function Test specially', '950', 1, 0, '[\"24\"]'),
+(19, 2, 'লিভার ফাংশন পরীক্ষা', 'বিশেষত লিভার ফাংশন পরীক্ষা', '৯৫০', 1, 0, '[\"25\"]'),
+(20, 3, 'जिगर कार्य परीक्षण', 'जिगर समारोह परीक्षण विशेष रूप से', '९५० ', 1, 0, '[\"26\"]'),
+(21, 1, 'Gynocology & pregnancy', 'Gynocology & pregnancy', '456', 2, 0, '[\"1\"]'),
+(22, 2, 'স্ত্রীরোগবিদ্যা এবং গর্ভাবস্থা', 'স্ত্রীরোগবিদ্যা এবং গর্ভাবস্থা', '৪৫৬', 2, 0, '[\"2\"]'),
+(23, 3, 'स्त्री रोग और गर्भावस्था', 'स्त्री रोग और गर्भावस्था', '४५६ ', 2, 0, '[\"3\"]'),
+(24, 1, 'SpecialAllTest2', 'SpecialAllTest is very special 2', '2000', 1, 0, '[\"1\",\"21\",\"24\"]'),
+(25, 2, 'স্পেশালএলটেষ্ট 2', 'স্পেশালএলটেষ্ট খুব বিশেষ২', '২০০০', 1, 0, '[\"2\",\"22\",\"25\"]'),
+(26, 3, 'सभी विशेष परीक्षण १', 'विशेष सभी परीक्षण बहुत विशेष है १', '३०००', 1, 0, '[\"3\",\"23\",\"26\"]');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_history`
+--
+
+CREATE TABLE `payment_history` (
+  `ph_id` int(11) NOT NULL,
+  `ph_city_id` int(11) DEFAULT NULL,
+  `ph_user_id` int(11) DEFAULT NULL,
+  `lab_idd` int(11) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `order_id` text,
+  `payment_type` text,
+  `status` text,
+  `created` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `payment_history`
+--
+
+INSERT INTO `payment_history` (`ph_id`, `ph_city_id`, `ph_user_id`, `lab_idd`, `amount`, `order_id`, `payment_type`, `status`, `created`) VALUES
+(1, 1, 10, 15, 250, '255', 'COD', 'Credit', '2020-08-29 13:13:42'),
+(2, 1, 10, 15, 2500, '556', 'Wallet', 'Debit', '2020-08-29 13:13:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `pro_id` int(11) NOT NULL,
+  `pro_lang_id` int(11) NOT NULL,
+  `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `product_amount` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `cat_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `promocode_id` int(11) NOT NULL,
+  `discount_per` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fasting` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `report_within` text CHARACTER SET utf8 COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`pro_id`, `pro_lang_id`, `name`, `description`, `product_amount`, `cat_id`, `city_id`, `vendor_id`, `created_at`, `promocode_id`, `discount_per`, `fasting`, `report_within`) VALUES
+(1, 1, 'Blood test', 'blood test description', '320', 16, 1, 13, '2020-09-15 00:00:00', 2, '10', 'yes', '4'),
+(2, 2, 'রক্ত পরীক্ষা', 'রক্ত পরীক্ষার বিবরণ', '৩২০', 17, 1, 13, '2020-09-15 00:00:00', 2, '১০', 'হ্যাঁ', '৪'),
+(3, 3, 'रक्त परीक्षण', 'रक्त परीक्षण  विवरण', '३२० ', 18, 1, 13, '2020-09-15 00:00:00', 2, '१० ', 'हाँ', '४ '),
+(4, 1, 'Product', 'full test2', '320', 1, 1, 13, '2020-09-16 00:00:00', 8, '10', 'yes', '10'),
+(5, 2, 'পণ্য', 'সম্পূর্ণ পরীক্ষা', '৩২০', 2, 1, 13, '2020-09-15 00:00:00', 8, '১০', 'হ্যাঁ', '১০'),
+(6, 3, 'उत्पाद', 'सम्पूर्ण परीक्षण', '३२० ', 3, 1, 13, '2020-09-15 00:00:00', 8, '१०', 'हाँ', '१०'),
+(7, 1, 'Corona Test', 'Covid 19', '250', 10, 1, 13, '2020-09-15 00:00:00', 5, '10', 'no', '10'),
+(8, 2, 'করোনার টেস্ট', 'কোভিড 19', '২৫০', 11, 1, 13, '2020-09-15 00:00:00', 5, '১০', 'না', '১০'),
+(9, 3, 'कोरोना टेस्ट', 'कोविड 19', '२५० ', 12, 1, 13, '2020-09-15 00:00:00', 5, '१०', 'नहीं', '१०'),
+(12, 1, 'Blood', 'Blood test is very important.', '350', 7, 1, 15, '2020-09-15 00:00:00', 9, '10', 'yes', '10'),
+(13, 2, 'রক্ত ', 'রক্ত পরীক্ষা খুব গুরুত্বপূর্ণ', '৩৫০', 5, 1, 15, '2020-09-15 00:00:00', 9, '১০', 'হ্যাঁ', '১০'),
+(14, 3, 'रक्त', 'रक्त परीक्षण बहुत महत्वपूर्ण है', '३५० ', 6, 1, 15, '2020-09-15 00:00:00', 9, '१०', 'हाँ', '१०'),
+(15, 1, 'Blood  Glucose Test', 'Gloucose test is very important', '56', 4, 1, 12, '2020-09-15 00:00:00', 2, '10', 'yes', '10'),
+(16, 2, 'রক্তের গ্লুকোজ পরীক্ষা', 'রক্ত গ্লুকোজ পরীক্ষা গুরুত্বপূর্ণ', '৫৬', 5, 1, 12, '2020-09-15 00:00:00', 2, '১০', 'হ্যাঁ', '১০'),
+(17, 3, 'ब्लड ग्लूकोज टेस्ट', 'ब्लड ग्लूकोज टेस्ट महत्वपूर्ण है', '५६ ', 9, 1, 12, '2020-09-15 00:00:00', 2, '१०', 'हाँ', '१०'),
+(18, 1, 'Thyroid test', 'Thyroid level test', '345', 7, 3, 12, '2020-09-15 00:00:00', 2, '10', 'yes', '8'),
+(19, 2, 'থাইরয়েড পরীক্ষা', 'থাইরয়েড স্তর পরীক্ষা', '৩৪৫', 8, 3, 12, '2020-09-15 00:00:00', 2, '১০', 'হ্যাঁ', '8'),
+(20, 3, 'थायराइड परीक्षण', 'थायराइड स्तर का परीक्षण', '३४५ ', 9, 3, 12, '2020-09-15 00:00:00', 2, '१०', 'हाँ', '८ '),
+(21, 1, 'covid 19', 'swab testing', '250', 10, 1, 15, '2020-09-15 00:00:00', 8, '10', 'no', '10'),
+(22, 2, 'কোভিড 19', 'স্বাব টেস্টিং', '২৫০', 11, 1, 15, '2020-09-15 00:00:00', 8, '১০', 'না', '১০'),
+(23, 3, 'कोविड 19', 'स्वाब परीक्षण', '२५० ', 12, 1, 15, '2020-09-15 00:00:00', 8, '१०', 'नहीं', '१०'),
+(24, 1, 'Liver function Test', 'Liver function Test', '5000', 19, 1, 12, '2020-09-15 00:00:00', 5, '10', 'yes', '10'),
+(25, 2, 'লিভার প্রোফাইল', 'লিভার প্রোফাইল ', '৫০০০', 20, 1, 12, '2020-09-15 00:00:00', 5, '১০', 'হ্যাঁ', '১০'),
+(26, 3, 'यकृत प्रोफ़ाइल', 'यकृत प्रोफ़ाइल परीक्षण', '५००० ', 21, 1, 12, '2020-09-15 00:00:00', 5, '१०', 'हाँ', '१०');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `promocode`
+--
+
+CREATE TABLE `promocode` (
+  `id` int(11) NOT NULL,
+  `promocode_name` varchar(100) NOT NULL,
+  `min_amount` int(11) DEFAULT NULL,
+  `max_disc_amount` int(11) DEFAULT NULL,
+  `discount_per` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `start_date` text,
+  `end_date` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `promocode`
+--
+
+INSERT INTO `promocode` (`id`, `promocode_name`, `min_amount`, `max_disc_amount`, `discount_per`, `city_id`, `vendor_id`, `start_date`, `end_date`) VALUES
+(2, 'tegg', NULL, NULL, 34, 15, 1, NULL, NULL),
+(5, 'ghhh2', NULL, NULL, 12, 15, 5, NULL, NULL),
+(8, 'PROMO10', NULL, NULL, 10, 1, 8, NULL, NULL),
+(9, 'LAB20', 200, 1000, 20, 1, 15, '2020/08/25', '2020/08/31'),
+(11, 'cc', 32, 76, 34, 16, 0, '2020-09-09', '2020-09-29'),
+(13, 'cvv2', 12, 34, 45, 16, 13, '2020-09-08', '2020-10-29'),
+(15, 'cc2', 20, 45, 21, 1, 12, '2020-09-05', '2020-11-24'),
+(16, 'cc2', 45, 51, 20, 1, 12, '2020-09-18', '2020-09-25'),
+(17, 'tegg5', 21, 456, 34, 1, 12, '2020-09-03', '2020-09-30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL,
+  `role` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role`) VALUES
+(2, 'Vendor'),
+(3, 'Lab Owner'),
+(4, 'User'),
+(5, 'Delivery Boy');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_access`
+--
+
+CREATE TABLE `role_access` (
+  `ra_id` int(11) NOT NULL,
+  `rol_id` int(11) DEFAULT NULL,
+  `sidemenu_fk_id` text COLLATE utf8_unicode_ci,
+  `can_view` int(11) NOT NULL DEFAULT '0',
+  `can_edit` int(11) NOT NULL DEFAULT '0',
+  `can_delete` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `role_access`
+--
+
+INSERT INTO `role_access` (`ra_id`, `rol_id`, `sidemenu_fk_id`, `can_view`, `can_edit`, `can_delete`) VALUES
+(1, 2, '1', 1, 0, 1),
+(2, 2, '2', 1, 1, 1),
+(3, 2, '3', 1, 1, 0),
+(4, 2, '4', 1, 0, 1),
+(5, 2, '5', 1, 0, 1),
+(6, 3, '8', 1, 1, 0),
+(12, 2, '6', 1, 1, 0),
+(13, 4, '1', 1, 0, 0),
+(14, 2, '7', 1, 0, 1),
+(15, 2, '9', 1, 1, 0),
+(16, 2, '12', 1, 1, 0),
+(17, 2, '16', 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sidemenus`
+--
+
+CREATE TABLE `sidemenus` (
+  `sm_id` int(11) NOT NULL,
+  `sidemenu_name` text,
+  `s_icon` text,
+  `s_link` text,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sidemenus`
+--
+
+INSERT INTO `sidemenus` (`sm_id`, `sidemenu_name`, `s_icon`, `s_link`, `create_time`) VALUES
+(1, 'Labratory Owner List', 'icon-user', 'labowner_list', '2020-08-24 11:23:00'),
+(2, 'Order List', 'fa fa-newspaper-o', 'order_list', '2020-08-24 11:25:35'),
+(3, 'Collectors List', 'icon-user', 'collector_boy_list', '2020-08-24 11:25:50'),
+(4, 'Product List', 'fa fa-product-hunt', 'product_list', '2020-08-24 11:26:46'),
+(5, 'User List', 'fa fa-user', 'user_list', '2020-08-24 11:27:01'),
+(6, 'Package List', 'fa fa-gift', 'package_list', '2020-08-24 11:30:07'),
+(7, 'Wallet History', 'fa fa-paper-plane', 'wallet_hist_list', '2020-08-24 12:35:11'),
+(8, 'Payment History', 'fa fa-question-circle', 'payment_hist', '2020-08-24 12:35:24'),
+(9, 'Collectors Payment', 'fa fa-tasks', 'collector_payments_page', '2020-08-24 16:08:05'),
+(10, 'City List', 'fa fa-list-alt', 'city_list', '2020-08-24 16:10:35'),
+(11, 'City Admin List', 'icon-user', 'city_admin_list', '2020-08-24 16:10:53'),
+(12, 'Category List', 'fa fa-list-alt', 'categorylist', '2020-08-24 16:11:08'),
+(13, 'Promocode List', 'fa fa-code', 'promocode_list', '2020-08-24 16:11:24'),
+(14, 'Sidemenu List', 'fa fa-code', 'sidemenu_list', '2020-08-24 16:11:37'),
+(15, 'Roles', 'fa fa-list-alt', 'roles_list', '2020-08-24 16:11:49'),
+(16, 'City-Lab Payment', 'fa fa-shield fa-rotate-270', 'city_lab_payment', '2020-09-02 05:49:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
+  `main_user_id` int(11) NOT NULL,
+  `user_city_id` int(11) DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `phone_no` varchar(255) DEFAULT NULL,
+  `email_id` varchar(60) DEFAULT NULL,
+  `user_pass` text,
+  `address` text,
+  `wallet` varchar(20) NOT NULL,
+  `site_image` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `main_user_id`, `user_city_id`, `first_name`, `last_name`, `phone_no`, `email_id`, `user_pass`, `address`, `wallet`, `site_image`) VALUES
+(1, 1, 1, 'chira2', 'bh2', '89765432190', 'mail87@mail.om', 'd41d8cd98f00b204e980', 'kolkata2', '0', '1597333995_93104586_2522454904735639_4439669833738485760_n.jpg'),
+(3, 2, 2, 'Mala', 'Dey', '78956432190', 'mailmala@gmial.com', '4428c6c474502e611518', 'Kolkata', '0', '1597334874_backblue.gif'),
+(6, 24, 1, 'Biplab Chandra', 'Pattanayak', '8765432190', 'biplabchandrapattanayak1234567890987765@gmail.com', 'd41d8cd98f00b204e980', 'kolkata science city, shibtala more, kolkata 700100, near Highland Park', '0', '1597337646_backblue.gif'),
+(7, 22, 1, 'Bilan2', 'Dey2', '8765432190', 'mailbilan@gmail.com', '202cb962ac59075b964b', 'Kolkata', '0', '1597356060_1596003378_cc.jpg'),
+(9, 25, 2, 'Disha', 'Dey', '8765432190', 'maildisha@gmail.com', '4428c6c474502e611518', 'Kolkata', '0', '1597352341_backblue.gif'),
+(10, 11, 13, 'dina', 'dey', '5555522222', 'maildisha@gmail.com', '123', 'Kolkata', '10', '1597352341_backblue.gif');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vendor_access`
+--
+
+CREATE TABLE `vendor_access` (
+  `va_id` int(11) NOT NULL,
+  `sidemenu_name` text COLLATE utf8_unicode_ci,
+  `can_view` int(11) DEFAULT NULL,
+  `can_edit` int(11) DEFAULT NULL,
+  `can_delete` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `vendor_access`
+--
+
+INSERT INTO `vendor_access` (`va_id`, `sidemenu_name`, `can_view`, `can_edit`, `can_delete`) VALUES
+(1, 'Labratory Owner List', 1, 1, 1),
+(2, 'Order List', 1, 1, 1),
+(3, 'Collectors List', 1, 1, 0),
+(4, 'Product List', 1, 0, 1),
+(5, 'User List', 1, 1, 0),
+(6, 'Package List', 1, 1, 0),
+(7, 'Wallet History', 1, 0, 1),
+(8, 'Payment History', 1, 1, 1),
+(9, 'Collectors Payment', 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wallet_history`
+--
+
+CREATE TABLE `wallet_history` (
+  `wh_id` int(11) NOT NULL,
+  `wh_city_id` int(11) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `status` text,
+  `wh_user_id` text,
+  `order_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `wallet_history`
+--
+
+INSERT INTO `wallet_history` (`wh_id`, `wh_city_id`, `amount`, `status`, `wh_user_id`, `order_id`) VALUES
+(1, 1, 500, 'Credit', '10', 52),
+(2, 2, 200, 'Debit', '10', 65);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`cat_id`);
+
+--
+-- Indexes for table `city`
+--
+ALTER TABLE `city`
+  ADD PRIMARY KEY (`city_id`);
+
+--
+-- Indexes for table `city_labowner_payment`
+--
+ALTER TABLE `city_labowner_payment`
+  ADD PRIMARY KEY (`clp_id`);
+
+--
+-- Indexes for table `deliveryboy_feedback`
+--
+ALTER TABLE `deliveryboy_feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `delivery_boy`
+--
+ALTER TABLE `delivery_boy`
+  ADD PRIMARY KEY (`delivery_id`);
+
+--
+-- Indexes for table `delivery_boy_payment`
+--
+ALTER TABLE `delivery_boy_payment`
+  ADD PRIMARY KEY (`dbp_id`);
+
+--
+-- Indexes for table `labowner_feedback`
+--
+ALTER TABLE `labowner_feedback`
+  ADD PRIMARY KEY (`lf_id`);
+
+--
+-- Indexes for table `labowner_user_message`
+--
+ALTER TABLE `labowner_user_message`
+  ADD PRIMARY KEY (`lum_id`);
+
+--
+-- Indexes for table `labratory_owner`
+--
+ALTER TABLE `labratory_owner`
+  ADD PRIMARY KEY (`labratory_id`);
+
+--
+-- Indexes for table `language`
+--
+ALTER TABLE `language`
+  ADD PRIMARY KEY (`language_id`);
+
+--
+-- Indexes for table `language_field`
+--
+ALTER TABLE `language_field`
+  ADD PRIMARY KEY (`field_id`);
+
+--
+-- Indexes for table `order_item`
+--
+ALTER TABLE `order_item`
+  ADD PRIMARY KEY (`item_id`);
+
+--
+-- Indexes for table `order_tbl`
+--
+ALTER TABLE `order_tbl`
+  ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `package`
+--
+ALTER TABLE `package`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_history`
+--
+ALTER TABLE `payment_history`
+  ADD PRIMARY KEY (`ph_id`);
+
+--
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`pro_id`);
+
+--
+-- Indexes for table `promocode`
+--
+ALTER TABLE `promocode`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`role_id`);
+
+--
+-- Indexes for table `role_access`
+--
+ALTER TABLE `role_access`
+  ADD PRIMARY KEY (`ra_id`);
+
+--
+-- Indexes for table `sidemenus`
+--
+ALTER TABLE `sidemenus`
+  ADD PRIMARY KEY (`sm_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `main_user_id` (`main_user_id`);
+
+--
+-- Indexes for table `vendor_access`
+--
+ALTER TABLE `vendor_access`
+  ADD PRIMARY KEY (`va_id`);
+
+--
+-- Indexes for table `wallet_history`
+--
+ALTER TABLE `wallet_history`
+  ADD PRIMARY KEY (`wh_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `city`
+--
+ALTER TABLE `city`
+  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
+--
+-- AUTO_INCREMENT for table `city_labowner_payment`
+--
+ALTER TABLE `city_labowner_payment`
+  MODIFY `clp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `deliveryboy_feedback`
+--
+ALTER TABLE `deliveryboy_feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `delivery_boy`
+--
+ALTER TABLE `delivery_boy`
+  MODIFY `delivery_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `delivery_boy_payment`
+--
+ALTER TABLE `delivery_boy_payment`
+  MODIFY `dbp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `labowner_feedback`
+--
+ALTER TABLE `labowner_feedback`
+  MODIFY `lf_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `labowner_user_message`
+--
+ALTER TABLE `labowner_user_message`
+  MODIFY `lum_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `labratory_owner`
+--
+ALTER TABLE `labratory_owner`
+  MODIFY `labratory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `language`
+--
+ALTER TABLE `language`
+  MODIFY `language_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `language_field`
+--
+ALTER TABLE `language_field`
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `order_item`
+--
+ALTER TABLE `order_item`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `order_tbl`
+--
+ALTER TABLE `order_tbl`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `package`
+--
+ALTER TABLE `package`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
+-- AUTO_INCREMENT for table `payment_history`
+--
+ALTER TABLE `payment_history`
+  MODIFY `ph_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `pro_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT for table `promocode`
+--
+ALTER TABLE `promocode`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `role_access`
+--
+ALTER TABLE `role_access`
+  MODIFY `ra_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `sidemenus`
+--
+ALTER TABLE `sidemenus`
+  MODIFY `sm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `vendor_access`
+--
+ALTER TABLE `vendor_access`
+  MODIFY `va_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

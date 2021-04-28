@@ -1,0 +1,11 @@
+<ul>
+    <li><a href="<?php echo base_url(); ?>store_account">My Account</a></li>
+    <li><a href="<?php echo base_url(); ?>edit-account">Edit Account</a></li>
+    <li><a href="<?php echo base_url(); ?>change-password">Change Password</a></li>
+    <li><a href="<?php echo base_url(); ?>all-addressbook">Address Book</a></li>
+    <li<?= ($this->uri->segment(1) == "my-design-requests") ? ' class="active"' : ''?>><a href="<?= base_url('my-design-requests') ?>">Design requests</a></li>
+    <li><a href="<?php echo base_url(); ?>wishlist">Wish List</a></li>
+    <li><a href="<?php echo base_url(); ?>order-history">Order History</a></li>
+    <li><a href="<?php echo base_url(); ?>user-newsletter">Newsletter</a></li>
+    <li class="bbnone"><a href="<?php echo base_url(); ?>logout">Logout</a></li>
+</ul>

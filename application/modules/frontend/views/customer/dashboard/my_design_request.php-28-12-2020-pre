@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php $this->load->view('common/header'); ?>
+</head>
+<body>
+<?php $this->load->view('common/header_nav'); ?>
+<!--+++++++++++++ Header End +++++++++++++++++++-->
+<div class="clearfix"></div>
+<section id="my-account">
+    <div class="custom-width">
+        <div class="page-heading">
+            <h1>Welcome <?php echo @$user_type['user_type_name']; ?> Account</h1>
+        </div>
+        <div class="my-account-inner">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="my-account-left-panel">
+                        <div class="design-requst-inner">
+                            <h4>Design requests</h4>
+                            <div class="design-requst-inner-sub">
+                                <h5>Design Request</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Order Number</th>
+                                            <th>Date of<br>
+                                                Request
+                                            </th>
+                                            <th>Designer</th>
+                                            <th>Status</th>
+                                            <th>Description</th>
+                                            <th class="dropdoenstyle">
+                                                <select class="form-control">
+                                                    <option value="">Select Service</option>
+                                                    <?php foreach ($design_service_type as $value) { ?>
+                                                        <option value="<?= $value['id']; ?>"><?= $value['type_name']; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </th>
+                                            <th>Payment Type</th>
+                                            <th style="text-align:center;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($design_request_data as $value) { ?>
+                                            <tr>
+                                                <td><?= $value['orderid'] ?></td>
+                                                <td><?= date('F jS Y', strtotime($value['created_date'])) ?></td>
+                                                <td><?= $value['first_name'] . ' ' . $value['last_name'] ?></td>
+                                                <td><?= $value['order_status']  ?></td>
+                                                <td><?= $value['message'] ?></td>
+                                                <td><?= $value['type_name'] ?></td>
+                                                <td><?= $value['payment_type'] ?></td>
+                                                <td style="text-align:center;">
+                                                    <a href="<?= base_url('my-design-requests/view/' . $value['order_table_id']) ?>">
+                                                        <?php
+                                                        $count_chat = count_chat_designer($value['order_table_id'], $value['designer_id']);
+                                                        @$check_design_request_hour = check_design_request_hour($value['order_table_id']);
+                                                        if($count_chat > 0 && isset($check_design_request_hour) && $check_design_request_hour == TRUE){
+                                                        ?>
+                                                        <div class="chat_count">
+                                                            <?= $count_chat ?>
+                                                        </div>
+                                                        <?php } ?>
+                                                        <img src="<?= base_url('assets/front/images/eye.png') ?>">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="my-account-right-panel">
+                        <?php $this->load->view('common/myaccount_side_panel'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+<?php $this->load->view('common/footer'); ?>
+<?php $this->load->view('common/footer_js'); ?>
+</body>
+</html>

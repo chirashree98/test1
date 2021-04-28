@@ -1,0 +1,295 @@
+<!DOCTYPE html> 
+<html lang="en">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <?php $this->load->view('common/header_include'); ?>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/global/css/jquery.datetimepicker.min.css">
+
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md">
+        <div class="page-wrapper">
+            <?php $this->load->view('common/header'); ?>
+            <div class="clearfix"> </div>
+            <div class="page-container">
+                <?php $this->load->view('common/sidebar'); ?>
+                <div class="page-content-wrapper"> 
+                    <div class="page-content">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="msg_div">
+                                    <?php if ($this->session->flashdata('success') != '') { ?>
+                                        <?php echo $this->session->flashdata('success'); ?>
+                                    <?php } ?>
+                                </div>
+                                <div class="portlet light portlet-fit portlet-form bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption"> <i class="icon-settings font-red"></i> <span class="caption-subject font-red sbold uppercase"> Edit Product</span> </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <form action="<?php echo base_url(); ?>admin/product_management/update_product" id="myFrm" method="post" class="horizontal-form" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?php echo $query['p_id']; ?>" name="p_id" id="p_id" >
+                                            <div class="form-body">
+                                           <!--<pre>
+                                                <?php // print_r($query); ?>
+                                                </pre>-->
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product For ( Design Store SS)</label>
+                                                            <select class="form-control" required="" id="u_id" name="u_id">
+                                                                <option value="">Select User</option>
+                                                                <?php foreach ($ss_users->result() as $row) { ?>
+                                                                    <option <?php
+                                                                    if ($query['u_id'] == $row->id) {
+                                                                        echo "selected";
+                                                                    }
+                                                                    ?> value="<?php echo $row->id ?>"><?php echo $row->first_name . ' ' . $row->first_name ?></option>
+                                                                    <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Name</label>
+                                                            <input type="text" required value="<?php echo $query['name']; ?>" name="name" id="p_name" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Price</label>
+                                                            <input type="number" min="0.0" step="0.01" value="<?php echo $query['price']; ?>"  required="" name="price" id="price" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Sell Price</label>
+                                                            <input type="number" min="0.0" step="0.01" value="<?php echo $query['sell_price']; ?>"  required="" name="sell_price" id="sell_price" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-group">
+                                                            <label class="control-label">SKU</label>
+                                                            <input type="text" required value="<?php echo $query['sku']; ?>"  name="sku" id="sku" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-group">
+                                                            <label class="control-label">Quantity</label>
+                                                            <input type="number" min="0" value="<?php echo $query['qty']; ?>"  required="" name="qty" id="qty" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Description</label>
+                                                            <textarea required name="details" id="details" class="form-control"><?php echo $query['details']; ?> </textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Extra Description [ Please Use comma (,) separator ]</label>
+                                                            <input type="text" value="<?php echo $query['extra_desc']; ?>"  required="" name="extra_desc" id="extra_desc" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Category</label>
+                                                            <select class="form-control" required="" onchange="getCat();" id="cat_id" name="cat_id">
+                                                                <option value="">Select Category</option>
+                                                                <?php foreach ($category->result() as $row) { ?>
+                                                                    <option <?php
+                                                                    if ($query['cat_id'] == $row->id) {
+                                                                        echo "selected";
+                                                                    }
+                                                                    ?> value="<?php echo $row->id ?>"><?php echo $row->name; ?></option>
+                                                                    <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Sub Category</label>
+                                                            <select class="form-control"  id="sub_cat_id" name="sub_cat_id">
+                                                                <option value="0">Select Sub Category </option>
+                                                                <?php foreach ($sub_category->result() as $row) { ?>
+                                                                    <option <?php
+                                                                    if ($query['sub_cat_id'] == $row->id) {
+                                                                        echo "selected";
+                                                                    }
+                                                                    ?> value="<?php echo $row->id ?>"><?php echo $row->sub_category_name; ?></option>
+                                                                    <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+ <div class="row">
+
+                                                <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Is Featured:</label>
+                                                            <?php 
+                                                            if($query['is_featured']=="Y")
+                                                            {
+                                                                $checked='TRUE';
+                                                            } 
+                                                            else
+                                                            {
+                                                                $checked=FALSE;
+                                                            }
+                                                            ?>
+                                                           
+                                                            <?php echo form_checkbox(array('name'=>'is_featured','value'=>'Y','checked' =>$checked));?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+		
+		
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Main Images</label>
+                                                            <input type="file"  name="image"  id="image" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <img src="<?php echo base_url(); ?>uploads/product/<?php echo $query['image']; ?>" height="100" />
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                    $extra_images = json_decode($query['extra_images']);
+                                                    ?>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Extra Images</label>
+                                                            <input type="file"  name="extra_images[]" multiple id="images" class="form-control" placeholder="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+<?php for ($i = 0; $i < count($extra_images); $i++) { ?>
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="old_extra_images[]" value="<?php echo $extra_images[$i]; ?>" />
+                                                                <img src="<?php echo base_url(); ?>uploads/product/<?php echo $extra_images[$i]; ?>" height="100" />
+                                                                <button type="button" class="btn blue remove"> Remove </button>
+                                                            </div>
+<?php } ?>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Attribute</label>
+                                                            <br>
+                                                            <?php
+                                                            $pro_attribute= (array)json_decode($query['attribute']);
+                                                            foreach ($parent_attribute->result() as $row) {
+                                                                ?>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label"><?php echo $row->attr_name; ?></label>
+                                                                    </div>
+
+                                                                    <div class="form-group addproductcheckitem">
+                                                                        <?php
+                                                                        foreach ($child_attribute->result() as $c_row) {
+                                                                            if ($row->id == $c_row->parent_id) {
+                                                                                ?>
+                                                                                <div>
+                                                                                    <span><?php echo $c_row->attr_name; ?></span>                                                                            <div class="addproductcheck">
+                                                                                        <input type="checkbox"  <?php  if (in_array($c_row->id,$pro_attribute)){ echo"checked"; } ?>  value="<?php echo $c_row->id; ?>" name="attribute[]" class="">
+                                                                                    </div>
+                                                                                </div>
+                                                                            <?php }
+                                                                        } ?>
+                                                                    </div>
+
+                                                                </div>
+<?php } ?>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+<!--
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Product Attribute</label>
+                                                            <br>
+                                                            <?php 
+                                                            $pro_attribute= (array)json_decode($query['attribute']);
+                                                            foreach ($attribute->result() as $row) { 
+                                                                ?>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label"><?php echo $row->attr_name; ?></label>
+                                                                    </div>
+                                                                <div class="">
+                                                                    <div class="form-group addproductcheckitem">
+                                                                        <?php
+                                                                        $attr_value = json_decode($row->attr_value);
+                                                                        foreach ($attr_value as $val) {
+                                                                            ?>
+                                                                        <div>
+                                                                        <?php
+                                                                            echo '<span>'.$val.'</span>';
+                                                                            ?>  
+                                                                            <div class="addproductcheck">                                                                      
+                                                                            <input type="checkbox" <?php  if (in_array($val,$pro_attribute[$row->attr_name])){ echo"checked"; } ?> value="<?php echo $val; ?>"  name="attribute[<?php echo $row->attr_name; ?>][]" class="form-control" >
+                                                                        </div>
+                                                                        </div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            <?php } ?>
+
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+
+                                            </div>
+                                            <div class="form-actions right"><button id="frmSubmit" type="submit" class="btn blue"> <i class="fa fa-check"></i> Save Product </button> </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        <?php $this->load->view('common/footer'); ?>
+        </div>
+<?php // $this->load->view('common/quick_nav');    ?>
+<?php $this->load->view('common/js_include'); ?>
+        <script src="<?php echo base_url(); ?>assets/admin/global/scripts/jquery.datetimepicker.full.min.js"></script>
+        <script>
+
+
+                                                                $(document).on("click", ".remove", function () {
+                                                                    $(this).parent().remove();
+                                                                });
+                                                                function getCat() {
+                                                                    $.post('<?php echo base_url(); ?>admin/product_management/get_sub_category', 'c_id=' + $('#cat_id').val(), function (data) {
+                                                                        $('#sub_cat_id').html(data);
+                                                                    });
+                                                                }
+        </script>
+    </body>
+
+</html>

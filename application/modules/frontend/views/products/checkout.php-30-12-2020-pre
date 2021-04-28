@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head> <?php
+    $this->load->view('common/header');
+    ?> </head>
+<body> <?php
+$this->load->view('common/header_nav');
+?>
+<section id="my-account">
+    <div class="custom-width">
+        <div class="page-heading"><h1>Checkout</h1></div>
+        <div class="user-right-panel">
+            <div class="user-dasbord-area">
+                <div class="my-account-left-panel">
+                    <div class="my-account-left-panel-sec1 checkoutpage">
+                        <div class="accordion" id="accordionExample">
+                            <form action="<?= base_url('checkout-confirm') ?>" method="post">
+                                <input type="hidden" name="order_id" value="<?= $order_id ?>">
+                                <input type="hidden" name="customer_id" value="<?= $customer_id ?>">
+                                <div class="card">
+                                    <div class="card-header" id="headingzero">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link <?php
+                                            echo $this->session->userdata('USER_ID') != '' ? 'collapsed' : '';
+                                            ?>"
+                                                    type="button" data-toggle="collapse" data-target="#collapsezero"
+                                                    aria-expanded="false" aria-controls="collapsezero">Step 1: Checkout
+                                                Options<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapsezero"
+                                         class="collapse <?php
+                                         echo $this->session->userdata('USER_ID') != '' ? '' : 'in';
+                                         ?>"
+                                         aria-labelledby="headingzero" data-parent="#accordionExample">
+                                        <div class="card-body"> <?php
+                                            if ($this->session->userdata('USER_TYPE') != '4' || $this->session->userdata('USER_ID') == '') {
+                                            ?>
+                                            <div class="row">
+                                                <div class="col-sm-6"><p>New Customer</p><span>Checkout Options:</span>
+                                                    <h6>
+                                                        Register Account</h6><span>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</span><a
+                                                            href="<?php
+                                                            echo base_url();
+                                                            ?>register"
+                                                            style="color:#fff;float:left"
+                                                            class="continue-btn flotchnage">Continue</a>
+                                                </div>
+                                                <div class="col-sm-6"><span
+                                                            id="msg_box"> <?php
+                                                        if ($this->session->flashdata('success') != '') {
+                                                            ?><?php
+                                                            echo $this->session->flashdata('success');
+                                                            ?><?php
+                                                        }
+                                                        ?> </span>
+                                                    <form action="<?php
+                                                    echo base_url();
+                                                    ?>checkout-login" method="POST"
+                                                          enctype="multipart/form-data"><span
+                                                                id="msg_box"> <?php
+                                                            if ($this->session->flashdata('error') != '') {
+                                                                ?><?php
+                                                                echo $this->session->flashdata('error');
+                                                                ?><?php
+                                                            }
+                                                            ?> </span>
+                                                        <p>Returning Customer</p><span>I am a returning customer</span>
+                                                        <div class="form-group"><label>Email *</label><input type="text"
+                                                                                                             class="form-control"
+                                                                                                             placeholder="Enter Your Email"
+                                                                                                             name="email"
+                                                                                                             id="email"
+                                                                                                             required>
+                                                            <p class="error_msg"
+                                                               id="email_err"><?php
+                                                                echo form_error('email');
+                                                                ?> </p></div>
+                                                        <div class="form-group"><label>Password *</label><input
+                                                                    type="password" class="form-control"
+                                                                    placeholder="Enter Password" id="pswd" name="pswd"
+                                                                    required>
+                                                            <p class="error_msg"
+                                                               id="pswd_err"><?php
+                                                                echo form_error('pswd');
+                                                                ?> </p><a
+                                                                    href="<?php
+                                                                    echo base_url();
+                                                                    ?>forgot_password">Forgotten
+                                                                Password</a></div>
+                                                        <button type="submit" id="loginchk"
+                                                                class="continue-btn flotchnage">
+                                                            Login
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div> <?php
+                                        } else {
+                                            echo "Already LoggedIn";
+                                        }
+                                        ?> </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button id="billingDetailsTab"
+                                                    class="btn btn-link <?php
+                                                    echo $this->session->userdata('USER_ID') != '' ? '' : 'collapsed';
+                                                    ?>"
+                                                    type="button" data-toggle="collapse" data-target="#collapseOne"
+                                                    aria-expanded="true" aria-controls="collapseOne">Step 2: Billing
+                                                Details<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseOne" class="collapse <?php echo $this->session->userdata('USER_ID') != '' ? 'in' : ''; ?>" aria-labelledby="headingOne" data-parent="#accordionExample" aria-expanded="true">
+                                        <div class="card-body"> <?php
+                                            //if ($this->session->userdata('USER_TYPE') == '4' || $this->session->userdata('USER_ID') != '') {
+                                            ?>
+                                            <div class="row">
+                                                <div class="col-sm-12"> <?php
+                                                    //print_r($address_data);
+                                                    if ($address_data->num_rows() > 0) {
+                                                        $i = 1;
+                                                        foreach ($address_data->result() as $row) {
+                                                            ?>
+                                                            <div class="delivery-detailsarea-checkoutpage">
+                                                                <h6><input type="radio" name="billing_address" <?php
+                                                                    if ($i == 1) {
+                                                                        echo 'checked';
+                                                                    }
+                                                                    ?> value="<?php
+                                                                    echo $row->id;
+                                                                    ?>"
+                                                                           class="billing_address_details"><span
+                                                                            class="checkout-detailsaddress"><ul><li><?php
+                                                                                echo $row->name . ' - ' . $row->phone;
+                                                                                ?></li><li><?php
+                                                                                echo variable_array_check($row->company_name) ? $row->company_name . ',' : '';
+                                                                                ?> <?php
+                                                                                echo $row->address2;
+                                                                                ?>, <?php
+                                                                                echo $row->city;
+                                                                                ?>, <?php
+                                                                                echo $row->postcode;
+                                                                                ?>,</li></ul></span>
+                                                                </h6>
+                                                            </div> <?php
+                                                            $i++;
+                                                        }
+                                                    }
+                                                    ?> <?php
+                                                    if ($address_data->num_rows() > 0) {
+                                                        ?>
+                                                        <button type="button"
+                                                                class="btn add_new_billing_address addressbtncheckout"
+                                                                data-toggle="collapse" data-target="#demo"><img
+                                                                    src="<?php
+                                                                    echo base_url();
+                                                                    ?>assets/front/images/plus-black.png">
+                                                            Add a New Address
+                                                        </button> <?php
+                                                    }
+                                                    ?> </div>
+                                                <div id="demo" class="collapse<?= ($address_data->num_rows() < 1) ? ' in' : '' ?>">
+                                                    <input type="radio" id="newAdd" name="billing_address" <?php if ($address_data->num_rows() < 1) { echo 'checked'; } ?> value="new_address" class="billing_address_details">
+                                                    <span class="checkout-detailsaddress">
+                                                        <div class="col-sm-6">
+                                                            <p>Your Personal Details</p>
+                                                            <div class="form-group">
+                                                                <label>Name *</label>
+                                                                <input type="text" class="form-control" name="billingname" id="billingname">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Email *</label>
+                                                                <input type="email" class="form-control" name="billingemail" id="billingemail">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Phone *</label>
+                                                                <input type="text" class="form-control" name="billingphone" id="billingphone">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p>Your Address</p>
+                                                            <div class="form-group">
+                                                                <label>Company</label>
+                                                                <input type="text" class="form-control" name="billing_company_name" id="billing_company_name">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Address *</label>
+                                                                <input type="text" class="form-control" name="billingaddress" id="billingaddress">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>City *</label>
+                                                                <input type="text" class="form-control" name="billingcity" id="billingcity">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Post Code *</label>
+                                                                <input type="text" class="form-control" name="billingzip" id="billingzip">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Country *</label>
+                                                                <select name="billingcountry" class="form-control country" id="billingcountry">
+                                                                    <option value="">Select Country</option>
+                                                                    <?php
+                                                                    foreach ($country->result() as $val) {
+                                                                    ?>
+                                                                        <option value="<?php echo $val->id; ?>"><?php echo strtoupper($val->country_name); ?></option>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Rigion / State *</label>
+                                                                <select class="form-control state" name="billingstate" id="billingstate">
+                                                                    <option value="">Select Country First</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <button type="button" id="billingContinue"
+                                                                class="continue-btn">Continue
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingDeliveryMethod">
+                                        <h2 class="mb-0">
+                                            <button id="deliveryMethodTab" class="btn btn-link collapsed"
+                                                    type="button" data-toggle="collapse"
+                                                    data-target="#collapseDeliveryMethodTab"
+                                                    aria-expanded="false" aria-controls="collapseDeliveryMethodTab">Step
+                                                3:
+                                                Delivery Method<i class="fa fa-caret-down" aria-hidden="true"></i>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseDeliveryMethodTab" class="collapse" aria-labelledby="headingDeliveryMethod" data-parent="#accordionExample" aria-expanded="false">
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Image</th>
+                                                    <th>Product</th>
+                                                    <th>SKU</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody> <?php
+                                                foreach ($query as $row) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="hidden" class="total_cart_product_count"
+                                                                   name="total_cart_product_count"
+                                                                   value="<?= count($query) ?>">
+                                                            <?php
+                                                            $pickup_data = check_cart_product_pickup_address_exist($row->store_id);
+                                                            ?>
+                                                            <?php
+                                                            if (variable_array_check($pickup_data)) {
+                                                                $pickup_id = $pickup_data[0]->id;
+                                                                if (count($pickup_data) == 2) {
+                                                                    ?>
+                                                                    <input type="hidden" name="product_id_checkout[]"
+                                                                           value="<?= $row->product_id ?>">
+
+                                                                    <input type="checkbox" name="pickup_address[]"
+                                                                           value="<?= $pickup_id ?>/<?= $row->cart_id ?>">
+                                                                    <?php
+                                                                    echo $pickup_data[0]->delivery_type;
+                                                                } elseif ($pickup_data[0]->dService_id == 2) {
+                                                                    //pr($pickup_data[0]->dService_id);
+                                                                    ?>
+                                                                    <input type="hidden" name="product_id_checkout[]"
+                                                                           value="<?= $row->product_id ?>">
+
+                                                                    <input type="checkbox" name="pickup_address[]"
+                                                                           value="<?= $pickup_id ?>/<?= $row->cart_id ?>"
+                                                                           onclick="return false" checked>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><img height="100px" src="<?php
+                                                            echo base_url();
+                                                            ?>uploads/product/<?php
+                                                            echo $row->product_image;
+                                                            ?>">
+                                                        </td>
+                                                        <td><?php
+                                                            echo $row->product_name;
+                                                            ?></td>
+                                                        <td><?php
+                                                            echo $row->sku;
+                                                            ?></td>
+                                                        <td>
+                                                            <?php
+                                                            if (variable_array_check($pickup_data)) {
+                                                                ?>
+                                                                <?= !empty($pickup_data[0]->name) ? $pickup_data[0]->name : '' ?> <?= !empty($pickup_data[0]->company_name) ? ', ' . $pickup_data[0]->company_name : '' ?> <?= !empty($pickup_data[0]->address2) ? ', ' . $pickup_data[0]->address2 : '' ?> <?= !empty($pickup_data[0]->postcode) ? ', ' . $pickup_data[0]->postcode : '' ?> <?= !empty($pickup_data[0]->city) ? ', ' . $pickup_data[0]->city : '' ?> <?= !empty($pickup_data[0]->state_name) ? ', ' . $pickup_data[0]->state_name : '' ?> <?= !empty($pickup_data[0]->country_name) ? ', ' . $pickup_data[0]->country_name : '' ?> <?= !empty($pickup_data[0]->email) ? ', ' . $pickup_data[0]->email : '' ?> <?= !empty($pickup_data[0]->phone) ? ', ' . $pickup_data[0]->phone : '' ?>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr> <?php
+                                                }
+                                                ?> </tbody>
+                                            </table>
+                                            <button class="continue-btn delivery_method_continue" type="button">
+                                                Continue
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo">
+                                        <h2 class="mb-0">
+                                            <button id="deliveryDetailsTab" class="btn btn-link collapsed"
+                                                    type="button" data-toggle="collapse" data-target="#collapseTwo"
+                                                    aria-expanded="false" aria-controls="collapseTwo">Step 3:
+                                                Delivery Details<i class="fa fa-caret-down" aria-hidden="true"></i>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample" aria-expanded="false">
+                                        <div class="card-body">
+                                            <div class="delivery_type_delivery"> <?php
+                                                if ($this->session->userdata('USER_TYPE') == '4' || $this->session->userdata('USER_ID') != '') {
+                                                    ?>
+                                                    <div class="row">
+                                                        <div class="col-sm-12"> <?php
+                                                            if ($address_data->num_rows() > 0) {
+                                                                $i = 1;
+                                                                foreach ($address_data->result() as $row) {
+                                                                    ?>
+                                                                    <div class="delivery-detailsarea-checkoutpage">
+                                                                        <h6><input type="radio"
+                                                                                   name="delivery_address" <?php
+                                                                            if ($i == 1) {
+                                                                                echo 'checked';
+                                                                            }
+                                                                            ?> value="<?php
+                                                                            echo $row->id;
+                                                                            ?>"
+                                                                                   class="billing_address_details"><span
+                                                                                    class="checkout-detailsaddress"><ul><li><?php
+                                                                                        echo $row->name . ' - ' . $row->phone;
+                                                                                        ?></li><li><?php
+                                                                                        echo variable_array_check($row->company_name) ? $row->company_name . ',' : '';
+                                                                                        ?> <?php
+                                                                                        echo $row->address2;
+                                                                                        ?>, <?php
+                                                                                        echo $row->city;
+                                                                                        ?>, <?php
+                                                                                        echo $row->postcode;
+                                                                                        ?> </li></ul></span>
+                                                                        </h6>
+                                                                    </div> <?php
+                                                                    $i++;
+                                                                }
+                                                            }
+                                                            ?> </div>
+                                                    </div> <?php
+                                                }
+                                                if ($address_data->num_rows() > 0) {
+                                                    ?>
+                                                    <button type="button"
+                                                            class="btn add_new_delivery addressbtncheckout"
+                                                            data-toggle="collapse"
+                                                            data-target="#add_new_delivery_address_accordion"><img
+                                                                src="<?php
+                                                                echo base_url();
+                                                                ?>assets/front/images/plus-black.png">
+                                                        Add a New Address
+                                                    </button> <?php
+                                                }
+                                                ?>
+                                                <div class="new_delivery_address_form" <?= ($address_data->num_rows() > 0) ? 'style="display: none;"' : '' ?>>
+                                                    <div id="add_new_delivery_address_accordion" class="collapse">
+                                                        <span>Delivery charge will be included for your final billing amount</span>
+                                                        <h5><input type="checkbox" id="copy_address"
+                                                                   name="copy_address"> My delivery and billing address
+                                                            are the same</h5>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <input type="radio" id="new_add_delivery" value="new_address" name="delivery_address" <?= ($address_data->num_rows() < 1) ? 'checked' : '' ?>/>
+                                                                    <label>Name *</label>
+                                                                    <input type="text" class="form-control" name="shippingname" id="shippingname">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Email *</label>
+                                                                    <input type="email" class="form-control" name="shippingemail" id="shippingemail">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Phone *</label>
+                                                                    <input type="text" class="form-control" name="shippingphone" id="shippingphone">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Company </label>
+                                                                    <input type="text" class="form-control" name="shipping_company_name" id="shipping_company_name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Address *</label>
+                                                                    <input type="text" class="form-control"
+                                                                           name="shippingaddress"
+                                                                           id="shippingaddress">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>City *</label>
+                                                                    <input type="text" class="form-control"
+                                                                           name="shippingcity" id="shippingcity">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Post Code *</label>
+                                                                    <input type="text" class="form-control"
+                                                                           name="shippingzip" id="shippingzip">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Country *</label>
+                                                                    <select name="shippingcountry" class="form-control delivery_country" id="shippingcountry">
+                                                                        <option value="">Select Country</option>
+                                                                        <?php foreach ($country->result() as $val) { ?>
+                                                                            <option value="<?php echo $val->id; ?>">
+                                                                                <?php echo strtoupper($val->country_name); ?></option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Region / State *</label>
+                                                                    <select class="form-control delivery_state"
+                                                                            name="shippingstate" id="shippingstate">
+                                                                        <option value="">Select Country First
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="continue-btn delivery_pickup_continue" type="button"
+                                                    id="deliveryContinue">Continue
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h2 class="mb-0">
+                                            <button id="confirmOrderTab" class="btn btn-link collapsed"
+                                                    type="button" data-toggle="collapse" data-target="#collapseFour"
+                                                    aria-expanded="false" aria-controls="collapseFour">Step 4:
+                                                Confirm Order<i class="fa fa-caret-down" aria-hidden="true"></i>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample" aria-expanded="false">
+                                        <div class="card-body">
+                                            <div class="cart conform-order">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Image</th>
+                                                            <th>Product</th>
+                                                            <th>SKU</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Total</th>
+                                                            <th class="th_delivery_method" style="display: none;">
+                                                                Delivery Method
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody> <?php
+                                                        $sub_tot = floatval(0);
+                                                        $tot = floatval(0);
+                                                        foreach ($query as $row) {
+                                                            ?>
+                                                            <tr>
+                                                                <td><img height="100px"
+                                                                         src="<?php
+                                                                         echo base_url();
+                                                                         ?>uploads/product/<?php
+                                                                         echo $row->product_image;
+                                                                         ?>">
+                                                                </td>
+                                                                <td><?php
+                                                                    echo $row->product_name;
+                                                                    ?></td>
+                                                                <td><?php
+                                                                    echo $row->sku;
+                                                                    ?></td>
+                                                                <td><?php
+                                                                    echo $row->cart_quantity;
+                                                                    ?></td>
+                                                                <td>SR <?php
+                                                                    echo $row->sell_price;
+                                                                    ?></td>
+                                                                <td>
+                                                                    SR <?php
+                                                                    echo floatval($row->sell_price * $row->cart_quantity);
+                                                                    ?>
+                                                                </td>
+                                                                <td class="td_delivery_method"
+                                                                    id="td_delivery_method_id_<?= $row->cart_id ?>"
+                                                                    style="display: none;">
+                                                                    Delivery
+                                                                </td>
+                                                            </tr> <?php
+                                                            $sub_tot += floatval($row->sell_price * $row->cart_quantity);
+                                                            $tot += floatval($row->sell_price * $row->cart_quantity);
+                                                        }
+                                                        ?> </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-sm-4 col-md-offset-8 btnone">
+                                                    <div class="row">
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td><b>Subtotal</b></td>
+                                                                    <td style="text-align:right">
+                                                                        SR <?php
+                                                                        echo $sub_tot;
+                                                                        ?></td>
+                                                                </tr>
+                                                                <tr class="borderbnone">
+                                                                    <td class="borderbnone"><b>Total</b></td>
+                                                                    <td class="borderbnone"
+                                                                        style="text-align:right">
+                                                                        SR <?php
+                                                                        echo $tot;
+                                                                        ?> </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <a href="javascript:void(0);" class="continue-btn"
+                                                               id="product_confirm">Confirm</a></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h2 class="mb-0">
+                                            <button id="paymentMethodTab" class="btn btn-link collapsed"
+                                                    type="button" data-toggle="collapse"
+                                                    data-target="#collapseThree" aria-expanded="false"
+                                                    aria-controls="collapseThree">Step 5: Payment Method<i
+                                                        class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample" aria-expanded="false">
+                                        <div class="card-body">Anim pariatur cliche reprehenderit, enim eiusmod high
+                                            life accusamus terry richardson ad squid. 3 wolf moon officia aute, non
+                                            cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+                                            single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh
+                                            helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
+                                            proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer farm-to-table, raw denim aesthetic synth nesciunt you probably
+                                            haven't heard of them accusamus labore sustainable VHS.
+                                            <div class="form-group">
+                                                <button class="continue-btn" type="submit" id="paymentContinue">
+                                                    Confirm Order
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div> <?php
+$this->load->view('common/footer');
+?>
+</body> <?php
+$this->load->view('common/footer_js');
+?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>function isEmail(e) {
+        return /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(e)
+    }
+
+    $(document).ready(function () {
+        $("#goReg").on("click", function () {
+            $("#goRegLink").click()
+        }), $(".add_new_billing_address").on("click", function () {
+            $("#newAdd").click();
+        })
+    }), $("#loginchk").on("click", function () {
+        return $(".error_msg").html(""), "" == $("#email").val() ? ($("#email").next(".error_msg").html("Please enter email id "), $("#email").focus(), !1) : isEmail($("#email").val()) ? "" == $("#pswd").val() ? ($("#pswd").next(".error_msg").html("Please enter password"), $("#pswd").focus(), !1) : void 0 : ($("#email").next(".error_msg").html("Please enter a valid email id "), $("#email").focus(), !1)
+    })</script>
+<script type="text/javascript">$(document).ready(function () {
+        $("#copy_address").click(function () {
+            if ($('input[name="copy_address"]').is(":checked")) {
+                $("#shippingname").val($("#billingname").val()), $("#shipping_company_name").val($("#billing_company_name").val()), $("#shippingemail").val($("#billingemail").val()), $("#shippingaddress").val($("#billingaddress").val()), $("#shippingcity").val($("#billingcity").val()), $("#shippingzip").val($("#billingzip").val()), $("#shippingphone").val($("#billingphone").val());
+                var i = $("#billingstate option:selected").val();
+                $("#shippingstate option[value='" + i + "']").attr("selected", "selected");
+                var l = $("#billingcountry option:selected").val();
+                $("#shippingcountry option[value='" + l + "']").attr("selected", "selected")
+            } else $("#shippingname").val(""), $("#shipping_company_name").val(""), $("#shippingemail").val(""), $("#shippingaddress").val(""), $("#shippingcity").val(""), $("#shippingstate").val(""), $("#shippingcountry").val(""), $("#shippingzip").val(""), $("#shippingphone").val("")
+        })
+    })</script>
+</html>

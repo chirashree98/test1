@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+
+
+
+
+        <section id="artist-accept-decline">
+            <div class="custom-width">
+                <div class="artist-heading">
+                    <h1>Artist Dashboard</h1>
+                </div>
+
+                <div class="artist-accept-decline-inner">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="artist-left-panel">
+                                <?php $this->load->view('artist/artist-left-panel'); ?>  
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                             <div class="my-account-left-panel">
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>Edit Address Book</h4>
+                                    <?php // print_r($query);?>
+                                    <div class="my-account-left-panel-sec1-inner">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                            <div class="artist-right-panel">
+
+                                <form action="<?php echo base_url(); ?>update-addressbook" id="myFrm" method="post" >
+
+                                    <p>Address Book Details</p>
+                                    <?php
+                                    
+                                    //print_R($query);
+                                    
+                                    ?>
+                                    <div class="row">
+                                    <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>First Name *</label>
+                                        <input type="text" name="first_name" class="form-control" placeholder="" value ="<?php echo $query['first_name']; ?>" id="first_name" required/>
+                                        <p class = "error_msg"><?php echo form_error('first_name'); ?> </p>
+                                    </div>
+</div>
+ <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Last Name *</label>
+                                        <input type="text" name="last_name" class="form-control" placeholder="" value ="<?php echo $query['last_name']; ?>" id="last_name" required/>
+                                        <p class = "error_msg"><?php echo form_error('last_name'); ?> </p>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Description *</label>
+                                        <textarea type="text" class="form-control" name="email" placeholder="Description Here" id="email" value="<?php echo $query['email']; ?>"></textarea>
+                                        <p class = "error_msg"><?php echo form_error('email'); ?> </p>
+                                    </div>
+
+ 
+                                    <!--<div class="form-group">
+                                        <label>Phone *</label>
+                                        <span class="number-cuntrycode">+966</span>
+                                        <input type="number" name="phone" class="form-control number-cuntry" placeholder="phone"  value="<?php echo $query['phone']; ?>" id="phone"  title="Please enter a valid phone number" onkeyup="if (/\D/g.test(this.value))
+            this.value = this.value.replace(/\D/g, '')"  required/>
+                                        <p class = "error_msg"><?php echo form_error('phone'); ?> </p>
+
+                                    </div>-->
+
+                                   
+                                    <div class="form-group">
+                                        <label>About The Designer / Studio * </label>
+                                        <textarea type="text" name="company_name" id="company_name" class="form-control" placeholder="" value ="<?php echo $query['company_name']; ?>"></textarea>
+                                        <!--<p class = "error_msg"><?php echo form_error('company_name'); ?> </p>-->
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>About Me * </label>
+                                        <textarea type="text" name="address2" id="address2" class="form-control" placeholder="" value ="<?php echo $query['address2']; ?>"></textarea>
+                                        <p class = "error_msg"><?php echo form_error('address2'); ?> </p>
+                                    </div>
+
+
+ <h4 class="mb15 linehight">Servises <button class="seemore-btn">Add More Servises</button></h4>
+
+
+                                    <div class="form-group">
+                                        <label>Services *</label>
+                                        <input type="text" name="city" class="form-control" placeholder="" value ="<?php echo $query['city']; ?>" id="city" />
+                                        <p class = "error_msg"><?php echo form_error('city'); ?> </p>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <label>Give a Description *</label>
+                                        <textarea type="text" class="form-control" name="email" placeholder="" id="email" value="<?php echo $query['email']; ?>"></textarea>
+                                        <p class = "error_msg"><?php echo form_error('email'); ?> </p>
+                                    </div>
+
+                                   <div class="form-group">
+                                        <label>Add A Fixed Cost *</label>
+                                        <input type="text" name="postcode" id="postcode" class="form-control" placeholder="$125" value ="<?php echo $query['postcode']; ?>"/>
+                                        <p class = "error_msg"><?php echo form_error('postcode'); ?> </p>
+                                    </div>
+                                    
+                                    
+                                  <div class="addmoreservices">
+                                  <h4 class="mb15 linehight">Servises <button class="seemore-btn">Remove</button></h4>
+                                  <div class="form-group">
+                                        <label>Services *</label>
+                                        <input type="text" name="city" class="form-control" placeholder="" value ="<?php echo $query['city']; ?>" id="city" />
+                                        <p class = "error_msg"><?php echo form_error('city'); ?> </p>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <label>Give a Description *</label>
+                                        <textarea type="text" class="form-control" name="email" placeholder="" id="email" value="<?php echo $query['email']; ?>"></textarea>
+                                        <p class = "error_msg"><?php echo form_error('email'); ?> </p>
+                                    </div>
+
+                                   <div class="form-group">
+                                        <label>Add A Fixed Cost *</label>
+                                        <input type="text" name="postcode" id="postcode" class="form-control" placeholder="$125" value ="<?php echo $query['postcode']; ?>"/>
+                                        <p class = "error_msg"><?php echo form_error('postcode'); ?> </p>
+                                    </div>
+                                  </div>  
+                                    
+                                    
+
+                                    <!--<div class="form-group">
+                                        <label>Country *</label>
+                                        <select name = "country_id" class = "form-control" id = "country" >
+                                            <option value="">Select Country</option>
+                                            <?php
+                                            foreach ($country->result() as $val) {
+                                                ?>
+                                                <option <?php
+                                                if ($val->id == $query['country_id']) {
+                                                    echo 'selected';
+                                                }
+                                                ?> value  = "<?php echo $val->id; ?>"  > <?php echo strtoupper($val->country_name); ?> </option>
+                                                    <?php
+                                                }
+                                                ?>
+                                        </select>
+                                        <p class = "error_msg"><?php echo form_error('country_id'); ?> </p>
+                                    </div>-->
+
+                                    <!--<div class="form-group" >
+                                        <label>Rigion / State *</label>
+                                        <select class="form-control" name="state_id" required="" id="state">
+                                            <?php
+                                            if (count($state->result()) > 0) {
+
+                                                foreach ($state->result() as $sval) {
+                                                    ?>
+                                                    <option <?php
+                                                    if ($sval->id == $query['state_id']) {
+                                                        echo 'selected';
+                                                    }
+                                                    ?> value  = "<?php echo $sval->id; ?>"  > <?php echo strtoupper($sval->name); ?> </option>
+                                                        <?php
+                                                    }
+                                                } else {
+                                                    ?>
+
+                                                <option value ="">Select Country First</option>
+                                                <?php
+                                            }
+                                            ?>
+
+
+                                        </select>
+                                        <p class = "error_msg"><?php echo form_error('state_id'); ?> </p>
+                                    </div>-->
+
+
+                                    <div class="form-group">
+                                        <!--
+                                        <button class="back">Back</button>
+                                        <button  class="back"href="<?php echo base_url(); ?>all-addressbook">Back</button>-->
+                                        <button class="continue" id = "editUser">Continue</button>
+                                    </div>
+                                </form>
+                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                        <div class="dashboard-btn-area col-sm-12">
+                            <button class="save">Save</button>
+                            <button class="save cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <div class="clearfix"></div> 
+
+        <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+    <?php $this->load->view('common/footer_js'); ?>  
+
+</html>

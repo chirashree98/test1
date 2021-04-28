@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div>
+
+
+
+
+
+
+        <section id="my-account">
+            <div class="custom-width">
+                <div class="page-heading">
+                    <h1>Order History</h1>
+                </div>
+
+                <div class="my-account-inner">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="my-account-left-panel">
+                                <div class="my-account-left-panel-sec1">
+                                    <h4>Order History</h4>
+                                    <div class="my-account-left-panel-sec1-inner wishlisttable">
+                                        <p>Your Order History</p>
+                                        <div class="wishlist-area">
+                                            <div class="cart">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Image</th>
+                                                                <th>Product</th>
+                                                                <th>Model</th>
+                                                                <th>Price</th>
+                                                                <th>Quantity</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><img src="<?php echo base_url(); ?>assets/front/images/wishlist-img.png"/></td>
+                                                                <td>MODERN LAMP</td>
+                                                                <td>XYZ1234DYT56</td>
+                                                                <td>€95.00</td>
+                                                                <td>1</td>
+                                                                <td>07/08/2020</tr>
+                                                            <tr>
+                                                                <td><img src="<?php echo base_url(); ?>assets/front/images/wishlist-img.png"/></td>
+                                                                <td>MODERN LAMP</td>
+                                                                <td>XYZ1234DYT56</td>
+                                                                <td>€95.00</td>
+                                                                <td>1</td>
+                                                                <td>07/08/2020</tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="my-account-right-panel">
+                                <ul>
+                                   <?php $this->load->view('common/myaccount_side_panel'); ?>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <div class="clearfix"></div> 
+
+        <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+    <?php $this->load->view('common/footer_js'); ?>  
+
+</html>

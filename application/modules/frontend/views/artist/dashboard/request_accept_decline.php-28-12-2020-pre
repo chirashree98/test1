@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php $this->load->view('common/header'); ?>
+</head>
+<body>
+<?php $this->load->view('common/header_nav'); ?>
+<!--+++++++++++++ Header End +++++++++++++++++++-->
+<div class="clearfix"></div>
+<section id="artist-accept-decline">
+    <div class="custom-width">
+        <div class="artist-heading">
+            <h1>Artist Dashboard</h1>
+        </div>
+
+        <div class="artist-accept-decline-inner">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="artist-left-panel">
+                        <?php $this->load->view('artist/artist-left-panel'); ?>
+                    </div>
+                </div>
+                <!--Body Start-->
+                <div class="col-md-9">
+                    <div class="artist-right-panel">
+                        <div class="design-requst-inner">
+                            <h4>Design requests</h4>
+                            <div class="design-requst-inner-sub">
+                             
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Requester Name</th>
+                                            <th>Date of<br>
+                                                Request̥
+                                            </th>
+                                            <th>Description</th>
+                                            <th class="dropdoenstyle newdropdoenstyle">
+                                                <form action="<?= base_url('request-ad') ?>" method="post">
+                                                    <select class="form-control" name="filter_design_type" onchange="this.form.submit()">
+                                                        <option value="">Select Service</option>
+                                                        <?php foreach ($design_service_type as $value) { ?>
+                                                            <option value="<?= $value['id']; ?>" <?= ($value['id'] == $filter_design_type) ? ' selected' : '' ?>><?= $value['type_name']; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                    <noscript><input type="submit" value="submit"></noscript>
+                                                </form>
+                                            </th>
+                                            <th>Request Action</th>
+                                            <th style="text-align:center;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($accept_decline_data as $value) { ?>
+                                            <tr>
+                                                <td><?= $value['first_name'] . ' ' . $value['last_name'] ?></td>
+                                                <td><?= date('F jS Y', strtotime($value['created_date'])) ?></td>
+                                                <td>
+                                                    <?= $value['message'] ?>
+                                                </td>
+                                                <td><?= $value['type_name'] ?></td>
+                                                <td><?= $value['request_action'] ?></td>
+                                                <td style="text-align:center;">
+                                                    <a href="<?= base_url('request-ad/view/' . $value['order_table_id']) ?>">
+                                                        <?php
+                                                        @$count_chat = count_chat_designer($value['order_table_id'], $value['designer_id']);
+                                                        @$check_design_request_hour = check_design_request_hour($value['order_table_id']);
+                                                        if ($count_chat > 0 && isset($check_design_request_hour) && $check_design_request_hour == TRUE) {
+                                                            ?>
+                                                            <div class="chat_count">
+                                                                <?= $count_chat ?>
+                                                            </div>
+                                                        <?php } ?>
+                                                        <img src="<?= base_url('assets/front/images/eye.png') ?>">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Body End-->
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+<?php $this->load->view('common/footer'); ?>
+</body>
+<?php $this->load->view('common/footer_js'); ?>
+</html>
+

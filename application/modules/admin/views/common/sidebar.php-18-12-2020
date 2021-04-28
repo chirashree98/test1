@@ -1,0 +1,380 @@
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse">
+        <ul class="page-sidebar-menu page-header-fixed " data-keep-expanded="false" data-auto-scroll="true"
+            data-slide-speed="200" style="padding-top: 20px">
+            <li class="sidebar-toggler-wrapper hide">
+                <div class="sidebar-toggler"><span></span></div>
+            </li>
+            <li class="nav-item start <?php if ($this->uri->segment(2) == 'dashboard') { ?> active open <?php } ?>">
+                <a href="<?php echo base_url(); ?>admin/dashboard" class="nav-link nav-toggle">
+                    <i class="icon-home"></i>
+                    <span class="title">Dashboard</span>
+                    <span class="selected"></span>
+                    <span class="arrow open"></span>
+                </a>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'cms_management') { ?> active open <?php } ?>">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> CMS Management </span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_index"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_index') { ?> active open <?php } ?> ">
+                            <span class="arrow"></span>Edit Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_about"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_about') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit About</span>
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_contacts"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_contacts') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Contact </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/contact_us"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'contact_us') { ?> active open <?php } ?> ">
+                            <span class="arrow">User contact Details</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_carrers"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_carrers') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Carrers </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_term_condition"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_term_condition') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Terms&Conditions </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_payment_policy"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_payment_policy') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Payment Policy </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_shipping_policy"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_shipping_policy') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Shipping Policy </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_shop_details_footer"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_shop_details_footer') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Shop details </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_shop_header"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_shop_header') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Shop  </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_artist_header"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_artist_header') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Artist  </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_consultation_header"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_consultation_header') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Consultation  </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_product_all"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_product_all') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Product All  </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_project_all"
+                           class="nav-link  <?php if ($this->uri->segment(3) ==
+                               'edit_project_all') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit Project All  </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/edit_faq"
+                           class="nav-link <?php if ($this->uri->segment(3) ==
+                               'edit_faq') { ?> active open <?php } ?> ">
+                            <span class="arrow">Edit FAQ </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/cms_management/show_faq"
+                           class="nav-link <?php if ($this->uri->segment(3) ==
+                               'show_faq') { ?> active open <?php } ?> ">
+                            <span class="arrow">FAQ List</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'membership_management') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> Membership Management </span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/membership_management/all_membership"
+                           class="nav-link  <?php if ($this->uri->segment(2) == 'all_membership') { ?> active open <?php } ?> ">
+                            <span class="title">Membership</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'category_management') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> Category Management </span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/category_management/all_category"
+                           class="nav-link  <?php if ($this->uri->segment(2) == 'all_category') { ?> active open <?php } ?> ">
+                            <span class="title">Category</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/sub_category_management/all_sub_category"
+                           class="nav-link  <?php if ($this->uri->segment(2) == 'all_sub_category') { ?> active open <?php } ?> ">
+                            <span class="title">Sub Category</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'user_management') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> User Management</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/user_management/all_customer"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_customer') { ?> active open <?php } ?> ">
+                            <span class="title">All Customer</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/user_management/all_designer"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_designer') { ?> active open <?php } ?> ">
+                            <span class="title">All Designer/Company</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/user_management/all_designstore"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_designstore') { ?> active open <?php } ?> ">
+                            <span class="title">All Store</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/artist_management/all_pickupaddress"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_pickupaddress') { ?> active open <?php } ?> ">
+                            <span class="title">Store Pickup Address</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/user_management/all_subscription"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_designstore') { ?> active open <?php } ?> ">
+                            <span class="title">Subscription Email</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a href="<?php echo base_url(); ?>admin/user_management/news_letter"
+                           class="nav-link <?php if ($this->uri->segment(3) == 'news_letter') { ?> active open <?php } ?> ">
+                            <span class="title"> Newsletter Email</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/artist_management/all_artist"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_artist') { ?> active open <?php } ?> ">
+                            <span class="title">Work Samples</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'product_management') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> Product Management</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/product_management/all_product"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_product') { ?> active open <?php } ?> ">
+                            <span class="title">All Product</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/product_management/all_attribute"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_attribute') { ?> active open <?php } ?> ">
+                            <span class="title">All Attribute</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!---added by chirashree--->
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'Profilt_share') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> profit& shares</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/Profilt_share/edit_profitmargin_artist"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_profitmargin_artist') { ?> active open <?php } ?> ">
+                            <span class="title"> Profit Margin For Artist </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?php echo base_url(); ?>admin/Profilt_share/edit_profitmargin_store"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'edit_profitmargin_store') { ?> active open <?php } ?> ">
+                            <span class="title"> Profit Margin For Store </span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!--6/11/2020 added by chirashree -->
+
+            <li class="nav-item <?php if ($this->uri->segment(3) == 'all_news') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> News & Events</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/artist_management/all_news"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_news') { ?> active open <?php } ?> ">
+                            <span class="title">All News & Events</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(3) == 'all_artistquote') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> Received Quotes for Artists</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/artist_management/all_artistquote"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'all_artistquote') { ?> active open <?php } ?> ">
+                            <span class="title">Received Quotes for Artists</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item <?php if ($this->uri->segment(2) == 'settings') { ?> active open <?php } ?>">
+                <a href="javascript:" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title"> Settings Management</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/dashboard/settings"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'settings') { ?> active open <?php } ?> ">
+                            <span class="title">Others Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo base_url(); ?>admin/dashboard/footer_service_settings"
+                           class="nav-link  <?php if ($this->uri->segment(3) == 'footer_service_settings') { ?> active open <?php } ?> ">
+                            <span class="title">Footer Service Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item<?= ($this->uri->segment(3) == 'design-request-hours') ? ' active' : '' ?>">
+                        <a href="<?php echo base_url(); ?>admin/settings/design-request-hours"
+                           class="nav-link">
+                            <span class="title">Design Request Hours</span>
+                        </a>
+                    </li>
+                    <li class="nav-item<?= ($this->uri->segment(3) == 'quotation-hours') ? ' active' : '' ?>">
+                        <a href="<?php echo base_url(); ?>admin/settings/quotation-hours"
+                           class="nav-link">
+                            <span class="title">Quotation Hours</span>
+                        </a>
+                    </li>
+                    <li class="nav-item<?= ($this->uri->segment(3) == 'quotation-milestone') ? ' active' : '' ?>">
+                        <a href="<?php echo base_url(); ?>admin/settings/quotation-milestone"
+                           class="nav-link">
+                            <span class="title">Quotation Milestone & Fixed Price</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item start <?php if ($this->uri->segment(2) == 'rejected-quotation') { ?> active open <?php } ?>">
+                <a href="<?php echo base_url(); ?>admin/rejected-quotation" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title">Rejected Quotation</span>
+                </a>
+            </li>
+            <li class="nav-item start <?php if ($this->uri->segment(2) == 'accept-design') { ?> active open <?php } ?>">
+                <a href="<?php echo base_url(); ?>admin/accept-design" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title">Accept Request</span>
+                </a>
+            </li>
+            <li class="nav-item start <?php if ($this->uri->segment(2) == 'declined-design') { ?> active open <?php } ?>">
+                <a href="<?php echo base_url(); ?>admin/declined-design" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title">Pending & Declined Request</span>
+                </a>
+            </li>
+            <li class="nav-item start <?php if ($this->uri->segment(2) == 'order-history') { ?> active open <?php } ?>">
+                <a href="<?php echo base_url(); ?>admin/order-history" class="nav-link nav-toggle">
+                    <i class="icon-wrench"></i>
+                    <span class="title">Customer Orders</span>
+                </a>
+            </li>
+        </ul>
+        <!-- END SIDEBAR MENU -->
+        <!-- END SIDEBAR MENU -->
+    </div>
+    <!-- END SIDEBAR -->
+</div>

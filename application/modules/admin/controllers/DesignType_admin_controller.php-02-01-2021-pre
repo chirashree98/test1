@@ -1,0 +1,541 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class DesignType_admin_controller extends MX_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper(array('url', 'form', 'html', 'text', 'file', 'gen_helper'));
+        $this->load->library(array('session', 'form_validation', 'email', 'upload', 'image_lib', 'google', 'facebook', 'cart'));
+        if ($this->session->userdata('ADMIN_ID') == '') {
+            redirect('admin');
+        }
+        $this->load->model('frontend/artist_dashboard_model', 'custom_dev_model', 'admin/customer_dashboard_model');
+    }
+
+    public function declined_design()
+    {
+        $service_type_id = $this->input->get('service_type_id');
+
+        $select = 'id, type_name';
+        $table = 'ds_services_types';
+        $where = array('status' => 'Y');
+        $order = 'type_name ASC';
+
+        $data['design_type'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $select = 'ORD.orderid AS order_no, ORD.id AS order_id, ORD.created_date AS date_of_request, ORD.request_action_date AS date_of_rejected, ORD.payment_type, DES.first_name AS designer_first_name, DES.last_name AS designer_last_name, CUS.first_name AS customer_first_name, CUS.last_name AS customer_last_name, DST.type_name, ORD.created_date AS design_request_date_time, DRH.hours, ORD.request_action';
+        $table = 'ds_orders AS ORD';
+        $join_table = array('ds_users AS DES', 'ds_users AS CUS', 'ds_services_types AS DST', 'ds_design_request_hours AS DRH');
+        $join_on = array('ORD.userid = DES.id', 'ORD.customer_id = CUS.id', 'ORD.service_id = DST.id', 'ORD.service_id = DRH.design_service_type_id');
+        $join_name = array('LEFT', 'LEFT', 'LEFT', 'LEFT');
+        if(!empty($service_type_id)){
+
+            $data['service_type_id'] = $service_type_id;
+            $where = array(
+                'DRH.status' => 'ON',
+                'ORD.service_id' => $service_type_id,
+            );
+        }else{
+            $data['service_type_id'] = '';
+            $where = array('DRH.status' => 'ON',);
+        }
+        $where_not_in_column = 'ORD.service_id';
+        $where_not_in_values = array(1);
+        $order = 'ORD.created_date DESC, ORD.request_action_date DESC';
+
+        $data['rejected_design'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_whereNotIn_order($select, $table, $join_table, $join_on, $join_name, $where, $where_not_in_column, $where_not_in_values, $order);
+
+        //pr($data['rejected_design']);
+
+
+        $this->load->view('design_type/design_type_list', $data);
+    }
+
+    public function declined_design_details($order_id)
+    {
+        $data['order_id'] = $order_id;
+
+        $select = 'ORD.request_action, ORD.job_close_status_artist, ORD.job_close_status_admin, ORD.orderid AS order_no, ORD.id AS order_id, ORD.created_date AS date_of_request, ORD.request_action_date AS date_of_rejected, ORD.payment_type, DES.first_name AS designer_first_name, DES.last_name AS designer_last_name, CUS.first_name AS customer_first_name, CUS.last_name AS customer_last_name, ORD.totalamount AS order_amount, ORD.service_id';
+        $table = 'ds_orders AS ORD';
+        $join_table = array('ds_users AS DES', 'ds_users AS CUS');
+        $join_on = array('ORD.userid = DES.id', 'ORD.customer_id = CUS.id');
+        $join_name = array('LEFT', 'LEFT');
+        $where = array(
+            'ORD.id' => $order_id
+        );
+        $order = 'ORD.request_action_date DESC, ORD.created_date DESC';
+        $rejected_design = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        $data['rejected_design'] = $rejected_design[0];
+
+        $select = 'file_name';
+        $table = 'ds_service_enq_files';
+        $where = array('order_table_id' => $order_id);
+        $order = 'id';
+        $data['attachments_ans'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $chat_data = $this->custom_dev_model->chat_data_fetch($order_id);
+        $data['chat_data'] = $chat_data;
+
+        $accept_decline_view_data = $this->artist_dashboard_model->accept_decline_request_view($order_id);
+        $data['accept_decline_view_data'] = $accept_decline_view_data;
+
+        $select = 'payment_status';
+        $table = 'ds_design_request_quotation_milestones_admin';
+        $where = ['payment_status' => 'paid', 'order_id' => $order_id];
+        $order = '';
+
+        $data['check_paid'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        /////////////////////////////////////////
+
+        $select = 'id AS master_id, messages, added_date, added_time';
+        $table = 'ds_work_report_master';
+        $where = array('order_id' => $order_id);
+        $order = 'added_date DESC, added_time DESC';
+        $data['comment_answer'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+//        cart product data
+
+        $select = 'CRT.p_id AS product_id, CRT.qty AS cart_quantity, CRT.cart_id, PRO.image, PRO.name AS product_name, PRO.sku, PRO.qty AS product_quantity, PRO.sell_price';
+        $table = 'ds_temp_cart AS CRT';
+        $join_table = array('ds_products AS PRO');
+        $join_on = array('CRT.p_id = PRO.p_id');
+        $join_name = array('LEFT');
+        $where = array(
+            'CRT.design_order_id' => $order_id
+        );
+        $order = 'CRT.created_at DESC, CRT.updated_at DESC';
+        $data['cart_data'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        //pr($cart_data);
+        $this->load->view('design_type/design_type_details', $data);
+
+    }
+
+    public function accept_design()
+    {
+        $service_type_id = $this->input->get('service_type_id');
+
+        //pr($service_type_id);
+
+        $select = 'id, type_name';
+        $table = 'ds_services_types';
+        $where = array('status' => 'Y');
+        $order = 'type_name ASC';
+
+        $data['design_type'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $select = 'ORD.orderid AS order_no, ORD.id AS order_id, ORD.created_date AS date_of_request, ORD.request_action_date AS date_of_rejected, ORD.payment_type, DES.first_name AS designer_first_name, DES.last_name AS designer_last_name, CUS.first_name AS customer_first_name, CUS.last_name AS customer_last_name, DST.type_name, ORD.request_action';
+        $table = 'ds_orders AS ORD';
+        $join_table = array('ds_users AS DES', 'ds_users AS CUS', 'ds_services_types AS DST');
+        $join_on = array('ORD.userid = DES.id', 'ORD.customer_id = CUS.id', 'ORD.service_id = DST.id');
+        $join_name = array('LEFT', 'LEFT', 'LEFT');
+        if(!empty($service_type_id)){
+
+            $data['service_type_id'] = $service_type_id;
+            $where = array(
+                'ORD.request_action' => 'ACCEPTED',
+                'ORD.service_id' => $service_type_id,
+            );
+        }else{
+            $data['service_type_id'] = '';
+            $where = array('ORD.request_action' => 'ACCEPTED');
+        }
+        $order = ' ORD.created_date DESC, ORD.request_action_date DESC';
+
+        $data['rejected_design'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $data['page_url'] = 'accept-design';
+
+        $this->load->view('design_type/accept_design_type_list', $data);
+    }
+
+    public function accept_design_details($order_id)
+    {
+        $data['order_id'] = $order_id;
+
+        $select = 'ORD.orderid AS order_no, ORD.id AS order_id, ORD.created_date AS date_of_request, ORD.request_action_date AS date_of_rejected, ORD.payment_type, DES.first_name AS designer_first_name, DES.last_name AS designer_last_name, CUS.first_name AS customer_first_name, CUS.last_name AS customer_last_name, ORD.totalamount AS order_amount';
+        $table = 'ds_orders AS ORD';
+        $join_table = array('ds_users AS DES', 'ds_users AS CUS');
+        $join_on = array('ORD.userid = DES.id', 'ORD.customer_id = CUS.id');
+        $join_name = array('LEFT', 'LEFT');
+        $where = array(
+            'ORD.id' => $order_id
+        );
+        $order = 'ORD.request_action_date DESC, ORD.created_date DESC';
+        $rejected_design = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        $data['rejected_design'] = $rejected_design[0];
+
+        $select = 'file_name';
+        $table = 'ds_service_enq_files';
+        $where = array('order_table_id' => $order_id);
+        $order = 'id';
+        $data['attachments_ans'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $chat_data = $this->custom_dev_model->chat_data_fetch($order_id);
+        $data['chat_data'] = $chat_data;
+
+        $accept_decline_view_data = $this->artist_dashboard_model->accept_decline_request_view($order_id);
+        $data['accept_decline_view_data'] = $accept_decline_view_data;
+
+        $select = 'payment_status';
+        $table = 'ds_design_request_quotation_milestones_admin';
+        $where = ['payment_status' => 'paid', 'order_id' => $order_id];
+        $order = '';
+
+        $data['check_paid'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        /////////////////////////////////////////
+
+        $select = 'id AS master_id, messages, added_date, added_time';
+        $table = 'ds_work_report_master';
+        $where = array('order_id' => $order_id);
+        $order = 'added_date DESC, added_time DESC';
+        $data['comment_answer'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        //        cart product data
+
+        $select = 'CRT.p_id AS product_id, CRT.qty AS cart_quantity, CRT.cart_id, PRO.image, PRO.name AS product_name, PRO.sku, PRO.qty AS product_quantity, PRO.sell_price';
+        $table = 'ds_temp_cart AS CRT';
+        $join_table = array('ds_products AS PRO');
+        $join_on = array('CRT.p_id = PRO.p_id');
+        $join_name = array('LEFT');
+        $where = array(
+            'CRT.design_order_id' => $order_id
+        );
+        $order = 'CRT.created_at DESC, CRT.updated_at DESC';
+        $data['cart_data'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        //pr($cart_data);
+
+        $this->load->view('design_type/accept_design_type_details', $data);
+
+    }
+
+    public function add_more_product_list($order_id)
+    {
+        $data['order_id'] = $order_id;
+
+        $select = 'CAT.name as category_name, PRO.p_id AS product_id, PRO.image, PRO.name AS product_name, PRO.sku, PRO.qty AS product_quantity, PRO.sell_price';
+        $table = 'ds_products AS PRO';
+        $join_table = array('ds_category AS CAT');
+        $join_on = array('PRO.cat_id = CAT.id');
+        $join_name = array('LEFT');
+        $where = array('PRO.p_status' => 'Y');
+        $order = 'PRO.name ASC';
+        $product_data = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        $data['product_data'] = $product_data;
+        $data['order_id'] = $order_id;
+
+        $this->load->view('design_type/add_more_product_list', $data);
+
+    }
+
+    public function add_to_cart($cart_id, $quantity)
+    {
+        $table = 'ds_temp_cart';
+        $value = array('qty' => $quantity);
+        $where = array('cart_id' => $cart_id);
+
+        $status = $this->custom_dev_model->update_table_value_where($table, $value, $where);
+
+        if($status == TRUE){
+            $result['status'] = TRUE;
+        }else{
+            $result['status'] = FALSE;
+        }
+        echo json_encode($result);
+    }
+
+    public function delete_cart($cart_id)
+    {
+        $table = 'ds_temp_cart';
+        $where = array('cart_id' => $cart_id);
+
+        $status = $this->custom_dev_model->delete_table_where($table, $where);
+
+        if($status == TRUE){
+            $result['status'] = TRUE;
+        }else{
+            $result['status'] = FALSE;
+        }
+        echo json_encode($result);
+    }
+
+    public function add_to_cart_modal($product_id, $order_id) {
+
+        $select = 'PRO.*, CAT.name as cat_name, STR.first_name user_first_name , STR.last_name as user_last_name';
+        $table = 'ds_products AS PRO';
+        $join_table = array('ds_category AS CAT', 'ds_users AS STR');
+        $join_on = array('PRO.cat_id = CAT.id', 'PRO.u_id = STR.id');
+        $join_name = array('LEFT', 'LEFT');
+        $where = array('PRO.p_status' => 'Y', 'PRO.p_id' => $product_id);
+        $order = 'PRO.name ASC';
+        $product_details = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $data['query'] = $product_details[0];
+
+        $select = 'ds_product_items.*, attr.parent_id,attr.id as sub_attr_id,attr.attr_name as child_attr_name,parent_attr.attr_name as p_attr_name,parent_attr.id as p_attr_id';
+        $table = 'ds_product_items';
+        $join_table = array('ds_products_attribute as attr', 'ds_products_attribute as parent_attr');
+        $join_on = array('ds_product_items.attr_id = attr.id', 'attr.parent_id = parent_attr.id');
+        $join_name = array('LEFT', 'LEFT');
+        $where = array('ds_product_items.p_id' => $product_id);
+        $order = 'p_attr_id ASC';
+        $data['items'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $select = 'userid AS designer_id, customer_id, service_id AS design_type_id';
+        $table = 'ds_orders';
+        $where = array('id' => $order_id);
+        $order = '';
+
+        $order_details = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $data['order_details'] = $order_details[0];
+        $data['order_id'] = $order_id;
+
+        $add_to_cart_modal = $this->load->view('design_type/add_to_cart_modal', $data, TRUE);
+
+        echo json_encode($add_to_cart_modal);
+    }
+
+    public function add_to_cart_modal_save()
+    {
+        $user_id = $this->input->post('customer_id');
+        $design_order_id = $this->input->post('design_order_id');
+
+        $getUpData['design_order_id'] = $this->input->post('design_order_id');
+        $getUpData['designer_id'] = $this->input->post('designer_id');
+        $getUpData['customer_id'] = $this->input->post('customer_id');
+        $getUpData['design_type_id'] = $this->input->post('design_type_id');
+        $getUpData['block_status'] = 'YES';
+
+        $p_id = $this->input->post('p_id');
+        $qty = $this->input->post('qty');
+
+        $getUpData['p_id'] = $p_id;
+        $getUpData['user_id'] = $user_id;
+        $getUpData['attributes'] = json_encode($this->input->post('attrpro'));
+        $getUpData['qty'] = $qty;
+
+        $select = '*';
+        $table = 'ds_temp_cart';
+        $where = array('design_order_id' => $design_order_id, 'p_id' => $p_id);
+        $order = '';
+
+        $check_product = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+        if (variable_array_check($check_product)) {
+            $value = array('qty' => $qty);
+            $this->custom_dev_model->update_table_value_where($table, $value, $where);
+            $message = 'Product updated successfully.';
+        } else {
+            $value = $getUpData;
+            $this->custom_dev_model->insert_table_value($table, $value);
+            $message = 'Product added successfully.';
+        }
+        echo $message;
+    }
+
+    public function admin_chat_save()
+    {
+        $order_table_id = $this->input->post('order_table_id');
+        $text_messages = $this->input->post('text_messages');
+        $customer_id = 0;
+        $design_type_id = $this->input->post('design_type_id');
+        $chat_person_id = $this->session->userdata('ADMIN_ID');
+
+        $table = 'ds_designer_chat';
+        $value = array(
+            'order_table_id' => $order_table_id,
+            'customer_id' => $customer_id,
+            'chat_person_id' => $chat_person_id,
+            'design_type_id' => $design_type_id,
+            'text_messages' => $text_messages,
+            'added_date_time' => date('Y-m-d H:i:s'),
+        );
+
+        $status = $this->custom_dev_model->insert_table_value($table, $value);
+        $chat_id = $status;
+
+        if (!empty($chat_id) && count($_FILES['attachments']['name']) > 0) {
+            for ($i = 0; $i < count($_FILES['attachments']['name']); $i++) {
+
+                $_FILES['attachment']['name'] = $_FILES['attachments']['name'][$i];
+                $_FILES['attachment']['type'] = $_FILES['attachments']['type'][$i];
+                $_FILES['attachment']['tmp_name'] = $_FILES['attachments']['tmp_name'][$i];
+                $_FILES['attachment']['error'] = $_FILES['attachments']['error'][$i];
+                $_FILES['attachment']['size'] = $_FILES['attachments']['size'][$i];
+
+                $config['upload_path'] = 'uploads/chat/attachments/';
+                $config['allowed_types'] = '*';
+                $config['overwrite'] = FALSE;
+                $config['encrypt_name'] = true;
+
+
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('attachment')) {
+                    $result = $this->upload->data();
+                    $file_name = $result['file_name'];
+                    $file_type = $result['file_type'];
+                } else {
+                    $file_name = FALSE;
+                }
+
+                if ($file_name == FALSE) {
+                    $this->session->set_flashdata("error", $this->upload->display_errors());
+                    redirect('admin/declined-design/details/' . $order_table_id);
+                } else {
+                    $column_data = array(
+                        'designer_chat_id' => $chat_id,
+                        'attachment_file' => $file_name,
+                        'attachment_type' => $file_type
+                    );
+                    $insert_chat_attachments = $this->artist_dashboard_model->insert_chat_attachments($column_data);
+                }
+            }
+        }
+
+        if ($status) {
+            $message = '<div class="alert alert-success">Added successfully!!</div>';
+            $this->session->set_flashdata('success', $message);
+            redirect('admin/declined-design/details/' . $order_table_id);
+        } else {
+            $message = '<div class="alert alert-danger">Added successfully!!</div>';
+            $this->session->set_flashdata('error', $message);
+            redirect('admin/declined-design/details/' . $order_table_id);
+        }
+
+    }
+
+    public function order_history()
+    {
+        $select = 'MAORD.*, OLORD.orderid AS design_request_order_id';
+        $table = 'ds_order_master AS MAORD';
+        $join_table = array('ds_orders AS OLORD');
+        $join_on = array('MAORD.design_request_order_id = OLORD.id');
+        $join_name = array('left');
+        $order = 'MAORD.create_date DESC, MAORD.create_time DESC';
+
+        $where = array();
+
+        $data['order_data'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $this->load->view('order_history', $data);
+    }
+
+    public function order_history_details($main_order_id)
+    {
+        $select = 'BLAD.*, STA.name AS state_name, CUN.country_name';
+        $table = 'ds_order_master AS MORD';
+        $join_table = array('ds_users_address AS BLAD', 'ds_states AS STA', 'ds_country AS CUN');
+        $join_on = array('MORD.billing_address = BLAD.id', 'BLAD.state_id = STA.id', 'BLAD.country_id = CUN.id');
+        $join_name = array('left','left','left');
+        $order = '';
+        $where = array('MORD.id' => $main_order_id);
+
+        $data['billing_address'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+
+        $select = 'MAORD.*, OLORD.orderid AS design_request_order_id';
+        $table = 'ds_order_master AS MAORD';
+        $join_table = array('ds_orders AS OLORD');
+        $join_on = array('MAORD.design_request_order_id = OLORD.id');
+        $join_name = array('left');
+        $order = 'MAORD.create_date DESC, MAORD.create_time DESC';
+
+        $where = array('MAORD.id' => $main_order_id);
+
+        $data['order_master_data'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $select = 'OT.*, PRO.name, PRO.image, PRO.sku, MORD.delivery_address';
+        $table = 'ds_order_transaction AS OT';
+        $join_table = array('ds_products AS PRO', 'ds_order_master AS MORD');
+        $join_on = array('OT.product_id = PRO.p_id', 'OT.order_master_id = MORD.id');
+        $join_name = array('left', 'left');
+        $order = 'PRO.name ASC';
+        $where = array('OT.order_master_id' => $main_order_id);
+
+        $data['order_transaction_data'] = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+
+        $select = 'id, name';
+        $table = 'ds_order_transaction_product_status';
+        $order = 'position asc';
+        $where = array('status' => 'ON');
+        $data['product_status'] = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        $this->load->view('order_history_details', $data);
+    }
+
+    public function product_order_activity_change($transaction_id, $product_order_activity)
+    {
+        //Order pickup address code start
+        $table = 'ds_order_transaction';
+        $value = array('order_activity' => $product_order_activity);
+        $where = array('id' => $transaction_id);
+
+        $this->custom_dev_model->update_table_value_where($table, $value, $where);
+        echo true;
+    }
+
+    public function product_expected_delivery_date_change($transaction_id, $expected_delivery_date)
+    {
+        //Order pickup address code start
+        $table = 'ds_order_transaction';
+        $value = array('delivery_date' => $expected_delivery_date);
+        $where = array('id' => $transaction_id);
+
+        $this->custom_dev_model->update_table_value_where($table, $value, $where);
+        echo true;
+    }
+
+    public function show_pick_up_address($id, $delivery_method)
+    {
+        //Order pickup address code start
+        $select = 'STA.name AS state_name, CUN.country_name, PA.*';
+        $join_table = array('ds_states AS STA', 'ds_country AS CUN');
+        $join_on = array('PA.state_id = STA.id', 'PA.country_id = CUN.id');
+        $join_name = array('left','left');
+        $order = 'PA.name ASC';
+        if($delivery_method == 'PICKUP'){
+            $table = 'ds_pickup_address AS PA';
+        }else{
+            $table = 'ds_users_address AS PA';
+        }
+        $where = array('PA.id' => $id);
+
+        $pick_up_address = $this->custom_dev_model->select_table_joinTable_joinOn_joinName_where_order($select, $table, $join_table, $join_on, $join_name, $where, $order);
+        $data['pick_up_address'] = $pick_up_address;
+        //pr($data['pick_up_address']);
+        //Order pickup address code end
+
+        $pick_up_address = $this->load->view('order_history_pick_up_details', $data, TRUE);
+        //pr($pick_up_address);
+        echo $pick_up_address;
+    }
+
+    public function job_close($order_id)
+    {
+        $today_date = date('Y-m-d');
+        $time = date('H:i:s');
+
+        $table = 'ds_orders';
+        $value = array('job_close_status_admin' => 'CLOSED', 'job_close_date' => $today_date, 'job_close_time' => $time);
+        $where = array('id' => $order_id);
+
+        $status = $this->custom_dev_model->update_table_value_where($table, $value, $where);
+
+        if ($status == TRUE) {
+            $message = '<div class="alert alert-success"><p>Job successfully closed</p></div>';
+            $this->session->set_flashdata('success', $message);
+            redirect('admin/declined-design/details/' . $order_id);
+        } else {
+            $message = '<div class="alert alert-danger"><p>Sorry, something wrong please try again.</p></div>';
+            $this->session->set_flashdata('error', $message);
+            redirect('admin/declined-design/details/' . $order_id);
+        }
+    }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php $this->load->view('common/header'); ?>  
+    </head>
+    <body>
+        <?php $this->load->view('common/header_nav'); ?>  
+
+        <!--+++++++++++++ Header End +++++++++++++++++++-->
+
+        <div class="clearfix"></div> 
+
+        <section id="scheme-sec1">
+            <div class="custom-width">
+                <div class="row">
+                    <div class="col-sm-12">
+                    <div class="login-form">
+                    <div class="login-form-inner">
+                    <h4>Login</h4>
+					<span id="msg_box">
+            <?php if ($this->session->flashdata('success') != '') { ?>
+                <?php echo $this->session->flashdata('success'); ?>
+            <?php } ?>
+        </span>
+                        <form action="<?php echo base_url(); ?>login" method="POST" enctype="multipart/form-data">
+ <div class="row">
+                            <div class="col-sm-6">
+                                <label for="uname">Username</label>
+                                <input type="text" class="form-control" placeholder="Enter Username" name="email" required>
+                                 </div>
+                                  <div class="col-sm-6">
+                                <label for="psw">Password</label>
+                                <input type="password" class="form-control" placeholder="Enter Password" name="pswd" required>
+</div>
+</div>
+                                <button type="submit" class="login-btn">Login</button>
+                                <span class="psw"> <a href="<?php echo base_url(); ?>forgot_password">Forgot password?</a></span>
+                            </div>
+
+                           
+                                
+                           
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <div class="clearfix"></div> 
+
+
+        <!--+++++++++++++ footer Start +++++++++++++++++++-->
+
+        <?php $this->load->view('common/footer'); ?>  
+
+
+    </body>
+    <?php $this->load->view('common/footer_js'); ?>  
+</html>

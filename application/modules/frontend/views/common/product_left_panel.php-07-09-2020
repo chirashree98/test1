@@ -1,0 +1,80 @@
+<!--<div class="panel-group" id="accordion1">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">Top <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="panel-body">
+
+                    <div class="panel-group" id="accordion21">
+                        <div class="panel">
+                            <a data-toggle="collapse" data-parent="#accordion21" href="#collapseTwoOne">HOME DECOR <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+                            <div id="collapseTwoOne" class="panel-collapse collapse in">
+                                <div class="panel-body"> 
+                                    <ul>
+                                        <li><a href="#">Lamp</a></li>
+                                        <li><a href="#">Table</a></li>
+                                        <li><a href="#">Chair</a></li>
+                                    </ul> 
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel ">
+                            <a href="#">Architectural
+                            </a>
+
+                        </div>
+                        <div class="panel ">
+                            <a href="#">Glass
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div class="product-filder">
+    <h4>Filter By</h4>
+    <h5>Categories</h5>
+    <ul>
+        <?php 
+        if ($category->num_rows() > 0) {
+                                    foreach ($category->result() as $row) {
+        ?>
+        <li><input type="radio" value="<?php echo $row->id; ?>" name="cat_search"/> <?php echo $row->name; ?></li>
+        <?php } } ?>
+<!--        <li><input type="radio" name="1"/> Modular</li>
+        <li class="active"><input type="radio" name="1"/> Broadloom</li>
+        <li><input type="radio" name="1"/> Carpet Fiber</li>-->
+    </ul>
+</div>
+
+<div class="product-filder">
+
+    <h5>Color</h5>
+    <ul class="color-variant">
+        <li><a href="#"><div class="shap beige"></div> Beige (1)</a></li>
+        <li><a href="#"><div class="shap black"></div> Black (2)</a></li>
+        <li><a href="#"><div class="shap yellow"></div> Yellow (4)</a></li>
+        <li><a href="#"><div class="shap white"></div> White (2)</a></li>
+    </ul>
+</div>
+<div class="product-filder">
+
+    <h5>Compositions</h5>
+    <ul>
+        <li><input type="radio" name="1"/> Cotton (3)</li>
+        <li class="active"><input type="radio" name="1"/> Polyester (2)</li>
+        <li><input type="radio" name="1"/> Viscose (2)</li>
+    </ul>
+</div>
+<button class="clean-all-btn">Clean All</button>

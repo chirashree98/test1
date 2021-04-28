@@ -1,0 +1,10 @@
+<ul>
+    <li <?php if($this->uri->segment(1)=="artist_account"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist_account">View Profile</a></li>
+    <li <?php if($this->uri->segment(1)=="artist_edit_account"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>artist_edit_account">Edit Profile</a></li>
+    <li <?php if($this->uri->segment(1)=="change_password"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>change_password">Change Password</a></li>
+    <li><a href="#">Accept/Decline Request</a></li>
+    <li><a href="#">Consultation History</a></li>
+    <li><a href="#">Transaction History</a></li>
+    <li <?php if($this->uri->segment(1)=="all_work_samples"){echo 'class="active"';}?>><a href="<?php echo base_url(); ?>all_work_samples">All Work Samples</a></li>
+    <li><a href="<?php echo base_url(); ?>logout">Logout</a></li>
+</ul>

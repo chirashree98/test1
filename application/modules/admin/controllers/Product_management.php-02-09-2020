@@ -1,0 +1,180 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Product_management extends MX_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper(array('url', 'form', 'html', 'text'));
+        $this->load->library(array('session', 'form_validation', 'email', 'upload', 'image_lib'));
+        $this->load->model(array('common_model', 'custom_model'));
+        if ($this->session->userdata('ADMIN_ID') == '') {
+            redirect('admin');
+        }
+    }
+
+    public function all_product() {
+        $this->db->select('ds_products.*,ds_users.first_name,ds_users.last_name,ds_category.name as cat_name');
+        $this->db->from('ds_products');
+        $this->db->Join('ds_users', 'ds_products.u_id = ds_users.id', 'left');
+        $this->db->Join('ds_category', 'ds_products.cat_id = ds_category.id', 'left');
+        $this->db->order_by('products.p_id', 'DESC');
+        $data['query'] = $this->db->get();
+//        print_R($data['query']);
+//        exit();
+        $this->load->view('product/all-product', $data);
+    }
+
+    public function add_product() {
+        $data = array();
+        $data['ss_users'] = $this->common_model->RetriveRecordByWhere('ds_users', array('membership_id' => 2));
+        $data['category'] = $this->common_model->RetriveRecordByWhere('ds_category', array());
+
+        $this->load->view('product/add-product', $data);
+    }
+
+    public function save_product() {
+        $data = array();
+        $getData = array(
+            'added_by' => $this->input->post('added_by'),
+            'u_type' => '3',
+            'u_id' => $this->input->post('u_id'),
+            'name' => $this->input->post('name'),
+            'price' => $this->input->post('price'),
+            'sell_price' => $this->input->post('sell_price'),
+            'cat_id' => $this->input->post('cat_id'),
+            'sub_cat_id' => $this->input->post('sub_cat_id'),
+            'details' => $this->input->post('details'),
+            'extra_desc' => $this->input->post('extra_desc'),
+            'sku' => $this->input->post('sku'),
+            'qty' => $this->input->post('qty'),
+        );
+
+        if ($_FILES['image']['name'] != '') {
+            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_dir = "uploads/product/";
+            $file_name = time() . '_product_main_image.' . $ext;
+            $target_file = $target_dir . $file_name;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+
+            $getData['image'] = $file_name;
+        }
+        for ($i = 0; $i < count($_FILES['extra_images']); $i++) {
+            if ($_FILES['extra_images']['name'][$i] != '') {
+                $ext = strtolower(pathinfo($_FILES['extra_images']['name'][$i], PATHINFO_EXTENSION));
+                $target_dir = "uploads/product/";
+                $file_name = time() . '_' . $i . '_product_image.' . $ext;
+                $target_file = $target_dir . $file_name;
+                move_uploaded_file($_FILES["extra_images"]["tmp_name"][$i], $target_file);
+
+                $images[] = $file_name;
+            }
+        }
+        $getData['extra_images'] = json_encode($images);
+
+//        echo "<pre>";
+//print_r($getData);
+//exit();
+        $this->common_model->AddRecord($getData, 'ds_products');
+        $message = '<div class="alert alert-success"><p>Products has been successfully added.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/product_management/all_product');
+    }
+
+    public function edit_product() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('products', array('p_id' => $id));
+        $data['ss_users'] = $this->common_model->RetriveRecordByWhere('ds_users', array('membership_id' => 2));
+        $data['category'] = $this->common_model->RetriveRecordByWhere('ds_category', array());
+        $data['sub_category'] = $this->common_model->RetriveRecordByWhere('ds_sub_category', array('category_id' => $data['query']['cat_id']));
+
+        $this->load->view('product/edit-product', $data);
+    }
+
+    public function update_product() {
+//        print_r($_POST);exit();
+        $id = $this->input->post("p_id");
+        $data = array();
+        $getData = array(
+            'u_id' => $this->input->post('u_id'),
+            'name' => $this->input->post('name'),
+            'price' => $this->input->post('price'),
+            'sell_price' => $this->input->post('sell_price'),
+            'cat_id' => $this->input->post('cat_id'),
+            'sub_cat_id' => $this->input->post('sub_cat_id'),
+            'details' => $this->input->post('details'),
+            'extra_desc' => $this->input->post('extra_desc'),
+            'sku' => $this->input->post('sku'),
+            'qty' => $this->input->post('qty'),
+        );
+
+        if ($_FILES['image']['name'] != '') {
+            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $target_dir = "uploads/product/";
+            $file_name = time() . '_product_main_image.' . $ext;
+            $target_file = $target_dir . $file_name;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+
+            $getData['image'] = $file_name;
+        }
+        for ($i = 0; $i < count($_POST['old_extra_images']); $i++) {
+                $images[] = $_POST['old_extra_images'][$i];
+        }
+        for ($i = 0; $i < count($_FILES['extra_images']); $i++) {
+            if ($_FILES['extra_images']['name'][$i] != '') {
+                $ext = strtolower(pathinfo($_FILES['extra_images']['name'][$i], PATHINFO_EXTENSION));
+                $target_dir = "uploads/product/";
+                $file_name = time() . '_' . $i . '_product_image.' . $ext;
+                $target_file = $target_dir . $file_name;
+                move_uploaded_file($_FILES["extra_images"]["tmp_name"][$i], $target_file);
+
+                $images[] = $file_name;
+            }
+        }
+        $getData['extra_images'] = json_encode($images);
+//        echo "<pre>";
+//print_r($getData);
+//exit();
+
+        $this->common_model->UpdateRecord($getData, 'ds_products', 'p_id', $id);
+        $message = '<div class="alert alert-success"><p>Products has been successfully updated.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/product_management/all_product');
+    }
+
+    public function delete_product() {
+        $id = $this->uri->segment(4);
+        $this->common_model->Delete('products', $id, 'p_id');
+        $message = '<div class="alert alert-success"><p>Products has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/product_management/all_product');
+    }
+
+    public function change_product_status() {
+
+        $data = array();
+        $id = $this->input->post('id');
+        $value = $this->input->post('val');
+        $save_data['p_status'] = $value;
+        $this->common_model->UpdateRecord($save_data, 'products', 'p_id', $id);
+        echo 'ok';
+    }
+
+    public function get_sub_category() {
+        $data = array();
+
+        $sub_category = $this->common_model->RetriveRecordByWhere('ds_sub_category', array('category_id' => $_POST['c_id']));
+        $sub_cat = '';
+        if ($sub_category->num_rows() > 0) {
+            foreach ($sub_category->result() as $row) {
+                $sub_cat .= ' <option value="' . $row->id . '">' . $row->sub_category_name . '</option>';
+            }
+        } else {
+            $sub_cat .= ' <option value="0">No Sub Category found</option>';
+        }
+        echo $sub_cat;
+    }
+
+}

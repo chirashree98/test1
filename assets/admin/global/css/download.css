@@ -1,0 +1,75 @@
+<style>
+        @media print {
+            .user_heaser,.header,.header img,.prnt,#header_holder, #footer_holder , #innerbanner { display: none !important; }
+        }
+        h3
+{
+  border:1px solid black;
+}
+        a.bttn-green {
+    margin-top: 40px;
+}
+a.bttn-green {
+    width: 178px;
+    height: 63px;
+    border-radius: 5px;
+    background: #67b930;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+}
+.bttn-green {
+    width: 308px;
+    height: 63px;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    line-height: 63px;
+    border-radius: 5px;
+    background: #67b930;
+    font-size: 20px;
+    display: inline-block;
+    border: 2px solid #67b930;
+    font-weight: 600;
+    box-shadow: -1px 3px 2px rgba(0, 0, 0, 0.10);
+    margin: 15px 0 40px;
+    text-transform: uppercase;
+}
+        .box-cards{
+            background: #fff; padding: 15px;border: 2px solid #3db8da;
+        }
+        .box-cards .right-table h1{
+            font-size: 32px;
+            color: #2f788a;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        .box-cards .right-table h2{
+            font-size: 22px;
+        }
+        .box-cards .right-table .table.normal-table tbody td{
+            text-align: left; font-size: 15px; color: #10242b;
+            font-weight: 300; padding: 8px 10px; border-top: 0;
+        }
+        .box-cards .right-table .table.normal-table tbody td:first-child{
+            font-weight: 500;
+        }
+        .box-cards .right-table .table.normal-table tbody td:last-child{
+            text-align: right;
+        }
+        .raaddress{
+            padding: 15px;
+            background: #f7f7f7;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 30px;
+        }
+        .raaddress p{ margin-bottom: 6px;}
+        .raaddress h4{ font-size: 20px; margin-top: 1.5em;}
+        @media (min-width: 992px){
+            .col-md-6 {
+            width: 50%;
+            margin-left: 50%;
+        }
+        }
+        
+    </style>

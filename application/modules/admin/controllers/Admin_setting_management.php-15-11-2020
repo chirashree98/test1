@@ -1,0 +1,236 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Admin_setting_management extends MX_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper(array('url', 'form', 'html', 'text', 'file', 'gen_helper'));
+        $this->load->library(array('session', 'form_validation', 'email', 'upload', 'image_lib', 'google', 'facebook', 'cart'));
+        if ($this->session->userdata('ADMIN_ID') == '') {
+            redirect('admin');
+        }
+        $this->load->model(array('custom_dev_model'));
+    }
+
+    public function design_request_hours(){
+
+        $data['design_service_type_data'] = $this->custom_dev_model->fetch_design_hours();
+        $this->load->view('settings_management/design_request_hours', $data);
+    }
+
+    public function design_request_hours_save() {
+
+        $design_service_type_id = $this->input->post('design_service_type_id');
+        $hours = $this->input->post('hours');
+
+        for($i = 0; $i < count($design_service_type_id); $i++){
+            $id = $design_service_type_id[$i];
+            $hour = trim($hours[$i]);
+            $check = $this->custom_dev_model->check_hours($id);
+            if($check > 0){
+                $status = $this->custom_dev_model->update_check_hours($hour, $id);
+            }else{
+                $column_data = array(
+                    'design_service_type_id' => $id,
+                    'hours' => $hour
+                );
+                $status = $this->custom_dev_model->insert_check_hours($column_data);
+            }
+        }
+
+        if($status == TRUE){
+            $message = '<div class="alert alert-success"><p>Design request hours save successfully.</p></div>';
+            $this->session->set_flashdata('success', $message);
+            redirect('admin/settings/design-request-hours');
+        }else{
+            $message = '<div class="alert alert-danger"><p>Sorry something wrong, please try again.</p></div>';
+            $this->session->set_flashdata('error', $message);
+            redirect('admin/settings/design-request-hours');
+        }
+    }
+
+    public function quotation_hours(){
+
+        $select = '*';
+        $table = 'ds_quotation_hours';
+        $where = array();
+        $order = '';
+
+        $quotation_hours = $this->custom_dev_model->select_table_where_order($select, $table, $where, $order);
+
+        if(count($quotation_hours) > 0){
+            $request_hours_to_designer = $quotation_hours[0]['request_hours_to_designer'];
+            $response_hours_from_customer = $quotation_hours[0]['response_hours_from_customer'];
+        }else{
+            $request_hours_to_designer = 0;
+            $response_hours_from_customer = 0;
+        }
+
+        $data['request_hours_to_designer'] = $request_hours_to_designer;
+        $data['response_hours_from_customer'] = $response_hours_from_customer;
+
+        $this->load->view('settings_management/quotation_hours', $data);
+    }
+
+    public function quotation_hours_save() {
+
+        $table = 'ds_quotation_hours';
+        $where = array('status' => 'ON');
+        $this->custom_dev_model->delete_table_where($table, $where);
+
+        $table = 'ds_quotation_hours';
+        $value = $this->input->post();
+
+        $status = $this->custom_dev_model->insert_table_value($table, $value);
+
+        if($status == TRUE){
+            $message = '<div class="alert alert-success"><p>Quotation hours save successfully.</p></div>';
+            $this->session->set_flashdata('success', $message);
+            redirect('admin/settings/quotation-hours');
+        }else{
+            $message = '<div class="alert alert-danger"><p>Sorry something wrong, please try again.</p></div>';
+            $this->session->set_flashdata('error', $message);
+            redirect('admin/settings/quotation-hours');
+        }
+    }
+
+    public function all_subscribed_emails() {
+        //echo "lll"; die;
+        $this->db->select('subscribed.*')->from('subscribed')->order_by('id','desc');;
+        $data['query'] = $this->db->get();
+
+        $this->load->view('vereniging/all_subscribed_email', $data);
+    }
+
+    public function all_user() {
+        $this->db->select('ds_users.*');
+        //$this->db->where('role_id!=', 1);
+        $this->db->from('ds_users');
+        $this->db->order_by('id', 'DESC');
+        $data['users'] = $this->db->get();
+        if (isset($_GET['edit']) && !isset($_POST['edit'])) {
+            $data = array();
+            $id = $this->uri->segment(4);
+            $data['user'] = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $id));
+            $this->load->view('user/all-user', $data);
+        }
+        $this->load->view('user/all-user', $data);
+    }
+
+
+    public function all_designer() {
+        $this->db->select('ds_users.*');
+        $this->db->where('role_id', 1);
+        $this->db->from('ds_users');
+        $this->db->order_by('id', 'DESC');
+        $data['users'] = $this->db->get();
+
+        $this->load->view('user/all-designer', $data);
+    }
+
+    public function all_designerstore() {
+        $this->db->select('ds_users.*');
+        $this->db->where('role_id', 6);
+        $this->db->from('ds_users');
+        $this->db->order_by('id', 'DESC');
+        $data['users'] = $this->db->get();
+
+        $this->load->view('user/all-designerstore', $data);
+    }
+    public function all_customer() {
+        $this->db->select('ds_users.*');
+        $this->db->where('role_id', 4);
+        $this->db->from('ds_users');
+        $this->db->order_by('id', 'DESC');
+        $data['users'] = $this->db->get();
+
+        $this->load->view('user/all-customer', $data);
+    }
+
+
+
+    public function edit_user() {
+        $data = array();
+        $id = $this->uri->segment(3);
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $id));
+        $this->load->view('user/edit-user', $data);
+    }
+
+    public function update_user() {
+//        print_r($_POST);exit();
+        $id = $this->input->post("id");
+        $data = array();
+        $getData = array(
+
+            'is_approved' => $this->input->post('is_approved'),
+        );
+
+        //$getData['updated_at'] = date('Y-m-d h:m:s');
+
+        $data['query'] = $this->common_model->RetriveRecordByWhereRow('ds_users', array('id' => $id));
+        $data['name'] = $data['query']['first_name'] . ' ' .$_POST['last_name'];
+        $data['email'] = $data['query']['email'];
+        $data['password'] = $data['query']['password'];
+        $from_email = "designstoreowner@gmail.com";
+        $to_email = $data['query']['email'];
+        $this->email->from($from_email, 'Design Studio');
+        $this->email->to($to_email);
+        $this->email->subject('Approval of Registration Request');
+
+        $mesg = $this->load->view('user/approve_email',$data,true);
+        $this->email->set_mailtype("html");
+        $this->email->message($mesg);
+        //Send mail
+        if($this->email->send()) {
+
+            $this->session->set_flashdata("email_sent","Congragulation Email Send Successfully.");
+        }
+        else{
+            $this->session->set_flashdata("email_sent","You have encountered an error");
+        }
+
+        $this->common_model->UpdateRecord($getData, 'ds_users', 'id', $id);
+        $message = '<div class="alert alert-success"><p>User has been Approved successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/all_user');
+    }
+
+    public function delete_user() {
+        $id = $this->uri->segment(3);
+        $this->common_model->Delete('ds_users', $id, 'id');
+        $message = '<div class="alert alert-success"><p>User has been deleted successfully.</p></div>';
+        $this->session->set_flashdata('success', $message);
+        redirect('admin/all_user');
+    }
+    public function users_approval()
+    {
+        //$this->login_check();
+
+
+        if($_POST['is_approved'] == 0)
+        {
+            $data['approve'] = 'Deactivate';
+        }
+        else{
+            $data['approve'] = 'Approve';
+
+        }
+
+
+        if (isset($_GET['tostatus']) && isset($_GET['codeid'])) {
+            $this->common_model->changeStoreStatus($_GET['codeid'], $_GET['tostatus']);
+            redirect('admin/all_user');
+        }
+
+
+
+
+        $this->load->view('user/all_user', $data);
+    }
+
+
+
+
+}

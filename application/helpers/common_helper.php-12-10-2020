@@ -1,0 +1,63 @@
+<?php
+
+function send_mail($data) {
+    if (empty($data['to']) || empty($data['subject']) || empty($data['email_template'])) {
+        return false;
+    }
+
+    $CI = & get_instance();
+    $to = $data['to'];
+    $from = $data['from'];
+    $subject = $data['subject'];
+    $message = $CI->load->view('email_templates/' . $data['email_template'], $data, true);
+
+
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= 'From: <'.$from.'>' . "\r\n";  
+    
+//    echo $message;
+
+    if (mail($to, $subject, $message, $headers)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*function get_menu($menu_id) {
+    $CI = & get_instance();
+    $CI->db->distinct('page_by_menu.page_id')->select('page_by_menu.*,pages.page_name,pages.page_url')->from('page_by_menu')->join('pages', 'page_by_menu.page_id=pages.id')->where(array('menu_id' => $menu_id))->order_by('page_by_menu.sort', 'ASC');
+    $data = $CI->db->get();
+    return $data->result();
+}
+*/
+
+
+
+function get_footer_service_settings() {
+    $CI = & get_instance();    
+    $data = $CI->common_model->RetriveRecordByWhereRow('ds_footer_service_settings', array('id' => '1'));
+    return $data;
+}
+
+
+function get_catname_by_id($c_id) {
+    $CI = & get_instance();    
+    $data = $CI->common_model->RetriveRecordByWhereRow('ds_category', array('id' => $c_id));
+    return $data;
+}
+
+function get_attrname_by_id($attr_id) {
+    $CI = & get_instance();    
+    $data = $CI->common_model->RetriveRecordByWhereRow('ds_products_attribute', array('id' => $attr_id));
+    return $data;
+}
+
+
+function getServiceDetails($artist_id,$id) {
+    $CI = & get_instance();    
+    $data = $CI->common_model->RetriveRecordByWhereRow('ds_all_artist_services_details', array('artist_id' => $artist_id,'service_type_id' => $id));
+    return $data;
+}
+?>
